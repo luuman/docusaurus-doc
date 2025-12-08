@@ -1,0 +1,10 @@
+{
+  "github_user": "luuman",
+  "source_dir": ".",
+  "branch_mapping": {
+    "feat/claude": "luuman/claude-doc",
+    "feat/electron": "luuman/electron-doc",
+    "feat/moltbot": "luuman/moltbot-doc"
+  },
+  "description": "docusaurus-doc 仓库的 feat 分支部署到对应的文档仓库"
+}
