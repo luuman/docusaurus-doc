@@ -18,12 +18,12 @@ const config: Config = {
   url: "https://luuman.github.io/",
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
-  baseUrl: "/docusaurus-doc/",
+  baseUrl: "/electron-doc/",
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
   organizationName: "luuman", // Usually your GitHub org/user name.
-  projectName: "docusaurus-doc", // Usually your repo name.
+  projectName: "electron-doc", // Usually your repo name.
 
   trailingSlash: false,
 
