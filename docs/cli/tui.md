@@ -20,3 +20,7 @@ moltbot tui --url ws://127.0.0.1:18789 --token <token>
 moltbot tui --session main --deliver
 ```
 
+## 翻译说明
+
+此文档已翻译为中文，保留了原有的技术术语和命令格式。
+

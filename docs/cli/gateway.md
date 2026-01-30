@@ -1,77 +1,77 @@
 ---
-summary: "Moltbot Gateway CLI (`moltbot gateway`) — run, query, and discover gateways"
+summary: "Moltbot 网关 CLI (`moltbot gateway`) — 运行、查询和发现网关"
 read_when:
-  - Running the Gateway from the CLI (dev or servers)
-  - Debugging Gateway auth, bind modes, and connectivity
-  - Discovering gateways via Bonjour (LAN + tailnet)
+  - 从 CLI 运行网关（开发或服务器）
+  - 调试网关认证、绑定模式和连接性
+  - 通过 Bonjour（局域网 + tailnet）发现网关
 ---
 
-# Gateway CLI
+# 网关 CLI
 
-The Gateway is Moltbot’s WebSocket server (channels, nodes, sessions, hooks).
+网关是 Moltbot 的 WebSocket 服务器（通道、节点、会话、钩子）。
 
-Subcommands in this page live under `moltbot gateway …`.
+本页中的子命令位于 `moltbot gateway …` 下。
 
-Related docs:
+相关文档：
 - [/gateway/bonjour](/gateway/bonjour)
 - [/gateway/discovery](/gateway/discovery)
 - [/gateway/configuration](/gateway/configuration)
 
-## Run the Gateway
+## 运行网关
 
-Run a local Gateway process:
+运行本地网关进程：
 
 ```bash
 moltbot gateway
 ```
 
-Foreground alias:
+前台别名：
 
 ```bash
 moltbot gateway run
 ```
 
-Notes:
-- By default, the Gateway refuses to start unless `gateway.mode=local` is set in `~/.clawdbot/moltbot.json`. Use `--allow-unconfigured` for ad-hoc/dev runs.
-- Binding beyond loopback without auth is blocked (safety guardrail).
-- `SIGUSR1` triggers an in-process restart when authorized (enable `commands.restart` or use the gateway tool/config apply/update).
-- `SIGINT`/`SIGTERM` handlers stop the gateway process, but they don’t restore any custom terminal state. If you wrap the CLI with a TUI or raw-mode input, restore the terminal before exit.
+注意事项：
+- 默认情况下，除非在 `~/.clawdbot/moltbot.json` 中设置了 `gateway.mode=local`，否则网关拒绝启动。对于临时/开发运行，请使用 `--allow-unconfigured`。
+- 在没有认证的情况下绑定到回环之外被阻止（安全护栏）。
+- `SIGUSR1` 在授权时触发进程内重启（启用 `commands.restart` 或使用网关工具/配置应用/更新）。
+- `SIGINT`/`SIGTERM` 处理程序停止网关进程，但它们不会恢复任何自定义终端状态。如果您用 TUI 或原始模式输入包装 CLI，请在退出前恢复终端。
 
-### Options
+### 选项
 
-- `--port <port>`: WebSocket port (default comes from config/env; usually `18789`).
-- `--bind <loopback|lan|tailnet|auto|custom>`: listener bind mode.
-- `--auth <token|password>`: auth mode override.
-- `--token <token>`: token override (also sets `CLAWDBOT_GATEWAY_TOKEN` for the process).
-- `--password <password>`: password override (also sets `CLAWDBOT_GATEWAY_PASSWORD` for the process).
-- `--tailscale <off|serve|funnel>`: expose the Gateway via Tailscale.
-- `--tailscale-reset-on-exit`: reset Tailscale serve/funnel config on shutdown.
-- `--allow-unconfigured`: allow gateway start without `gateway.mode=local` in config.
-- `--dev`: create a dev config + workspace if missing (skips BOOTSTRAP.md).
-- `--reset`: reset dev config + credentials + sessions + workspace (requires `--dev`).
-- `--force`: kill any existing listener on the selected port before starting.
-- `--verbose`: verbose logs.
-- `--claude-cli-logs`: only show claude-cli logs in the console (and enable its stdout/stderr).
-- `--ws-log <auto|full|compact>`: websocket log style (default `auto`).
-- `--compact`: alias for `--ws-log compact`.
-- `--raw-stream`: log raw model stream events to jsonl.
-- `--raw-stream-path <path>`: raw stream jsonl path.
+- `--port <port>`: WebSocket 端口（默认来自配置/env；通常为 `18789`）。
+- `--bind <loopback|lan|tailnet|auto|custom>`: 监听器绑定模式。
+- `--auth <token|password>`: 认证模式覆盖。
+- `--token <token>`: 令牌覆盖（也为进程设置 `CLAWDBOT_GATEWAY_TOKEN`）。
+- `--password <password>`: 密码覆盖（也为进程设置 `CLAWDBOT_GATEWAY_PASSWORD`）。
+- `--tailscale <off|serve|funnel>`: 通过 Tailscale 暴露网关。
+- `--tailscale-reset-on-exit`: 关闭时重置 Tailscale serve/funnel 配置。
+- `--allow-unconfigured`: 允许在配置中没有 `gateway.mode=local` 时启动网关。
+- `--dev`: 如果缺少，则创建开发配置 + 工作空间（跳过 BOOTSTRAP.md）。
+- `--reset`: 重置开发配置 + 凭据 + 会话 + 工作空间（需要 `--dev`）。
+- `--force`: 启动前杀死选定端口上的任何现有监听器。
+- `--verbose`: 详细日志。
+- `--claude-cli-logs`: 仅在控制台显示 claude-cli 日志（并启用其标准输出/标准错误）。
+- `--ws-log <auto|full|compact>`: websocket 日志样式（默认 `auto`）。
+- `--compact`: `--ws-log compact` 的别名。
+- `--raw-stream`: 将原始模型流事件记录到 jsonl。
+- `--raw-stream-path <path>`: 原始流 jsonl 路径。
 
-## Query a running Gateway
+## 查询正在运行的网关
 
-All query commands use WebSocket RPC.
+所有查询命令都使用 WebSocket RPC。
 
-Output modes:
-- Default: human-readable (colored in TTY).
-- `--json`: machine-readable JSON (no styling/spinner).
-- `--no-color` (or `NO_COLOR=1`): disable ANSI while keeping human layout.
+输出模式：
+- 默认：人类可读（TTY 中着色）。
+- `--json`: 机器可读 JSON（无样式/旋转器）。
+- `--no-color`（或 `NO_COLOR=1`）：禁用 ANSI，同时保持人类布局。
 
-Shared options (where supported):
-- `--url <url>`: Gateway WebSocket URL.
-- `--token <token>`: Gateway token.
-- `--password <password>`: Gateway password.
-- `--timeout <ms>`: timeout/budget (varies per command).
-- `--expect-final`: wait for a “final” response (agent calls).
+共享选项（在支持的情况下）：
+- `--url <url>`: 网关 WebSocket URL。
+- `--token <token>`: 网关令牌。
+- `--password <password>`: 网关密码。
+- `--timeout <ms>`: 超时/预算（因命令而异）。
+- `--expect-final`: 等待"最终"响应（智能体调用）。
 
 ### `gateway health`
 
@@ -81,63 +81,63 @@ moltbot gateway health --url ws://127.0.0.1:18789
 
 ### `gateway status`
 
-`gateway status` shows the Gateway service (launchd/systemd/schtasks) plus an optional RPC probe.
+`gateway status` 显示网关服务（launchd/systemd/schtasks）加上可选的 RPC 探测。
 
 ```bash
 moltbot gateway status
 moltbot gateway status --json
 ```
 
-Options:
-- `--url <url>`: override the probe URL.
-- `--token <token>`: token auth for the probe.
-- `--password <password>`: password auth for the probe.
-- `--timeout <ms>`: probe timeout (default `10000`).
-- `--no-probe`: skip the RPC probe (service-only view).
-- `--deep`: scan system-level services too.
+选项：
+- `--url <url>`: 覆盖探测 URL。
+- `--token <token>`: 探测的令牌认证。
+- `--password <password>`: 探测的密码认证。
+- `--timeout <ms>`: 探测超时（默认 `10000`）。
+- `--no-probe`: 跳过 RPC 探测（仅服务视图）。
+- `--deep`: 也扫描系统级服务。
 
 ### `gateway probe`
 
-`gateway probe` is the “debug everything” command. It always probes:
-- your configured remote gateway (if set), and
-- localhost (loopback) **even if remote is configured**.
+`gateway probe` 是"调试一切"命令。它总是探测：
+- 您配置的远程网关（如果设置），以及
+- 本地主机（回环）**即使配置了远程**。
 
-If multiple gateways are reachable, it prints all of them. Multiple gateways are supported when you use isolated profiles/ports (e.g., a rescue bot), but most installs still run a single gateway.
+如果可以访问多个网关，它会打印所有网关。当您使用隔离配置文件/端口时（例如，救援机器人），支持多个网关，但大多数安装仍然运行单个网关。
 
 ```bash
 moltbot gateway probe
 moltbot gateway probe --json
 ```
 
-#### Remote over SSH (Mac app parity)
+#### 通过 SSH 远程（Mac 应用对等）
 
-The macOS app “Remote over SSH” mode uses a local port-forward so the remote gateway (which may be bound to loopback only) becomes reachable at `ws://127.0.0.1:<port>`.
+macOS 应用"通过 SSH 远程"模式使用本地端口转发，因此远程网关（可能仅绑定到回环）在 `ws://127.0.0.1:<port>` 变得可访问。
 
-CLI equivalent:
+CLI 等效：
 
 ```bash
 moltbot gateway probe --ssh user@gateway-host
 ```
 
-Options:
-- `--ssh <target>`: `user@host` or `user@host:port` (port defaults to `22`).
-- `--ssh-identity <path>`: identity file.
-- `--ssh-auto`: pick the first discovered gateway host as SSH target (LAN/WAB only).
+选项：
+- `--ssh <target>`: `user@host` 或 `user@host:port`（端口默认为 `22`）。
+- `--ssh-identity <path>`: 身份文件。
+- `--ssh-auto`: 选择第一个发现的网关主机作为 SSH 目标（仅 LAN/WAB）。
 
-Config (optional, used as defaults):
+配置（可选，用作默认值）：
 - `gateway.remote.sshTarget`
 - `gateway.remote.sshIdentity`
 
 ### `gateway call <method>`
 
-Low-level RPC helper.
+低级 RPC 助手。
 
 ```bash
 moltbot gateway call status
 moltbot gateway call logs.tail --params '{"sinceMs": 60000}'
 ```
 
-## Manage the Gateway service
+## 管理网关服务
 
 ```bash
 moltbot gateway install
@@ -147,27 +147,27 @@ moltbot gateway restart
 moltbot gateway uninstall
 ```
 
-Notes:
-- `gateway install` supports `--port`, `--runtime`, `--token`, `--force`, `--json`.
-- Lifecycle commands accept `--json` for scripting.
+注意事项：
+- `gateway install` 支持 `--port`、`--runtime`、`--token`、`--force`、`--json`。
+- 生命周期命令接受 `--json` 用于脚本。
 
-## Discover gateways (Bonjour)
+## 发现网关（Bonjour）
 
-`gateway discover` scans for Gateway beacons (`_moltbot-gw._tcp`).
+`gateway discover` 扫描网关信标（`_moltbot-gw._tcp`）。
 
-- Multicast DNS-SD: `local.`
-- Unicast DNS-SD (Wide-Area Bonjour): `moltbot.internal.` (requires split DNS + DNS server; see [/gateway/bonjour](/gateway/bonjour))
+- 多播 DNS-SD：`local.`
+- 单播 DNS-SD（广域 Bonjour）：`moltbot.internal.`（需要拆分 DNS + DNS 服务器；参见 [/gateway/bonjour](/gateway/bonjour)）
 
-Only gateways with Bonjour discovery enabled (default) advertise the beacon.
+只有启用了 Bonjour 发现的网关（默认）才广告信标。
 
-Wide-Area discovery records include (TXT):
-- `role` (gateway role hint)
-- `transport` (transport hint, e.g. `gateway`)
-- `gatewayPort` (WebSocket port, usually `18789`)
-- `sshPort` (SSH port; defaults to `22` if not present)
-- `tailnetDns` (MagicDNS hostname, when available)
-- `gatewayTls` / `gatewayTlsSha256` (TLS enabled + cert fingerprint)
-- `cliPath` (optional hint for remote installs)
+广域发现记录包括（TXT）：
+- `role`（网关角色提示）
+- `transport`（传输提示，例如 `gateway`）
+- `gatewayPort`（WebSocket 端口，通常为 `18789`）
+- `sshPort`（SSH 端口；如果不存在，默认为 `22`）
+- `tailnetDns`（MagicDNS 主机名，可用时）
+- `gatewayTls` / `gatewayTlsSha256`（TLS 启用 + 证书指纹）
+- `cliPath`（远程安装的可选提示）
 
 ### `gateway discover`
 
@@ -175,11 +175,11 @@ Wide-Area discovery records include (TXT):
 moltbot gateway discover
 ```
 
-Options:
-- `--timeout <ms>`: per-command timeout (browse/resolve); default `2000`.
-- `--json`: machine-readable output (also disables styling/spinner).
+选项：
+- `--timeout <ms>`: 每个命令超时（浏览/解析）；默认 `2000`。
+- `--json`: 机器可读输出（也禁用样式/旋转器）。
 
-Examples:
+示例：
 
 ```bash
 moltbot gateway discover --timeout 4000

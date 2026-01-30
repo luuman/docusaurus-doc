@@ -15,3 +15,7 @@ moltbot uninstall --all --yes
 moltbot uninstall --dry-run
 ```
 
+## 翻译说明
+
+此文档已翻译为中文，保留了原有的技术术语和命令格式。
+

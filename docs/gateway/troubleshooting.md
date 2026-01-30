@@ -1,453 +1,453 @@
 ---
-summary: "Quick troubleshooting guide for common Moltbot failures"
+summary: "常见 Moltbot 故障的快速故障排除指南"
 read_when:
-  - Investigating runtime issues or failures
+  - 调查运行时问题或故障
 ---
-# Troubleshooting 🔧
+# 故障排除 🔧
 
-When Moltbot misbehaves, here's how to fix it.
+当 Moltbot 表现异常时，这里是如何修复它的方法。
 
-Start with the FAQ’s [First 60 seconds](/help/faq#first-60-seconds-if-somethings-broken) if you just want a quick triage recipe. This page goes deeper on runtime failures and diagnostics.
+如果你只想快速分类处理，从 FAQ 的 [前 60 秒](/help/faq#first-60-seconds-if-somethings-broken) 开始。本页面深入探讨运行时故障和诊断。
 
-Provider-specific shortcuts: [/channels/troubleshooting](/channels/troubleshooting)
+特定提供商快捷方式：[/channels/troubleshooting](/channels/troubleshooting)
 
-## Status & Diagnostics
+## 状态和诊断
 
-Quick triage commands (in order):
+快速分类命令（按顺序）：
 
-| Command | What it tells you | When to use it |
+| 命令 | 它告诉你什么 | 何时使用 |
 |---|---|---|
-| `moltbot status` | Local summary: OS + update, gateway reachability/mode, service, agents/sessions, provider config state | First check, quick overview |
-| `moltbot status --all` | Full local diagnosis (read-only, pasteable, safe-ish) incl. log tail | When you need to share a debug report |
-| `moltbot status --deep` | Runs gateway health checks (incl. provider probes; requires reachable gateway) | When “configured” doesn’t mean “working” |
-| `moltbot gateway probe` | Gateway discovery + reachability (local + remote targets) | When you suspect you’re probing the wrong gateway |
-| `moltbot channels status --probe` | Asks the running gateway for channel status (and optionally probes) | When gateway is reachable but channels misbehave |
-| `moltbot gateway status` | Supervisor state (launchd/systemd/schtasks), runtime PID/exit, last gateway error | When the service “looks loaded” but nothing runs |
-| `moltbot logs --follow` | Live logs (best signal for runtime issues) | When you need the actual failure reason |
+| `moltbot status` | 本地摘要：操作系统 + 更新，网关可达性/模式，服务，代理/会话，提供商配置状态 | 首次检查，快速概览 |
+| `moltbot status --all` | 完整本地诊断（只读，可粘贴，相对安全）包括日志尾部 | 当你需要分享调试报告时 |
+| `moltbot status --deep` | 运行网关健康检查（包括提供商探测；需要可访问的网关） | 当"配置"不等于"工作"时 |
+| `moltbot gateway probe` | 网关发现 + 可达性（本地 + 远程目标） | 当你怀疑你在探测错误的网关时 |
+| `moltbot channels status --probe` | 向运行中的网关询问通道状态（可选探测） | 当网关可达但通道表现异常时 |
+| `moltbot gateway status` | 监督程序状态（launchd/systemd/schtasks），运行时 PID/退出，最后网关错误 | 当服务"看起来已加载"但没有运行任何东西时 |
+| `moltbot logs --follow` | 实时日志（运行时问题的最佳信号） | 当你需要实际的失败原因时 |
 
-**Sharing output:** prefer `moltbot status --all` (it redacts tokens). If you paste `moltbot status`, consider setting `CLAWDBOT_SHOW_SECRETS=0` first (token previews).
+**分享输出：** 建议使用 `moltbot status --all`（它会脱敏令牌）。如果你粘贴 `moltbot status`，请考虑先设置 `CLAWDBOT_SHOW_SECRETS=0`（令牌预览）。
 
-See also: [Health checks](/gateway/health) and [Logging](/logging).
+另请参阅：[健康检查](/gateway/health) 和 [日志](/logging)。
 
-## Common Issues
+## 常见问题
 
-### No API key found for provider "anthropic"
+### 找不到提供商 "anthropic" 的 API 密钥
 
-This means the **agent’s auth store is empty** or missing Anthropic credentials.
-Auth is **per agent**, so a new agent won’t inherit the main agent’s keys.
+这意味着 **代理的身份验证存储为空** 或缺少 Anthropic 凭证。
+身份验证是 **按代理的**，所以新代理不会继承主代理的密钥。
 
-Fix options:
-- Re-run onboarding and choose **Anthropic** for that agent.
-- Or paste a setup-token on the **gateway host**:
+修复选项：
+- 重新运行入职流程并为该代理选择 **Anthropic**。
+- 或者在 **网关主机** 上粘贴一个设置令牌：
   ```bash
   moltbot models auth setup-token --provider anthropic
   ```
-- Or copy `auth-profiles.json` from the main agent dir to the new agent dir.
+- 或者从主代理目录复制 `auth-profiles.json` 到新代理目录。
 
-Verify:
+验证：
 ```bash
 moltbot models status
 ```
 
-### OAuth token refresh failed (Anthropic Claude subscription)
+### OAuth 令牌刷新失败（Anthropic Claude 订阅）
 
-This means the stored Anthropic OAuth token expired and the refresh failed.
-If you’re on a Claude subscription (no API key), the most reliable fix is to
-switch to a **Claude Code setup-token** and paste it on the **gateway host**.
+这意味着存储的 Anthropic OAuth 令牌已过期且刷新失败。
+如果你使用 Claude 订阅（无 API 密钥），最可靠的修复方法是
+切换到 **Claude Code 设置令牌** 并在 **网关主机** 上粘贴它。
 
-**Recommended (setup-token):**
+**推荐（设置令牌）：**
 
 ```bash
-# Run on the gateway host (paste the setup-token)
+# 在网关主机上运行（粘贴设置令牌）
 moltbot models auth setup-token --provider anthropic
 moltbot models status
 ```
 
-If you generated the token elsewhere:
+如果你在其他地方生成了令牌：
 
 ```bash
 moltbot models auth paste-token --provider anthropic
 moltbot models status
 ```
 
-More detail: [Anthropic](/providers/anthropic) and [OAuth](/concepts/oauth).
+更多细节：[Anthropic](/providers/anthropic) 和 [OAuth](/concepts/oauth)。
 
-### Control UI fails on HTTP ("device identity required" / "connect failed")
+### 控制 UI 在 HTTP 上失败（"需要设备身份" / "连接失败"）
 
-If you open the dashboard over plain HTTP (e.g. `http://<lan-ip>:18789/` or
-`http://<tailscale-ip>:18789/`), the browser runs in a **non-secure context** and
-blocks WebCrypto, so device identity can’t be generated.
+如果你通过纯 HTTP 打开仪表板（例如 `http://<lan-ip>:18789/` 或
+`http://<tailscale-ip>:18789/`），浏览器在 **非安全上下文** 中运行并
+阻止 WebCrypto，因此无法生成设备身份。
 
-**Fix:**
-- Prefer HTTPS via [Tailscale Serve](/gateway/tailscale).
-- Or open locally on the gateway host: `http://127.0.0.1:18789/`.
-- If you must stay on HTTP, enable `gateway.controlUi.allowInsecureAuth: true` and
-  use a gateway token (token-only; no device identity/pairing). See
-  [Control UI](/web/control-ui#insecure-http).
+**修复：**
+- 优先使用 [Tailscale Serve](/gateway/tailscale) 的 HTTPS。
+- 或者在网关主机上本地打开：`http://127.0.0.1:18789/`。
+- 如果你必须停留在 HTTP，启用 `gateway.controlUi.allowInsecureAuth: true` 并
+  使用网关令牌（仅令牌；无设备身份/配对）。参见
+  [控制 UI](/web/control-ui#insecure-http)。
 
-### CI Secrets Scan Failed
+### CI 密钥扫描失败
 
-This means `detect-secrets` found new candidates not yet in the baseline.
-Follow [Secret scanning](/gateway/security#secret-scanning-detect-secrets).
+这意味着 `detect-secrets` 找到了基线中尚未包含的新候选者。
+遵循 [密钥扫描](/gateway/security#secret-scanning-detect-secrets)。
 
-### Service Installed but Nothing is Running
+### 服务已安装但没有任何运行
 
-If the gateway service is installed but the process exits immediately, the service
-can appear “loaded” while nothing is running.
+如果网关服务已安装但进程立即退出，服务
+可能看起来"已加载"但实际上没有运行任何东西。
 
-**Check:**
+**检查：**
 ```bash
 moltbot gateway status
 moltbot doctor
 ```
 
-Doctor/service will show runtime state (PID/last exit) and log hints.
+医生/服务将显示运行时状态（PID/上次退出）和日志提示。
 
-**Logs:**
-- Preferred: `moltbot logs --follow`
-- File logs (always): `/tmp/moltbot/moltbot-YYYY-MM-DD.log` (or your configured `logging.file`)
-- macOS LaunchAgent (if installed): `$CLAWDBOT_STATE_DIR/logs/gateway.log` and `gateway.err.log`
-- Linux systemd (if installed): `journalctl --user -u moltbot-gateway[-<profile>].service -n 200 --no-pager`
-- Windows: `schtasks /Query /TN "Moltbot Gateway (<profile>)" /V /FO LIST`
+**日志：**
+- 首选：`moltbot logs --follow`
+- 文件日志（始终）：`/tmp/moltbot/moltbot-YYYY-MM-DD.log`（或你配置的 `logging.file`）
+- macOS LaunchAgent（如已安装）：`$CLAWDBOT_STATE_DIR/logs/gateway.log` 和 `gateway.err.log`
+- Linux systemd（如已安装）：`journalctl --user -u moltbot-gateway[-<profile>].service -n 200 --no-pager`
+- Windows：`schtasks /Query /TN "Moltbot Gateway (<profile>)" /V /FO LIST`
 
-**Enable more logging:**
-- Bump file log detail (persisted JSONL):
+**启用更多日志记录：**
+- 提升文件日志详细程度（持久化 JSONL）：
   ```json
   { "logging": { "level": "debug" } }
   ```
-- Bump console verbosity (TTY output only):
+- 提升控制台详细程度（仅 TTY 输出）：
   ```json
   { "logging": { "consoleLevel": "debug", "consoleStyle": "pretty" } }
   ```
-- Quick tip: `--verbose` affects **console** output only. File logs remain controlled by `logging.level`.
+- 快速提示：`--verbose` 仅影响 **控制台** 输出。文件日志仍由 `logging.level` 控制。
 
-See [/logging](/logging) for a full overview of formats, config, and access.
+参见 [/logging](/logging) 获取格式、配置和访问的完整概述。
 
-### "Gateway start blocked: set gateway.mode=local"
+### "网关启动被阻止：设置 gateway.mode=local"
 
-This means the config exists but `gateway.mode` is unset (or not `local`), so the
-Gateway refuses to start.
+这意味着配置存在但 `gateway.mode` 未设置（或不是 `local`），所以
+网关拒绝启动。
 
-**Fix (recommended):**
-- Run the wizard and set the Gateway run mode to **Local**:
+**修复（推荐）：**
+- 运行向导并将网关运行模式设置为 **本地**：
   ```bash
   moltbot configure
   ```
-- Or set it directly:
+- 或直接设置：
   ```bash
   moltbot config set gateway.mode local
   ```
 
-**If you meant to run a remote Gateway instead:**
-- Set a remote URL and keep `gateway.mode=remote`:
+**如果你想运行远程网关：**
+- 设置远程 URL 并保持 `gateway.mode=remote`：
   ```bash
   moltbot config set gateway.mode remote
   moltbot config set gateway.remote.url "wss://gateway.example.com"
   ```
 
-**Ad-hoc/dev only:** pass `--allow-unconfigured` to start the gateway without
-`gateway.mode=local`.
+**仅临时/开发：** 传递 `--allow-unconfigured` 在没有
+`gateway.mode=local` 的情况下启动网关。
 
-**No config file yet?** Run `moltbot setup` to create a starter config, then rerun
-the gateway.
+**还没有配置文件？** 运行 `moltbot setup` 创建起始配置，然后重新运行
+网关。
 
-### Service Environment (PATH + runtime)
+### 服务环境（PATH + 运行时）
 
-The gateway service runs with a **minimal PATH** to avoid shell/manager cruft:
-- macOS: `/opt/homebrew/bin`, `/usr/local/bin`, `/usr/bin`, `/bin`
-- Linux: `/usr/local/bin`, `/usr/bin`, `/bin`
+网关服务使用 **最小 PATH** 以避免 shell/manager 混乱：
+- macOS：`/opt/homebrew/bin`, `/usr/local/bin`, `/usr/bin`, `/bin`
+- Linux：`/usr/local/bin`, `/usr/bin`, `/bin`
 
-This intentionally excludes version managers (nvm/fnm/volta/asdf) and package
-managers (pnpm/npm) because the service does not load your shell init. Runtime
-variables like `DISPLAY` should live in `~/.clawdbot/.env` (loaded early by the
-gateway).
-Exec runs on `host=gateway` merge your login-shell `PATH` into the exec environment,
-so missing tools usually mean your shell init isn’t exporting them (or set
-`tools.exec.pathPrepend`). See [/tools/exec](/tools/exec).
+这故意排除了版本管理器（nvm/fnm/volta/asdf）和包
+管理器（pnpm/npm），因为服务不会加载你的 shell 初始化。运行时
+变量如 `DISPLAY` 应该保存在 `~/.clawdbot/.env` 中（由
+网关早期加载）。
+在 `host=gateway` 上运行 exec 会将你的登录 shell `PATH` 合并到 exec 环境中，
+所以缺少工具通常意味着你的 shell 初始化没有导出它们（或设置
+`tools.exec.pathPrepend`）。参见 [/tools/exec](/tools/exec)。
 
-WhatsApp + Telegram channels require **Node**; Bun is unsupported. If your
-service was installed with Bun or a version-managed Node path, run `moltbot doctor`
-to migrate to a system Node install.
+WhatsApp + Telegram 通道需要 **Node**；Bun 不支持。如果你的
+服务是用 Bun 或版本管理的 Node 路径安装的，运行 `moltbot doctor`
+迁移到系统 Node 安装。
 
-### Skill missing API key in sandbox
+### 沙盒中技能缺少 API 密钥
 
-**Symptom:** Skill works on host but fails in sandbox with missing API key.
+**症状：** 技能在主机上工作但在沙盒中因缺少 API 密钥而失败。
 
-**Why:** sandboxed exec runs inside Docker and does **not** inherit host `process.env`.
+**原因：** 沙盒 exec 在 Docker 内部运行，**不** 继承主机 `process.env`。
 
-**Fix:**
-- set `agents.defaults.sandbox.docker.env` (or per-agent `agents.list[].sandbox.docker.env`)
-- or bake the key into your custom sandbox image
-- then run `moltbot sandbox recreate --agent <id>` (or `--all`)
+**修复：**
+- 设置 `agents.defaults.sandbox.docker.env`（或按代理 `agents.list[].sandbox.docker.env`）
+- 或将密钥烘焙到你的自定义沙盒镜像中
+- 然后运行 `moltbot sandbox recreate --agent <id>`（或 `--all`）
 
-### Service Running but Port Not Listening
+### 服务运行但端口未监听
 
-If the service reports **running** but nothing is listening on the gateway port,
-the Gateway likely refused to bind.
+如果服务报告 **运行中** 但网关端口上没有监听任何东西，
+网关可能拒绝绑定。
 
-**What "running" means here**
-- `Runtime: running` means your supervisor (launchd/systemd/schtasks) thinks the process is alive.
-- `RPC probe` means the CLI could actually connect to the gateway WebSocket and call `status`.
-- Always trust `Probe target:` + `Config (service):` as the “what did we actually try?” lines.
+**"运行中" 在这里意味着什么**
+- `Runtime: running` 意味着你的监督程序（launchd/systemd/schtasks）认为进程是活动的。
+- `RPC probe` 意味着 CLI 实际上可以连接到网关 WebSocket 并调用 `status`。
+- 始终信任 `Probe target:` + `Config (service):` 作为"我们实际上尝试了什么？"的行。
 
-**Check:**
-- `gateway.mode` must be `local` for `moltbot gateway` and the service.
-- If you set `gateway.mode=remote`, the **CLI defaults** to a remote URL. The service can still be running locally, but your CLI may be probing the wrong place. Use `moltbot gateway status` to see the service’s resolved port + probe target (or pass `--url`).
-- `moltbot gateway status` and `moltbot doctor` surface the **last gateway error** from logs when the service looks running but the port is closed.
-- Non-loopback binds (`lan`/`tailnet`/`custom`, or `auto` when loopback is unavailable) require auth:
-  `gateway.auth.token` (or `CLAWDBOT_GATEWAY_TOKEN`).
-- `gateway.remote.token` is for remote CLI calls only; it does **not** enable local auth.
-- `gateway.token` is ignored; use `gateway.auth.token`.
+**检查：**
+- `gateway.mode` 对于 `moltbot gateway` 和服务必须是 `local`。
+- 如果你设置了 `gateway.mode=remote`，**CLI 默认** 为远程 URL。服务仍可能在本地运行，但你的 CLI 可能在探测错误的位置。使用 `moltbot gateway status` 查看服务解析的端口 + 探测目标（或传递 `--url`）。
+- `moltbot gateway status` 和 `moltbot doctor` 会在服务看起来运行但端口关闭时从日志中显示 **最后网关错误**。
+- 非环回绑定（`lan`/`tailnet`/`custom`，或在环回不可用时的 `auto`）需要身份验证：
+  `gateway.auth.token`（或 `CLAWDBOT_GATEWAY_TOKEN`）。
+- `gateway.remote.token` 仅用于远程 CLI 调用；它 **不** 启用本地身份验证。
+- `gateway.token` 被忽略；使用 `gateway.auth.token`。
 
-**If `moltbot gateway status` shows a config mismatch**
-- `Config (cli): ...` and `Config (service): ...` should normally match.
-- If they don’t, you’re almost certainly editing one config while the service is running another.
-- Fix: rerun `moltbot gateway install --force` from the same `--profile` / `CLAWDBOT_STATE_DIR` you want the service to use.
+**如果 `moltbot gateway status` 显示配置不匹配**
+- `Config (cli): ...` 和 `Config (service): ...` 应该通常匹配。
+- 如果不匹配，你几乎肯定在编辑一个配置的同时服务正在运行另一个配置。
+- 修复：从你希望服务使用的相同 `--profile` / `CLAWDBOT_STATE_DIR` 重新运行 `moltbot gateway install --force`。
 
-**If `moltbot gateway status` reports service config issues**
-- The supervisor config (launchd/systemd/schtasks) is missing current defaults.
-- Fix: run `moltbot doctor` to update it (or `moltbot gateway install --force` for a full rewrite).
+**如果 `moltbot gateway status` 报告服务配置问题**
+- 监督程序配置（launchd/systemd/schtasks）缺少当前默认值。
+- 修复：运行 `moltbot doctor` 更新它（或 `moltbot gateway install --force` 进行完全重写）。
 
-**If `Last gateway error:` mentions “refusing to bind … without auth”**
-- You set `gateway.bind` to a non-loopback mode (`lan`/`tailnet`/`custom`, or `auto` when loopback is unavailable) but didn’t configure auth.
-- Fix: set `gateway.auth.mode` + `gateway.auth.token` (or export `CLAWDBOT_GATEWAY_TOKEN`) and restart the service.
+**如果 `Last gateway error:` 提到"拒绝在没有身份验证的情况下绑定 …"**
+- 你将 `gateway.bind` 设置为非环回模式（`lan`/`tailnet`/`custom`，或在环回不可用时的 `auto`）但没有配置身份验证。
+- 修复：设置 `gateway.auth.mode` + `gateway.auth.token`（或导出 `CLAWDBOT_GATEWAY_TOKEN`）并重启服务。
 
-**If `moltbot gateway status` says `bind=tailnet` but no tailnet interface was found**
-- The gateway tried to bind to a Tailscale IP (100.64.0.0/10) but none were detected on the host.
-- Fix: bring up Tailscale on that machine (or change `gateway.bind` to `loopback`/`lan`).
+**如果 `moltbot gateway status` 说 `bind=tailnet` 但没有找到 tailnet 接口**
+- 网关试图绑定到 Tailscale IP（100.64.0.0/10）但在主机上没有检测到。
+- 修复：在该机器上启动 Tailscale（或将 `gateway.bind` 更改为 `loopback`/`lan`）。
 
-**If `Probe note:` says the probe uses loopback**
-- That’s expected for `bind=lan`: the gateway listens on `0.0.0.0` (all interfaces), and loopback should still connect locally.
-- For remote clients, use a real LAN IP (not `0.0.0.0`) plus the port, and ensure auth is configured.
+**如果 `Probe note:` 说探测使用环回**
+- 这对于 `bind=lan` 是预期的：网关监听 `0.0.0.0`（所有接口），环回应该仍能本地连接。
+- 对于远程客户端，使用真实的 LAN IP（不是 `0.0.0.0`）加上端口，并确保配置了身份验证。
 
-### Address Already in Use (Port 18789)
+### 地址已在使用（端口 18789）
 
-This means something is already listening on the gateway port.
+这意味着已经有其他东西在监听网关端口。
 
-**Check:**
+**检查：**
 ```bash
 moltbot gateway status
 ```
 
-It will show the listener(s) and likely causes (gateway already running, SSH tunnel).
-If needed, stop the service or pick a different port.
+它将显示监听器和可能的原因（网关已在运行，SSH 隧道）。
+如果需要，停止服务或选择不同的端口。
 
-### Extra Workspace Folders Detected
+### 检测到额外的工作空间文件夹
 
-If you upgraded from older installs, you might still have `~/moltbot` on disk.
-Multiple workspace directories can cause confusing auth or state drift because
-only one workspace is active.
+如果你从旧安装升级，你可能仍有 `~/moltbot` 在磁盘上。
+多个工作空间目录可能导致混乱的身份验证或状态漂移，因为
+只有一个工作空间处于活动状态。
 
-**Fix:** keep a single active workspace and archive/remove the rest. See
-[Agent workspace](/concepts/agent-workspace#extra-workspace-folders).
+**修复：** 保留单个活动工作空间并归档/删除其余的。参见
+[代理工作空间](/concepts/agent-workspace#extra-workspace-folders)。
 
-### Main chat running in a sandbox workspace
+### 主聊天在沙盒工作空间中运行
 
-Symptoms: `pwd` or file tools show `~/.clawdbot/sandboxes/...` even though you
-expected the host workspace.
+症状：`pwd` 或文件工具显示 `~/.clawdbot/sandboxes/...` 即使你
+期望的是主机工作空间。
 
-**Why:** `agents.defaults.sandbox.mode: "non-main"` keys off `session.mainKey` (default `"main"`).
-Group/channel sessions use their own keys, so they are treated as non-main and
-get sandbox workspaces.
+**原因：** `agents.defaults.sandbox.mode: "non-main"` 基于 `session.mainKey`（默认为 `"main"`）。
+组/频道会话使用自己的密钥，所以它们被视为非主会话并
+获得沙盒工作空间。
 
-**Fix options:**
-- If you want host workspaces for an agent: set `agents.list[].sandbox.mode: "off"`.
-- If you want host workspace access inside sandbox: set `workspaceAccess: "rw"` for that agent.
+**修复选项：**
+- 如果你希望代理使用主机工作空间：设置 `agents.list[].sandbox.mode: "off"`。
+- 如果你希望在沙盒内访问主机工作空间：为该代理设置 `workspaceAccess: "rw"`。
 
-### "Agent was aborted"
+### "代理被中止"
 
-The agent was interrupted mid-response.
+代理在响应中途被中断。
 
-**Causes:**
-- User sent `stop`, `abort`, `esc`, `wait`, or `exit`
-- Timeout exceeded
-- Process crashed
+**原因：**
+- 用户发送了 `stop`、`abort`、`esc`、`wait` 或 `exit`
+- 超时超出
+- 进程崩溃
 
-**Fix:** Just send another message. The session continues.
+**修复：** 只需发送另一条消息。会话继续。
 
-### "Agent failed before reply: Unknown model: anthropic/claude-haiku-3-5"
+### "代理在回复前失败：未知模型：anthropic/claude-haiku-3-5"
 
-Moltbot intentionally rejects **older/insecure models** (especially those more
-vulnerable to prompt injection). If you see this error, the model name is no
-longer supported.
+Moltbot 故意拒绝 **较旧/不安全的模型**（尤其是那些更容易
+受到提示注入攻击的模型）。如果你看到此错误，该模型名称已不再
+支持。
 
-**Fix:**
-- Pick a **latest** model for the provider and update your config or model alias.
-- If you’re unsure which models are available, run `moltbot models list` or
-  `moltbot models scan` and choose a supported one.
-- Check gateway logs for the detailed failure reason.
+**修复：**
+- 为提供商选择 **最新** 模型并更新你的配置或模型别名。
+- 如果你不确定哪些模型可用，运行 `moltbot models list` 或
+  `moltbot models scan` 并选择一个支持的模型。
+- 检查网关日志以获取详细的失败原因。
 
-See also: [Models CLI](/cli/models) and [Model providers](/concepts/model-providers).
+另请参见：[模型 CLI](/cli/models) 和 [模型提供商](/concepts/model-providers)。
 
-### Messages Not Triggering
+### 消息未触发
 
-**Check 1:** Is the sender allowlisted?
+**检查 1：** 发送者是否在白名单中？
 ```bash
 moltbot status
 ```
-Look for `AllowFrom: ...` in the output.
+在输出中查找 `AllowFrom: ...`。
 
-**Check 2:** For group chats, is mention required?
+**检查 2：** 对于群聊，是否需要提及？
 ```bash
-# The message must match mentionPatterns or explicit mentions; defaults live in channel groups/guilds.
-# Multi-agent: `agents.list[].groupChat.mentionPatterns` overrides global patterns.
+# 消息必须匹配 mentionPatterns 或明确提及；默认值位于频道组/公会中。
+# 多代理：`agents.list[].groupChat.mentionPatterns` 覆盖全局模式。
 grep -n "agents\\|groupChat\\|mentionPatterns\\|channels\\.whatsapp\\.groups\\|channels\\.telegram\\.groups\\|channels\\.imessage\\.groups\\|channels\\.discord\\.guilds" \
   "${CLAWDBOT_CONFIG_PATH:-$HOME/.clawdbot/moltbot.json}"
 ```
 
-**Check 3:** Check the logs
+**检查 3：** 检查日志
 ```bash
 moltbot logs --follow
-# or if you want quick filters:
+# 或如果你想要快速过滤：
 tail -f "$(ls -t /tmp/moltbot/moltbot-*.log | head -1)" | grep "blocked\\|skip\\|unauthorized"
 ```
 
-### Pairing Code Not Arriving
+### 配对码未到达
 
-If `dmPolicy` is `pairing`, unknown senders should receive a code and their message is ignored until approved.
+如果 `dmPolicy` 是 `pairing`，未知发送者应该收到一个码，他们的消息会被忽略直到批准。
 
-**Check 1:** Is a pending request already waiting?
+**检查 1：** 是否已有待处理请求？
 ```bash
 moltbot pairing list <channel>
 ```
 
-Pending DM pairing requests are capped at **3 per channel** by default. If the list is full, new requests won’t generate a code until one is approved or expires.
+待处理 DM 配对请求默认限制为 **每频道 3 个**。如果列表已满，新请求不会生成码，直到其中一个被批准或过期。
 
-**Check 2:** Did the request get created but no reply was sent?
+**检查 2：** 请求是否已创建但没有发送回复？
 ```bash
 moltbot logs --follow | grep "pairing request"
 ```
 
-**Check 3:** Confirm `dmPolicy` isn’t `open`/`allowlist` for that channel.
+**检查 3：** 确认该频道的 `dmPolicy` 不是 `open`/`allowlist`。
 
-### Image + Mention Not Working
+### 图像 + 提及不起作用
 
-Known issue: When you send an image with ONLY a mention (no other text), WhatsApp sometimes doesn't include the mention metadata.
+已知问题：当你只发送带有提及（没有其他文本）的图像时，WhatsApp 有时不包含提及元数据。
 
-**Workaround:** Add some text with the mention:
-- ❌ `@clawd` + image
-- ✅ `@clawd check this` + image
+**解决方法：** 在提及中添加一些文本：
+- ❌ `@clawd` + 图像
+- ✅ `@clawd check this` + 图像
 
-### Session Not Resuming
+### 会话未恢复
 
-**Check 1:** Is the session file there?
+**检查 1：** 会话文件是否存在？
 ```bash
 ls -la ~/.clawdbot/agents/<agentId>/sessions/
 ```
 
-**Check 2:** Is the reset window too short?
+**检查 2：** 重置窗口是否太短？
 ```json
 {
   "session": {
     "reset": {
       "mode": "daily",
       "atHour": 4,
-      "idleMinutes": 10080  // 7 days
+      "idleMinutes": 10080  // 7 天
     }
   }
 }
 ```
 
-**Check 3:** Did someone send `/new`, `/reset`, or a reset trigger?
+**检查 3：** 是否有人发送了 `/new`、`/reset` 或重置触发器？
 
-### Agent Timing Out
+### 代理超时
 
-Default timeout is 30 minutes. For long tasks:
+默认超时为 30 分钟。对于长时间任务：
 
 ```json
 {
   "reply": {
-    "timeoutSeconds": 3600  // 1 hour
+    "timeoutSeconds": 3600  // 1 小时
   }
 }
 ```
 
-Or use the `process` tool to background long commands.
+或使用 `process` 工具将长时间命令后台化。
 
-### WhatsApp Disconnected
+### WhatsApp 断开连接
 
 ```bash
-# Check local status (creds, sessions, queued events)
+# 检查本地状态（凭据、会话、排队事件）
 moltbot status
-# Probe the running gateway + channels (WA connect + Telegram + Discord APIs)
+# 探测运行中的网关 + 通道（WA 连接 + Telegram + Discord API）
 moltbot status --deep
 
-# View recent connection events
+# 查看最近的连接事件
 moltbot logs --limit 200 | grep "connection\\|disconnect\\|logout"
 ```
 
-**Fix:** Usually reconnects automatically once the Gateway is running. If you’re stuck, restart the Gateway process (however you supervise it), or run it manually with verbose output:
+**修复：** 一旦网关运行通常会自动重新连接。如果你卡住了，重启网关进程（无论你如何监督它），或使用详细输出手动运行：
 
 ```bash
 moltbot gateway --verbose
 ```
 
-If you’re logged out / unlinked:
+如果你已登出/取消链接：
 
 ```bash
 moltbot channels logout
-trash "${CLAWDBOT_STATE_DIR:-$HOME/.clawdbot}/credentials" # if logout can't cleanly remove everything
-moltbot channels login --verbose       # re-scan QR
+trash "${CLAWDBOT_STATE_DIR:-$HOME/.clawdbot}/credentials" # 如果登出不能干净地移除所有内容
+moltbot channels login --verbose       # 重新扫描 QR
 ```
 
-### Media Send Failing
+### 媒体发送失败
 
-**Check 1:** Is the file path valid?
+**检查 1：** 文件路径是否有效？
 ```bash
 ls -la /path/to/your/image.jpg
 ```
 
-**Check 2:** Is it too large?
-- Images: max 6MB
-- Audio/Video: max 16MB  
-- Documents: max 100MB
+**检查 2：** 文件是否太大？
+- 图像：最大 6MB
+- 音频/视频：最大 16MB  
+- 文档：最大 100MB
 
-**Check 3:** Check media logs
+**检查 3：** 检查媒体日志
 ```bash
 grep "media\\|fetch\\|download" "$(ls -t /tmp/moltbot/moltbot-*.log | head -1)" | tail -20
 ```
 
-### High Memory Usage
+### 高内存使用率
 
-Moltbot keeps conversation history in memory.
+Moltbot 在内存中保持对话历史。
 
-**Fix:** Restart periodically or set session limits:
+**修复：** 定期重启或设置会话限制：
 ```json
 {
   "session": {
-    "historyLimit": 100  // Max messages to keep
+    "historyLimit": 100  // 保留的最大消息数
   }
 }
 ```
 
-## Common troubleshooting
+## 常见故障排除
 
-### “Gateway won’t start — configuration invalid”
+### "网关无法启动 — 配置无效"
 
-Moltbot now refuses to start when the config contains unknown keys, malformed values, or invalid types.
-This is intentional for safety.
+当配置包含未知键、格式错误的值或无效类型时，Moltbot 现在拒绝启动。
+这是出于安全考虑的故意行为。
 
-Fix it with Doctor:
+用 Doctor 修复它：
 ```bash
 moltbot doctor
 moltbot doctor --fix
 ```
 
-Notes:
-- `moltbot doctor` reports every invalid entry.
-- `moltbot doctor --fix` applies migrations/repairs and rewrites the config.
-- Diagnostic commands like `moltbot logs`, `moltbot health`, `moltbot status`, `moltbot gateway status`, and `moltbot gateway probe` still run even if the config is invalid.
+说明：
+- `moltbot doctor` 报告每个无效条目。
+- `moltbot doctor --fix` 应用迁移/修复并重写配置。
+- 即使配置无效，`moltbot logs`、`moltbot health`、`moltbot status`、`moltbot gateway status` 和 `moltbot gateway probe` 等诊断命令仍可运行。
 
-### “All models failed” — what should I check first?
+### "所有模型都失败了" — 我应该首先检查什么？
 
-- **Credentials** present for the provider(s) being tried (auth profiles + env vars).
-- **Model routing**: confirm `agents.defaults.model.primary` and fallbacks are models you can access.
-- **Gateway logs** in `/tmp/moltbot/…` for the exact provider error.
-- **Model status**: use `/model status` (chat) or `moltbot models status` (CLI).
+- **凭据** 是否为正在尝试的提供商提供（身份验证配置文件 + 环境变量）。
+- **模型路由**：确认 `agents.defaults.model.primary` 和备用项是你能访问的模型。
+- **网关日志** 在 `/tmp/moltbot/…` 中查找确切的提供商错误。
+- **模型状态**：使用 `/model status`（聊天）或 `moltbot models status`（CLI）。
 
-### I’m running on my personal WhatsApp number — why is self-chat weird?
+### 我在我的个人 WhatsApp 号码上运行 — 为什么自聊很奇怪？
 
-Enable self-chat mode and allowlist your own number:
+启用自聊模式并允许白名单你的号码：
 
 ```json5
 {
@@ -461,248 +461,248 @@ Enable self-chat mode and allowlist your own number:
 }
 ```
 
-See [WhatsApp setup](/channels/whatsapp).
+参见 [WhatsApp 设置](/channels/whatsapp)。
 
-### WhatsApp logged me out. How do I re‑auth?
+### WhatsApp 登出我了。我如何重新认证？
 
-Run the login command again and scan the QR code:
+再次运行登录命令并扫描 QR 码：
 
 ```bash
 moltbot channels login
 ```
 
-### Build errors on `main` — what’s the standard fix path?
+### `main` 上的构建错误 — 标准修复路径是什么？
 
 1) `git pull origin main && pnpm install`
 2) `moltbot doctor`
-3) Check GitHub issues or Discord
-4) Temporary workaround: check out an older commit
+3) 检查 GitHub 问题或 Discord
+4) 临时解决方法：检出较早的提交
 
-### npm install fails (allow-build-scripts / missing tar or yargs). What now?
+### npm install 失败（allow-build-scripts / 缺少 tar 或 yargs）。现在怎么办？
 
-If you’re running from source, use the repo’s package manager: **pnpm** (preferred).
-The repo declares `packageManager: "pnpm@…"`.
+如果你从源码运行，请使用仓库的包管理器：**pnpm**（首选）。
+仓库声明了 `packageManager: "pnpm@…"`。
 
-Typical recovery:
+典型恢复：
 ```bash
-git status   # ensure you’re in the repo root
+git status   # 确保你在仓库根目录
 pnpm install
 pnpm build
 moltbot doctor
 moltbot gateway restart
 ```
 
-Why: pnpm is the configured package manager for this repo.
+原因：pnpm 是此仓库配置的包管理器。
 
-### How do I switch between git installs and npm installs?
+### 如何在 git 安装和 npm 安装之间切换？
 
-Use the **website installer** and select the install method with a flag. It
-upgrades in place and rewrites the gateway service to point at the new install.
+使用 **网站安装程序** 并使用标志选择安装方法。它
+就地升级并将网关服务重写为指向新安装。
 
-Switch **to git install**:
+切换 **到 git 安装**：
 ```bash
 curl -fsSL https://molt.bot/install.sh | bash -s -- --install-method git --no-onboard
 ```
 
-Switch **to npm global**:
+切换 **到 npm 全局**：
 ```bash
 curl -fsSL https://molt.bot/install.sh | bash
 ```
 
-Notes:
-- The git flow only rebases if the repo is clean. Commit or stash changes first.
-- After switching, run:
+说明：
+- git 流程仅在仓库干净时才会变基。先提交或暂存更改。
+- 切换后，运行：
   ```bash
   moltbot doctor
   moltbot gateway restart
   ```
 
-### Telegram block streaming isn’t splitting text between tool calls. Why?
+### Telegram 块流在工具调用之间不分割文本。为什么？
 
-Block streaming only sends **completed text blocks**. Common reasons you see a single message:
-- `agents.defaults.blockStreamingDefault` is still `"off"`.
-- `channels.telegram.blockStreaming` is set to `false`.
-- `channels.telegram.streamMode` is `partial` or `block` **and draft streaming is active**
-  (private chat + topics). Draft streaming disables block streaming in that case.
-- Your `minChars` / coalesce settings are too high, so chunks get merged.
-- The model emits one large text block (no mid‑reply flush points).
+块流仅发送 **已完成的文本块**。你看到单条消息的常见原因：
+- `agents.defaults.blockStreamingDefault` 仍是 `"off"`。
+- `channels.telegram.blockStreaming` 设置为 `false`。
+- `channels.telegram.streamMode` 是 `partial` 或 `block` **且草稿流处于活动状态**
+  （私聊 + 主题）。在这种情况下，草稿流禁用块流。
+- 你的 `minChars` / 合并设置太高，所以块被合并。
+- 模型发出一个大文本块（没有中间回复刷新点）。
 
-Fix checklist:
-1) Put block streaming settings under `agents.defaults`, not the root.
-2) Set `channels.telegram.streamMode: "off"` if you want real multi‑message block replies.
-3) Use smaller chunk/coalesce thresholds while debugging.
+修复清单：
+1) 将块流设置放在 `agents.defaults` 下，而不是根目录。
+2) 如果你想要真正的多消息块回复，设置 `channels.telegram.streamMode: "off"`。
+3) 调试时使用较小的块/合并阈值。
 
-See [Streaming](/concepts/streaming).
+参见 [流](/concepts/streaming)。
 
-### Discord doesn’t reply in my server even with `requireMention: false`. Why?
+### Discord 在我的服务器中不回复，即使设置了 `requireMention: false`。为什么？
 
-`requireMention` only controls mention‑gating **after** the channel passes allowlists.
-By default `channels.discord.groupPolicy` is **allowlist**, so guilds must be explicitly enabled.
-If you set `channels.discord.guilds.<guildId>.channels`, only the listed channels are allowed; omit it to allow all channels in the guild.
+`requireMention` 仅在频道通过白名单后控制提及门控。
+默认情况下 `channels.discord.groupPolicy` 是 **白名单**，所以公会必须明确启用。
+如果你设置了 `channels.discord.guilds.<guildId>.channels`，只允许列出的频道；省略它以允许公会中的所有频道。
 
-Fix checklist:
-1) Set `channels.discord.groupPolicy: "open"` **or** add a guild allowlist entry (and optionally a channel allowlist).
-2) Use **numeric channel IDs** in `channels.discord.guilds.<guildId>.channels`.
-3) Put `requireMention: false` **under** `channels.discord.guilds` (global or per‑channel).
-   Top‑level `channels.discord.requireMention` is not a supported key.
-4) Ensure the bot has **Message Content Intent** and channel permissions.
-5) Run `moltbot channels status --probe` for audit hints.
+修复清单：
+1) 设置 `channels.discord.groupPolicy: "open"` **或** 添加公会白名单条目（可选频道白名单）。
+2) 在 `channels.discord.guilds.<guildId>.channels` 中使用 **数字频道 ID**。
+3) 将 `requireMention: false` 放在 `channels.discord.guilds` **下**（全局或按频道）。
+   顶级 `channels.discord.requireMention` 不是受支持的键。
+4) 确保机器人有 **消息内容意图** 和频道权限。
+5) 运行 `moltbot channels status --probe` 获取审计提示。
 
-Docs: [Discord](/channels/discord), [Channels troubleshooting](/channels/troubleshooting).
+文档：[Discord](/channels/discord)，[通道故障排除](/channels/troubleshooting)。
 
-### Cloud Code Assist API error: invalid tool schema (400). What now?
+### 云代码助手 API 错误：无效工具架构（400）。现在怎么办？
 
-This is almost always a **tool schema compatibility** issue. The Cloud Code Assist
-endpoint accepts a strict subset of JSON Schema. Moltbot scrubs/normalizes tool
-schemas in current `main`, but the fix is not in the last release yet (as of
-January 13, 2026).
+这几乎总是一个 **工具架构兼容性** 问题。云代码助手
+端点接受 JSON 架构的严格子集。Moltbot 在当前 `main` 中清理/规范化工具
+架构，但修复尚未包含在最新发布版中（截至
+2026年1月13日）。
 
-Fix checklist:
-1) **Update Moltbot**:
-   - If you can run from source, pull `main` and restart the gateway.
-   - Otherwise, wait for the next release that includes the schema scrubber.
-2) Avoid unsupported keywords like `anyOf/oneOf/allOf`, `patternProperties`,
-   `additionalProperties`, `minLength`, `maxLength`, `format`, etc.
-3) If you define custom tools, keep the top‑level schema as `type: "object"` with
-   `properties` and simple enums.
+修复清单：
+1) **更新 Moltbot**：
+   - 如果你能从源码运行，拉取 `main` 并重启网关。
+   - 否则，等待包含架构清理器的下次发布。
+2) 避免不支持的关键字如 `anyOf/oneOf/allOf`、`patternProperties`、
+   `additionalProperties`、`minLength`、`maxLength`、`format` 等。
+3) 如果你定义自定义工具，将顶层架构保持为 `type: "object"` 带
+   `properties` 和简单枚举。
 
-See [Tools](/tools) and [TypeBox schemas](/concepts/typebox).
+参见 [工具](/tools) 和 [TypeBox 架构](/concepts/typebox)。
 
-## macOS Specific Issues
+## macOS 特定问题
 
-### App Crashes when Granting Permissions (Speech/Mic)
+### 授予权限时应用程序崩溃（语音/麦克风）
 
-If the app disappears or shows "Abort trap 6" when you click "Allow" on a privacy prompt:
+如果你点击隐私提示上的"允许"时应用程序消失或显示"Abort trap 6"：
 
-**Fix 1: Reset TCC Cache**
+**修复 1：重置 TCC 缓存**
 ```bash
 tccutil reset All bot.molt.mac.debug
 ```
 
-**Fix 2: Force New Bundle ID**
-If resetting doesn't work, change the `BUNDLE_ID` in [`scripts/package-mac-app.sh`](https://github.com/moltbot/moltbot/blob/main/scripts/package-mac-app.sh) (e.g., add a `.test` suffix) and rebuild. This forces macOS to treat it as a new app.
+**修复 2：强制新捆绑 ID**
+如果重置不起作用，更改 [`scripts/package-mac-app.sh`](https://github.com/moltbot/moltbot/blob/main/scripts/package-mac-app.sh) 中的 `BUNDLE_ID`（例如，添加 `.test` 后缀）并重建。这强制 macOS 将其视为新应用程序。
 
-### Gateway stuck on "Starting..."
+### 网关卡在"启动中..."
 
-The app connects to a local gateway on port `18789`. If it stays stuck:
+应用程序连接到端口 `18789` 上的本地网关。如果它持续卡住：
 
-**Fix 1: Stop the supervisor (preferred)**
-If the gateway is supervised by launchd, killing the PID will just respawn it. Stop the supervisor first:
+**修复 1：停止监督程序（首选）**
+如果网关由 launchd 监督，杀死 PID 只会使它重生。先停止监督程序：
 ```bash
 moltbot gateway status
 moltbot gateway stop
-# Or: launchctl bootout gui/$UID/bot.molt.gateway (replace with bot.molt.<profile>; legacy com.clawdbot.* still works)
+# 或：launchctl bootout gui/$UID/bot.molt.gateway（替换为 bot.molt.<profile>；遗留的 com.clawdbot.* 仍有效）
 ```
 
-**Fix 2: Port is busy (find the listener)**
+**修复 2：端口忙（查找监听器）**
 ```bash
 lsof -nP -iTCP:18789 -sTCP:LISTEN
 ```
 
-If it’s an unsupervised process, try a graceful stop first, then escalate:
+如果是无人监督的进程，先尝试优雅停止，然后升级：
 ```bash
 kill -TERM <PID>
 sleep 1
-kill -9 <PID> # last resort
+kill -9 <PID> # 最后手段
 ```
 
-**Fix 3: Check the CLI install**
-Ensure the global `moltbot` CLI is installed and matches the app version:
+**修复 3：检查 CLI 安装**
+确保全局 `moltbot` CLI 已安装并与应用程序版本匹配：
 ```bash
 moltbot --version
 npm install -g moltbot@<version>
 ```
 
-## Debug Mode
+## 调试模式
 
-Get verbose logging:
+获取详细日志：
 
 ```bash
-# Turn on trace logging in config:
+# 在配置中打开跟踪日志：
 #   ${CLAWDBOT_CONFIG_PATH:-$HOME/.clawdbot/moltbot.json} -> { logging: { level: "trace" } }
 #
-# Then run verbose commands to mirror debug output to stdout:
+# 然后运行详细命令将调试输出镜像到标准输出：
 moltbot gateway --verbose
 moltbot channels login --verbose
 ```
 
-## Log Locations
+## 日志位置
 
-| Log | Location |
+| 日志 | 位置 |
 |-----|----------|
-| Gateway file logs (structured) | `/tmp/moltbot/moltbot-YYYY-MM-DD.log` (or `logging.file`) |
-| Gateway service logs (supervisor) | macOS: `$CLAWDBOT_STATE_DIR/logs/gateway.log` + `gateway.err.log` (default: `~/.clawdbot/logs/...`; profiles use `~/.clawdbot-<profile>/logs/...`)<br />Linux: `journalctl --user -u moltbot-gateway[-<profile>].service -n 200 --no-pager`<br />Windows: `schtasks /Query /TN "Moltbot Gateway (<profile>)" /V /FO LIST` |
-| Session files | `$CLAWDBOT_STATE_DIR/agents/<agentId>/sessions/` |
-| Media cache | `$CLAWDBOT_STATE_DIR/media/` |
-| Credentials | `$CLAWDBOT_STATE_DIR/credentials/` |
+| 网关文件日志（结构化） | `/tmp/moltbot/moltbot-YYYY-MM-DD.log`（或 `logging.file`） |
+| 网关服务日志（监督程序） | macOS：`$CLAWDBOT_STATE_DIR/logs/gateway.log` + `gateway.err.log`（默认：`~/.clawdbot/logs/...`；配置文件使用 `~/.clawdbot-<profile>/logs/...`）<br />Linux：`journalctl --user -u moltbot-gateway[-<profile>].service -n 200 --no-pager`<br />Windows：`schtasks /Query /TN "Moltbot Gateway (<profile>)" /V /FO LIST` |
+| 会话文件 | `$CLAWDBOT_STATE_DIR/agents/<agentId>/sessions/` |
+| 媒体缓存 | `$CLAWDBOT_STATE_DIR/media/` |
+| 凭据 | `$CLAWDBOT_STATE_DIR/credentials/` |
 
-## Health Check
+## 健康检查
 
 ```bash
-# Supervisor + probe target + config paths
+# 监督程序 + 探测目标 + 配置路径
 moltbot gateway status
-# Include system-level scans (legacy/extra services, port listeners)
+# 包括系统级扫描（遗留/额外服务，端口监听器）
 moltbot gateway status --deep
 
-# Is the gateway reachable?
+# 网关是否可达？
 moltbot health --json
-# If it fails, rerun with connection details:
+# 如果失败，使用连接详情重新运行：
 moltbot health --verbose
 
-# Is something listening on the default port?
+# 默认端口上是否有东西在监听？
 lsof -nP -iTCP:18789 -sTCP:LISTEN
 
-# Recent activity (RPC log tail)
+# 最近活动（RPC 日志尾部）
 moltbot logs --follow
-# Fallback if RPC is down
+# 如果 RPC 停止的后备方案
 tail -20 /tmp/moltbot/moltbot-*.log
 ```
 
-## Reset Everything
+## 重置一切
 
-Nuclear option:
+终极选项：
 
 ```bash
 moltbot gateway stop
-# If you installed a service and want a clean install:
+# 如果你安装了服务并希望干净安装：
 # moltbot gateway uninstall
 
 trash "${CLAWDBOT_STATE_DIR:-$HOME/.clawdbot}"
-moltbot channels login         # re-pair WhatsApp
-moltbot gateway restart           # or: moltbot gateway
+moltbot channels login         # 重新配对 WhatsApp
+moltbot gateway restart           # 或：moltbot gateway
 ```
 
-⚠️ This loses all sessions and requires re-pairing WhatsApp.
+⚠️ 这会丢失所有会话并需要重新配对 WhatsApp。
 
-## Getting Help
+## 获取帮助
 
-1. Check logs first: `/tmp/moltbot/` (default: `moltbot-YYYY-MM-DD.log`, or your configured `logging.file`)
-2. Search existing issues on GitHub
-3. Open a new issue with:
-   - Moltbot version
-   - Relevant log snippets
-   - Steps to reproduce
-   - Your config (redact secrets!)
+1. 首先检查日志：`/tmp/moltbot/`（默认：`moltbot-YYYY-MM-DD.log`，或你配置的 `logging.file`）
+2. 搜索 GitHub 上的现有问题
+3. 开启新问题，包含：
+   - Moltbot 版本
+   - 相关日志片段
+   - 重现步骤
+   - 你的配置（脱敏密钥！）
 
 ---
 
-*"Have you tried turning it off and on again?"* — Every IT person ever
+*"你试过关闭再打开吗？"* — 每个 IT 人员都说过
 
 🦞🔧
 
-### Browser Not Starting (Linux)
+### 浏览器未启动（Linux）
 
-If you see `"Failed to start Chrome CDP on port 18800"`:
+如果你看到 `"Failed to start Chrome CDP on port 18800"`：
 
-**Most likely cause:** Snap-packaged Chromium on Ubuntu.
+**最可能的原因：** Ubuntu 上的 Snap 打包的 Chromium。
 
-**Quick fix:** Install Google Chrome instead:
+**快速修复：** 改为安装 Google Chrome：
 ```bash
 wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
 sudo dpkg -i google-chrome-stable_current_amd64.deb
 ```
 
-Then set in config:
+然后在配置中设置：
 ```json
 {
   "browser": {
@@ -711,4 +711,4 @@ Then set in config:
 }
 ```
 
-**Full guide:** See [browser-linux-troubleshooting](/tools/browser-linux-troubleshooting)
+**完整指南：** 参见 [browser-linux-troubleshooting](/tools/browser-linux-troubleshooting)

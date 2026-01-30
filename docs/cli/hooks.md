@@ -1,290 +1,290 @@
 ---
-summary: "CLI reference for `moltbot hooks` (agent hooks)"
+summary: "`moltbot hooks` 的 CLI 参考（智能体钩子）"
 read_when:
-  - You want to manage agent hooks
-  - You want to install or update hooks
+  - 您想要管理智能体钩子
+  - 您想要安装或更新钩子
 ---
 
 # `moltbot hooks`
 
-Manage agent hooks (event-driven automations for commands like `/new`, `/reset`, and gateway startup).
+管理智能体钩子（用于 `/new`、`/reset` 和网关启动等命令的事件驱动自动化）。
 
-Related:
-- Hooks: [Hooks](/hooks)
-- Plugin hooks: [Plugins](/plugin#plugin-hooks)
+相关：
+- 钩子：[钩子](/hooks)
+- 插件钩子：[插件](/plugin#plugin-hooks)
 
-## List All Hooks
+## 列出所有钩子
 
 ```bash
 moltbot hooks list
 ```
 
-List all discovered hooks from workspace, managed, and bundled directories.
+列出工作空间、托管和捆绑目录中发现的所有钩子。
 
-**Options:**
-- `--eligible`: Show only eligible hooks (requirements met)
-- `--json`: Output as JSON
-- `-v, --verbose`: Show detailed information including missing requirements
+**选项：**
+- `--eligible`: 仅显示符合条件的钩子（满足要求）
+- `--json`: 以 JSON 输出
+- `-v, --verbose`: 显示详细信息，包括缺失的要求
 
-**Example output:**
+**示例输出：**
 
 ```
-Hooks (4/4 ready)
+钩子 (4/4 就绪)
 
-Ready:
-  🚀 boot-md ✓ - Run BOOT.md on gateway startup
-  📝 command-logger ✓ - Log all command events to a centralized audit file
-  💾 session-memory ✓ - Save session context to memory when /new command is issued
-  😈 soul-evil ✓ - Swap injected SOUL content during a purge window or by random chance
+就绪:
+  🚀 boot-md ✓ - 在网关启动时运行 BOOT.md
+  📝 command-logger ✓ - 将所有命令事件记录到集中审核文件
+  💾 session-memory ✓ - 发出 /new 命令时将会话上下文保存到内存
+  😈 soul-evil ✓ - 在清除窗口期间或随机机会期间交换注入的 SOUL 内容
 ```
 
-**Example (verbose):**
+**示例（详细）：**
 
 ```bash
 moltbot hooks list --verbose
 ```
 
-Shows missing requirements for ineligible hooks.
+显示不符合条件钩子的缺失要求。
 
-**Example (JSON):**
+**示例（JSON）：**
 
 ```bash
 moltbot hooks list --json
 ```
 
-Returns structured JSON for programmatic use.
+返回结构化 JSON 以供编程使用。
 
-## Get Hook Information
+## 获取钩子信息
 
 ```bash
 moltbot hooks info <name>
 ```
 
-Show detailed information about a specific hook.
+显示特定钩子的详细信息。
 
-**Arguments:**
-- `<name>`: Hook name (e.g., `session-memory`)
+**参数：**
+- `<name>`: 钩子名称（例如，`session-memory`）
 
-**Options:**
-- `--json`: Output as JSON
+**选项：**
+- `--json`: 以 JSON 输出
 
-**Example:**
+**示例：**
 
 ```bash
 moltbot hooks info session-memory
 ```
 
-**Output:**
+**输出：**
 
 ```
-💾 session-memory ✓ Ready
+💾 session-memory ✓ 就绪
 
-Save session context to memory when /new command is issued
+发出 /new 命令时将会话上下文保存到内存
 
-Details:
-  Source: moltbot-bundled
-  Path: /path/to/moltbot/hooks/bundled/session-memory/HOOK.md
-  Handler: /path/to/moltbot/hooks/bundled/session-memory/handler.ts
-  Homepage: https://docs.molt.bot/hooks#session-memory
-  Events: command:new
+详情:
+  源: moltbot-bundled
+  路径: /path/to/moltbot/hooks/bundled/session-memory/HOOK.md
+  处理程序: /path/to/moltbot/hooks/bundled/session-memory/handler.ts
+  主页: https://docs.molt.bot/hooks#session-memory
+  事件: command:new
 
-Requirements:
-  Config: ✓ workspace.dir
+要求:
+  配置: ✓ workspace.dir
 ```
 
-## Check Hooks Eligibility
+## 检查钩子适用性
 
 ```bash
 moltbot hooks check
 ```
 
-Show summary of hook eligibility status (how many are ready vs. not ready).
+显示钩子适用性状态摘要（有多少就绪与未就绪）。
 
-**Options:**
-- `--json`: Output as JSON
+**选项：**
+- `--json`: 以 JSON 输出
 
-**Example output:**
+**示例输出：**
 
 ```
-Hooks Status
+钩子状态
 
-Total hooks: 4
-Ready: 4
-Not ready: 0
+总钩子数: 4
+就绪: 4
+未就绪: 0
 ```
 
-## Enable a Hook
+## 启用钩子
 
 ```bash
 moltbot hooks enable <name>
 ```
 
-Enable a specific hook by adding it to your config (`~/.clawdbot/config.json`).
+通过添加到您的配置（`~/.clawdbot/config.json`）来启用特定钩子。
 
-**Note:** Hooks managed by plugins show `plugin:<id>` in `moltbot hooks list` and
-can’t be enabled/disabled here. Enable/disable the plugin instead.
+**注意：** 插件管理的钩子在 `moltbot hooks list` 中显示为 `plugin:<id>`，
+不能在此处启用/禁用。请启用/禁用插件本身。
 
-**Arguments:**
-- `<name>`: Hook name (e.g., `session-memory`)
+**参数：**
+- `<name>`: 钩子名称（例如，`session-memory`）
 
-**Example:**
+**示例：**
 
 ```bash
 moltbot hooks enable session-memory
 ```
 
-**Output:**
+**输出：**
 
 ```
-✓ Enabled hook: 💾 session-memory
+✓ 已启用钩子: 💾 session-memory
 ```
 
-**What it does:**
-- Checks if hook exists and is eligible
-- Updates `hooks.internal.entries.<name>.enabled = true` in your config
-- Saves config to disk
+**功能：**
+- 检查钩子是否存在并符合条件
+- 在您的配置中更新 `hooks.internal.entries.<name>.enabled = true`
+- 将配置保存到磁盘
 
-**After enabling:**
-- Restart the gateway so hooks reload (menu bar app restart on macOS, or restart your gateway process in dev).
+**启用后：**
+- 重启网关以便钩子重新加载（macOS 上的菜单栏应用重启，或在开发环境中重启您的网关进程）。
 
-## Disable a Hook
+## 禁用钩子
 
 ```bash
 moltbot hooks disable <name>
 ```
 
-Disable a specific hook by updating your config.
+通过更新您的配置来禁用特定钩子。
 
-**Arguments:**
-- `<name>`: Hook name (e.g., `command-logger`)
+**参数：**
+- `<name>`: 钩子名称（例如，`command-logger`）
 
-**Example:**
+**示例：**
 
 ```bash
 moltbot hooks disable command-logger
 ```
 
-**Output:**
+**输出：**
 
 ```
-⏸ Disabled hook: 📝 command-logger
+⏸ 已禁用钩子: 📝 command-logger
 ```
 
-**After disabling:**
-- Restart the gateway so hooks reload
+**禁用后：**
+- 重启网关以便钩子重新加载
 
-## Install Hooks
+## 安装钩子
 
 ```bash
 moltbot hooks install <path-or-spec>
 ```
 
-Install a hook pack from a local folder/archive or npm.
+从本地文件夹/存档或 npm 安装钩子包。
 
-**What it does:**
-- Copies the hook pack into `~/.clawdbot/hooks/<id>`
-- Enables the installed hooks in `hooks.internal.entries.*`
-- Records the install under `hooks.internal.installs`
+**功能：**
+- 将钩子包复制到 `~/.clawdbot/hooks/<id>`
+- 在 `hooks.internal.entries.*` 中启用已安装的钩子
+- 在 `hooks.internal.installs` 下记录安装
 
-**Options:**
-- `-l, --link`: Link a local directory instead of copying (adds it to `hooks.internal.load.extraDirs`)
+**选项：**
+- `-l, --link`: 链接本地目录而不是复制（将其添加到 `hooks.internal.load.extraDirs`）
 
-**Supported archives:** `.zip`, `.tgz`, `.tar.gz`, `.tar`
+**支持的存档格式：** `.zip`、`.tgz`、`.tar.gz`、`.tar`
 
-**Examples:**
+**示例：**
 
 ```bash
-# Local directory
+# 本地目录
 moltbot hooks install ./my-hook-pack
 
-# Local archive
+# 本地存档
 moltbot hooks install ./my-hook-pack.zip
 
-# NPM package
+# NPM 包
 moltbot hooks install @moltbot/my-hook-pack
 
-# Link a local directory without copying
+# 链接本地目录而不复制
 moltbot hooks install -l ./my-hook-pack
 ```
 
-## Update Hooks
+## 更新钩子
 
 ```bash
 moltbot hooks update <id>
 moltbot hooks update --all
 ```
 
-Update installed hook packs (npm installs only).
+更新已安装的钩子包（仅限 npm 安装）。
 
-**Options:**
-- `--all`: Update all tracked hook packs
-- `--dry-run`: Show what would change without writing
+**选项：**
+- `--all`: 更新所有跟踪的钩子包
+- `--dry-run`: 显示将要更改的内容但不写入
 
-## Bundled Hooks
+## 捆绑钩子
 
 ### session-memory
 
-Saves session context to memory when you issue `/new`.
+在您发出 `/new` 时将会话上下文保存到内存。
 
-**Enable:**
+**启用：**
 
 ```bash
 moltbot hooks enable session-memory
 ```
 
-**Output:** `~/clawd/memory/YYYY-MM-DD-slug.md`
+**输出：** `~/clawd/memory/YYYY-MM-DD-slug.md`
 
-**See:** [session-memory documentation](/hooks#session-memory)
+**参见：** [session-memory 文档](/hooks#session-memory)
 
 ### command-logger
 
-Logs all command events to a centralized audit file.
+将所有命令事件记录到集中审核文件。
 
-**Enable:**
+**启用：**
 
 ```bash
 moltbot hooks enable command-logger
 ```
 
-**Output:** `~/.clawdbot/logs/commands.log`
+**输出：** `~/.clawdbot/logs/commands.log`
 
-**View logs:**
+**查看日志：**
 
 ```bash
-# Recent commands
+# 最近的命令
 tail -n 20 ~/.clawdbot/logs/commands.log
 
-# Pretty-print
+# 美化打印
 cat ~/.clawdbot/logs/commands.log | jq .
 
-# Filter by action
+# 按操作筛选
 grep '"action":"new"' ~/.clawdbot/logs/commands.log | jq .
 ```
 
-**See:** [command-logger documentation](/hooks#command-logger)
+**参见：** [command-logger 文档](/hooks#command-logger)
 
 ### soul-evil
 
-Swaps injected `SOUL.md` content with `SOUL_EVIL.md` during a purge window or by random chance.
+在清除窗口期间或随机机会期间将注入的 `SOUL.md` 内容与 `SOUL_EVIL.md` 交换。
 
-**Enable:**
+**启用：**
 
 ```bash
 moltbot hooks enable soul-evil
 ```
 
-**See:** [SOUL Evil Hook](/hooks/soul-evil)
+**参见：** [SOUL Evil 钩子](/hooks/soul-evil)
 
 ### boot-md
 
-Runs `BOOT.md` when the gateway starts (after channels start).
+在网关启动时运行 `BOOT.md`（在通道启动后）。
 
-**Events**: `gateway:startup`
+**事件**: `gateway:startup`
 
-**Enable**:
+**启用**:
 
 ```bash
 moltbot hooks enable boot-md
 ```
 
-**See:** [boot-md documentation](/hooks#boot-md)
+**参见：** [boot-md 文档](/hooks#boot-md)

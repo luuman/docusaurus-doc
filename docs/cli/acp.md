@@ -7,7 +7,7 @@ read_when:
 
 # acp
 
-运行与 Moltbot 网关通信的 ACP（代理客户端协议）桥接器。
+运行与 Moltbot 网关通信的 ACP（智能体客户端协议）桥接器。
 
 该命令通过 stdio 为 IDE 发送 ACP 并通过 WebSocket 将提示转发到网关。
 它将 ACP 会话映射到网关会话密钥。
@@ -47,7 +47,7 @@ moltbot acp client --server "node" --server-args moltbot.mjs acp --url ws://127.
 
 ## 如何使用
 
-当 IDE（或其他客户端）使用代理客户端协议并且您希望
+当 IDE（或其他客户端）使用智能体客户端协议并且您希望
 它驱动 Moltbot 网关会话时，请使用 ACP。
 
 1. 确保网关正在运行（本地或远程）。
@@ -67,11 +67,11 @@ moltbot config set gateway.remote.token <token>
 moltbot acp --url wss://gateway-host:18789 --token <token>
 ```
 
-## 选择代理
+## 选择智能体
 
-ACP 不直接选择代理。它按网关会话密钥路由。
+ACP 不直接选择智能体。它按网关会话密钥路由。
 
-使用代理范围的会话密钥来定位特定代理：
+使用智能体范围的会话密钥来定位特定智能体：
 
 ```bash
 moltbot acp --session agent:main:main
@@ -79,13 +79,13 @@ moltbot acp --session agent:design:main
 moltbot acp --session agent:qa:bug-123
 ```
 
-每个 ACP 会话映射到单个网关会话密钥。一个代理可以有多个
+每个 ACP 会话映射到单个网关会话密钥。一个智能体可以有多个
 会话；ACP 默认使用隔离的 `acp:<uuid>` 会话，除非您覆盖
 密钥或标签。
 
 ## Zed 编辑器设置
 
-在 `~/.config/zed/settings.json` 中添加自定义 ACP 代理（或使用 Zed 的设置界面）：
+在 `~/.config/zed/settings.json` 中添加自定义 ACP 智能体（或使用 Zed 的设置界面）：
 
 ```json
 {
@@ -100,7 +100,7 @@ moltbot acp --session agent:qa:bug-123
 }
 ```
 
-要定位特定网关或代理：
+要定位特定网关或智能体：
 
 ```json
 {
@@ -120,7 +120,7 @@ moltbot acp --session agent:qa:bug-123
 }
 ```
 
-在 Zed 中，打开代理面板并选择 "Moltbot ACP" 以启动线程。
+在 Zed 中，打开智能体面板并选择 "Moltbot ACP" 以启动线程。
 
 ## 会话映射
 
@@ -164,3 +164,7 @@ moltbot acp --session agent:qa:bug-123
 - `--server-args <args...>`: 传递给 ACP 服务器的额外参数。
 - `--server-verbose`: 启用 ACP 服务器上的详细日志记录。
 - `--verbose, -v`: 详细的客户端日志记录。
+
+## 翻译说明
+
+此文档已翻译为中文，保留了原有的技术术语和命令格式。

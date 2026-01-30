@@ -1,162 +1,162 @@
 ---
-summary: "Bonjour/mDNS discovery + debugging (Gateway beacons, clients, and common failure modes)"
+summary: "Bonjour/mDNS 发现 + 调试（网关信标、客户端和常见故障模式）"
 read_when:
-  - Debugging Bonjour discovery issues on macOS/iOS
-  - Changing mDNS service types, TXT records, or discovery UX
+  - 调试 macOS/iOS 上的 Bonjour 发现问题
+  - 更改 mDNS 服务类型、TXT 记录或发现用户体验
 ---
-# Bonjour / mDNS discovery
+# Bonjour / mDNS 发现
 
-Moltbot uses Bonjour (mDNS / DNS‑SD) as a **LAN‑only convenience** to discover
-an active Gateway (WebSocket endpoint). It is best‑effort and does **not** replace SSH or
-Tailnet-based connectivity.
+Moltbot 使用 Bonjour (mDNS / DNS‑SD) 作为 **仅局域网的便利方式** 来发现
+活动网关（WebSocket 端点）。这是尽力而为的，**不会** 替代基于 SSH 或
+Tailnet 的连接。
 
-## Wide‑area Bonjour (Unicast DNS‑SD) over Tailscale
+## 通过 Tailscale 的广域 Bonjour（单播 DNS‑SD）
 
-If the node and gateway are on different networks, multicast mDNS won’t cross the
-boundary. You can keep the same discovery UX by switching to **unicast DNS‑SD**
-("Wide‑Area Bonjour") over Tailscale.
+如果节点和网关在不同的网络上，多播 mDNS 不会跨越
+边界。您可以通过切换到通过 Tailscale 的 **单播 DNS‑SD**
+（"广域 Bonjour"）来保持相同的发现用户体验。
 
-High‑level steps:
+高级步骤：
 
-1) Run a DNS server on the gateway host (reachable over Tailnet).
-2) Publish DNS‑SD records for `_moltbot-gw._tcp` under a dedicated zone
-   (example: `moltbot.internal.`).
-3) Configure Tailscale **split DNS** so `moltbot.internal` resolves via that
-   DNS server for clients (including iOS).
+1) 在网关主机上运行 DNS 服务器（可通过 Tailnet 访问）。
+2) 在专用区域下发布 `_moltbot-gw._tcp` 的 DNS‑SD 记录
+   （示例：`moltbot.internal.`）。
+3) 配置 Tailscale **分段 DNS**，使 `moltbot.internal` 通过该
+   DNS 服务器为客户端（包括 iOS）解析。
 
-Moltbot standardizes on `moltbot.internal.` for this mode. iOS/Android nodes
-browse both `local.` and `moltbot.internal.` automatically.
+Moltbot 在这种模式下标准化使用 `moltbot.internal.`。iOS/Android 节点
+自动浏览 `local.` 和 `moltbot.internal.`。
 
-### Gateway config (recommended)
+### 网关配置（推荐）
 
 ```json5
 {
-  gateway: { bind: "tailnet" }, // tailnet-only (recommended)
-  discovery: { wideArea: { enabled: true } } // enables moltbot.internal DNS-SD publishing
+  gateway: { bind: "tailnet" }, // 仅 tailnet（推荐）
+  discovery: { wideArea: { enabled: true } } // 启用 moltbot.internal DNS-SD 发布
 }
 ```
 
-### One‑time DNS server setup (gateway host)
+### 一次性 DNS 服务器设置（网关主机）
 
 ```bash
 moltbot dns setup --apply
 ```
 
-This installs CoreDNS and configures it to:
-- listen on port 53 only on the gateway’s Tailscale interfaces
-- serve `moltbot.internal.` from `~/.clawdbot/dns/moltbot.internal.db`
+这将安装 CoreDNS 并配置它：
+- 仅在网关的 Tailscale 接口上监听端口 53
+- 从 `~/.clawdbot/dns/moltbot.internal.db` 服务 `moltbot.internal.`
 
-Validate from a tailnet‑connected machine:
+从连接到 tailnet 的机器上验证：
 
 ```bash
 dns-sd -B _moltbot-gw._tcp moltbot.internal.
 dig @<TAILNET_IPV4> -p 53 _moltbot-gw._tcp.clawdbot.internal PTR +short
 ```
 
-### Tailscale DNS settings
+### Tailscale DNS 设置
 
-In the Tailscale admin console:
+在 Tailscale 管理控制台中：
 
-- Add a nameserver pointing at the gateway’s tailnet IP (UDP/TCP 53).
-- Add split DNS so the domain `moltbot.internal` uses that nameserver.
+- 添加指向网关 tailnet IP 的域名服务器（UDP/TCP 53）。
+- 添加分段 DNS，使域名 `moltbot.internal` 使用该域名服务器。
 
-Once clients accept tailnet DNS, iOS nodes can browse
-`_moltbot-gw._tcp` in `moltbot.internal.` without multicast.
+一旦客户端接受 tailnet DNS，iOS 节点就可以在 `moltbot.internal.` 中浏览
+`_moltbot-gw._tcp` 而无需多播。
 
-### Gateway listener security (recommended)
+### 网关监听器安全性（推荐）
 
-The Gateway WS port (default `18789`) binds to loopback by default. For LAN/tailnet
-access, bind explicitly and keep auth enabled.
+网关 WS 端口（默认 `18789`）默认绑定到环回地址。对于 LAN/tailnet
+访问，明确绑定并保持认证启用。
 
-For tailnet‑only setups:
-- Set `gateway.bind: "tailnet"` in `~/.clawdbot/moltbot.json`.
-- Restart the Gateway (or restart the macOS menubar app).
+对于仅 tailnet 设置：
+- 在 `~/.clawdbot/moltbot.json` 中设置 `gateway.bind: "tailnet"`。
+- 重启网关（或重启 macOS 菜单栏应用）。
 
-## What advertises
+## 什么进行广播
 
-Only the Gateway advertises `_moltbot-gw._tcp`.
+只有网关广播 `_moltbot-gw._tcp`。
 
-## Service types
+## 服务类型
 
-- `_moltbot-gw._tcp` — gateway transport beacon (used by macOS/iOS/Android nodes).
+- `_moltbot-gw._tcp` — 网关传输信标（由 macOS/iOS/Android 节点使用）。
 
-## TXT keys (non‑secret hints)
+## TXT 键（非秘密提示）
 
-The Gateway advertises small non‑secret hints to make UI flows convenient:
+网关广播小型非秘密提示以使 UI 流程更方便：
 
 - `role=gateway`
-- `displayName=<friendly name>`
-- `lanHost=<hostname>.local`
-- `gatewayPort=<port>` (Gateway WS + HTTP)
-- `gatewayTls=1` (only when TLS is enabled)
-- `gatewayTlsSha256=<sha256>` (only when TLS is enabled and fingerprint is available)
-- `canvasPort=<port>` (only when the canvas host is enabled; default `18793`)
-- `sshPort=<port>` (defaults to 22 when not overridden)
+- `displayName=<友好名称>`
+- `lanHost=<主机名>.local`
+- `gatewayPort=<端口>`（网关 WS + HTTP）
+- `gatewayTls=1`（仅在启用 TLS 时）
+- `gatewayTlsSha256=<sha256>`（仅在启用 TLS 且指纹可用时）
+- `canvasPort=<端口>`（仅在启用画布主机时；默认 `18793`）
+- `sshPort=<端口>`（未覆盖时默认为 22）
 - `transport=gateway`
-- `cliPath=<path>` (optional; absolute path to a runnable `moltbot` entrypoint)
-- `tailnetDns=<magicdns>` (optional hint when Tailnet is available)
+- `cliPath=<路径>`（可选；可运行 `moltbot` 入口点的绝对路径）
+- `tailnetDns=<magicdns>`（可用时的可选提示）
 
-## Debugging on macOS
+## 在 macOS 上调试
 
-Useful built‑in tools:
+有用的内置工具：
 
-- Browse instances:
+- 浏览实例：
   ```bash
   dns-sd -B _moltbot-gw._tcp local.
   ```
-- Resolve one instance (replace `<instance>`):
+- 解析一个实例（替换 `<instance>`）：
   ```bash
   dns-sd -L "<instance>" _moltbot-gw._tcp local.
   ```
 
-If browsing works but resolving fails, you’re usually hitting a LAN policy or
-mDNS resolver issue.
+如果浏览工作但解析失败，通常会遇到 LAN 策略或
+mDNS 解析器问题。
 
-## Debugging in Gateway logs
+## 在网关日志中调试
 
-The Gateway writes a rolling log file (printed on startup as
-`gateway log file: ...`). Look for `bonjour:` lines, especially:
+网关写入滚动日志文件（在启动时打印为
+`gateway log file: ...`）。查找 `bonjour:` 行，特别是：
 
 - `bonjour: advertise failed ...`
 - `bonjour: ... name conflict resolved` / `hostname conflict resolved`
 - `bonjour: watchdog detected non-announced service ...`
 
-## Debugging on iOS node
+## 在 iOS 节点上调试
 
-The iOS node uses `NWBrowser` to discover `_moltbot-gw._tcp`.
+iOS 节点使用 `NWBrowser` 来发现 `_moltbot-gw._tcp`。
 
-To capture logs:
-- Settings → Gateway → Advanced → **Discovery Debug Logs**
-- Settings → Gateway → Advanced → **Discovery Logs** → reproduce → **Copy**
+要捕获日志：
+- 设置 → 网关 → 高级 → **发现调试日志**
+- 设置 → 网关 → 高级 → **发现日志** → 复现 → **复制**
 
-The log includes browser state transitions and result‑set changes.
+日志包括浏览器状态转换和结果集更改。
 
-## Common failure modes
+## 常见故障模式
 
-- **Bonjour doesn’t cross networks**: use Tailnet or SSH.
-- **Multicast blocked**: some Wi‑Fi networks disable mDNS.
-- **Sleep / interface churn**: macOS may temporarily drop mDNS results; retry.
-- **Browse works but resolve fails**: keep machine names simple (avoid emojis or
-  punctuation), then restart the Gateway. The service instance name derives from
-  the host name, so overly complex names can confuse some resolvers.
+- **Bonjour 不跨网络**：使用 Tailnet 或 SSH。
+- **多播被阻止**：某些 Wi‑Fi 网络禁用 mDNS。
+- **睡眠 / 接口波动**：macOS 可能暂时丢弃 mDNS 结果；重试。
+- **浏览工作但解析失败**：保持机器名称简单（避免表情符号或
+  标点符号），然后重启网关。服务实例名称来自
+  主机名，因此过于复杂的名称可能会混淆某些解析器。
 
-## Escaped instance names (`\032`)
+## 转义的实例名称 (`\032`)
 
-Bonjour/DNS‑SD often escapes bytes in service instance names as decimal `\DDD`
-sequences (e.g. spaces become `\032`).
+Bonjour/DNS‑SD 经常将服务实例名称中的字节转义为十进制 `\DDD`
+序列（例如空格变成 `\032`）。
 
-- This is normal at the protocol level.
-- UIs should decode for display (iOS uses `BonjourEscapes.decode`).
+- 这在协议级别是正常的。
+- UI 应解码以显示（iOS 使用 `BonjourEscapes.decode`）。
 
-## Disabling / configuration
+## 禁用 / 配置
 
-- `CLAWDBOT_DISABLE_BONJOUR=1` disables advertising.
-- `gateway.bind` in `~/.clawdbot/moltbot.json` controls the Gateway bind mode.
-- `CLAWDBOT_SSH_PORT` overrides the SSH port advertised in TXT.
-- `CLAWDBOT_TAILNET_DNS` publishes a MagicDNS hint in TXT.
-- `CLAWDBOT_CLI_PATH` overrides the advertised CLI path.
+- `CLAWDBOT_DISABLE_BONJOUR=1` 禁用广播。
+- `~/.clawdbot/moltbot.json` 中的 `gateway.bind` 控制网关绑定模式。
+- `CLAWDBOT_SSH_PORT` 覆盖在 TXT 中广播的 SSH 端口。
+- `CLAWDBOT_TAILNET_DNS` 在 TXT 中发布 MagicDNS 提示。
+- `CLAWDBOT_CLI_PATH` 覆盖广播的 CLI 路径。
 
-## Related docs
+## 相关文档
 
-- Discovery policy and transport selection: [Discovery](/gateway/discovery)
-- Node pairing + approvals: [Gateway pairing](/gateway/pairing)
+- 发现策略和传输选择：[发现](/gateway/discovery)
+- 节点配对 + 批准：[网关配对](/gateway/pairing)

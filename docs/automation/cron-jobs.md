@@ -1,286 +1,285 @@
 ---
-summary: "Cron jobs + wakeups for the Gateway scheduler"
+summary: "网关调度程序的 Cron 作业和唤醒功能"
 read_when:
-  - Scheduling background jobs or wakeups
-  - Wiring automation that should run with or alongside heartbeats
-  - Deciding between heartbeat and cron for scheduled tasks
+  - 安排后台作业或唤醒
+  - 连接应与心跳同时运行或独立运行的自动化
+  - 在心跳和 cron 之间为计划任务做决定
 ---
-# Cron jobs (Gateway scheduler)
+# Cron 作业（网关调度程序）
 
-> **Cron vs Heartbeat?** See [Cron vs Heartbeat](/automation/cron-vs-heartbeat) for guidance on when to use each.
+> **Cron 与心跳？** 请参阅 [Cron 与心跳](/automation/cron-vs-heartbeat) 了解何时使用每种方法的指导。
 
-Cron is the Gateway’s built-in scheduler. It persists jobs, wakes the agent at
-the right time, and can optionally deliver output back to a chat.
+Cron 是网关内置的调度程序。它持久化作业，在正确的时间唤醒代理，
+并且可以选择将输出返回到聊天中。
 
-If you want *“run this every morning”* or *“poke the agent in 20 minutes”*,
-cron is the mechanism.
+如果您想要 *“每天早上运行这个”* 或 *“20 分钟后唤醒代理”*，
+cron 就是机制。
 
-## TL;DR
-- Cron runs **inside the Gateway** (not inside the model).
-- Jobs persist under `~/.clawdbot/cron/` so restarts don’t lose schedules.
-- Two execution styles:
-  - **Main session**: enqueue a system event, then run on the next heartbeat.
-  - **Isolated**: run a dedicated agent turn in `cron:<jobId>`, optionally deliver output.
-- Wakeups are first-class: a job can request “wake now” vs “next heartbeat”.
+## 概要
+- Cron 在 **网关内部** 运行（不在模型内部）。
+- 作业持久化存储在 `~/.clawdbot/cron/` 中，因此重启不会丢失计划。
+- 两种执行方式：
+  - **主会话**：排队系统事件，然后在下次心跳时运行。
+  - **隔离**：在 `cron:<jobId>` 中运行专用代理回合，可选择传递输出。
+- 唤醒是一等公民：作业可以请求"立即唤醒"与"下次心跳"。
 
-## Beginner-friendly overview
-Think of a cron job as: **when** to run + **what** to do.
+## 初学者友好概述
+将 cron 作业想象为：**何时**运行 + **做什么**。
 
-1) **Choose a schedule**
-   - One-shot reminder → `schedule.kind = "at"` (CLI: `--at`)
-   - Repeating job → `schedule.kind = "every"` or `schedule.kind = "cron"`
-   - If your ISO timestamp omits a timezone, it is treated as **UTC**.
+1) **选择一个计划**
+   - 一次性提醒 → `schedule.kind = "at"`（CLI：`--at`）
+   - 重复作业 → `schedule.kind = "every"` 或 `schedule.kind = "cron"`
+   - 如果您的 ISO 时间戳省略了时区，则被视为 **UTC**。
 
-2) **Choose where it runs**
-   - `sessionTarget: "main"` → run during the next heartbeat with main context.
-   - `sessionTarget: "isolated"` → run a dedicated agent turn in `cron:<jobId>`.
+2) **选择运行位置**
+   - `sessionTarget: "main"` → 在下次心跳期间使用主上下文运行。
+   - `sessionTarget: "isolated"` → 在 `cron:<jobId>` 中运行专用代理回合。
 
-3) **Choose the payload**
-   - Main session → `payload.kind = "systemEvent"`
-   - Isolated session → `payload.kind = "agentTurn"`
+3) **选择有效载荷**
+   - 主会话 → `payload.kind = "systemEvent"`
+   - 隔离会话 → `payload.kind = "agentTurn"`
 
-Optional: `deleteAfterRun: true` removes successful one-shot jobs from the store.
+可选：`deleteAfterRun: true` 从存储中删除成功的一次性作业。
 
-## Concepts
+## 概念
 
-### Jobs
-A cron job is a stored record with:
-- a **schedule** (when it should run),
-- a **payload** (what it should do),
-- optional **delivery** (where output should be sent).
-- optional **agent binding** (`agentId`): run the job under a specific agent; if
-  missing or unknown, the gateway falls back to the default agent.
+### 作业
+Cron 作业是一个存储记录，包含：
+- 一个 **计划**（应该何时运行），
+- 一个 **有效载荷**（应该做什么），
+- 可选的 **传递**（输出应该发送到哪里）。
+- 可选的 **代理绑定**（`agentId`）：在特定代理下运行作业；如果
+  缺失或未知，网关回退到默认代理。
 
-Jobs are identified by a stable `jobId` (used by CLI/Gateway APIs).
-In agent tool calls, `jobId` is canonical; legacy `id` is accepted for compatibility.
-Jobs can optionally auto-delete after a successful one-shot run via `deleteAfterRun: true`.
+作业由稳定的 `jobId` 标识（CLI/Gateway API 使用）。
+在代理工具调用中，`jobId` 是规范的；遗留的 `id` 为了兼容性被接受。
+作业可以通过 `deleteAfterRun: true` 在成功的一次性运行后自动删除。
 
-### Schedules
-Cron supports three schedule kinds:
-- `at`: one-shot timestamp (ms since epoch). Gateway accepts ISO 8601 and coerces to UTC.
-- `every`: fixed interval (ms).
-- `cron`: 5-field cron expression with optional IANA timezone.
+### 计划
+Cron 支持三种计划类型：
+- `at`：一次性时间戳（自纪元以来的毫秒数）。网关接受 ISO 8601 并转换为 UTC。
+- `every`：固定间隔（毫秒）。
+- `cron`：5 字段 cron 表达式，带可选的 IANA 时区。
 
-Cron expressions use `croner`. If a timezone is omitted, the Gateway host’s
-local timezone is used.
+Cron 表达式使用 `croner`。如果省略时区，则使用网关主机的
+本地时区。
 
-### Main vs isolated execution
+### 主会话与隔离执行
 
-#### Main session jobs (system events)
-Main jobs enqueue a system event and optionally wake the heartbeat runner.
-They must use `payload.kind = "systemEvent"`.
+#### 主会话作业（系统事件）
+主作业排队系统事件并可选择唤醒心跳运行器。
+它们必须使用 `payload.kind = "systemEvent"`。
 
-- `wakeMode: "next-heartbeat"` (default): event waits for the next scheduled heartbeat.
-- `wakeMode: "now"`: event triggers an immediate heartbeat run.
+- `wakeMode: "next-heartbeat"`（默认）：事件等待下次计划的心跳。
+- `wakeMode: "now"`：事件触发即时心跳运行。
 
-This is the best fit when you want the normal heartbeat prompt + main-session context.
-See [Heartbeat](/gateway/heartbeat).
+这是当您想要正常心跳提示 + 主会话上下文时的最佳选择。
+请参阅 [心跳](/gateway/heartbeat)。
 
-#### Isolated jobs (dedicated cron sessions)
-Isolated jobs run a dedicated agent turn in session `cron:<jobId>`.
+#### 隔离作业（专用 cron 会话）
+隔离作业在会话 `cron:<jobId>` 中运行专用代理回合。
 
-Key behaviors:
-- Prompt is prefixed with `[cron:<jobId> <job name>]` for traceability.
-- Each run starts a **fresh session id** (no prior conversation carry-over).
-- A summary is posted to the main session (prefix `Cron`, configurable).
-- `wakeMode: "now"` triggers an immediate heartbeat after posting the summary.
-- If `payload.deliver: true`, output is delivered to a channel; otherwise it stays internal.
+关键行为：
+- 提示以 `[cron:<jobId> <job name>]` 为前缀以便追踪。
+- 每次运行都以 **新的会话 ID** 开始（没有先前对话的延续）。
+- 摘要发布到主会话（前缀 `Cron`，可配置）。
+- `wakeMode: "now"` 在发布摘要后立即触发心跳。
+- 如果 `payload.deliver: true`，输出传递到通道；否则保持内部。
 
-Use isolated jobs for noisy, frequent, or "background chores" that shouldn't spam
-your main chat history.
+对嘈杂、频繁或不应在主聊天历史中刷屏的"后台任务"使用隔离作业。
 
-### Payload shapes (what runs)
-Two payload kinds are supported:
-- `systemEvent`: main-session only, routed through the heartbeat prompt.
-- `agentTurn`: isolated-session only, runs a dedicated agent turn.
+### 有效载荷形状（运行什么）
+支持两种有效载荷类型：
+- `systemEvent`：仅主会话，通过心跳提示路由。
+- `agentTurn`：仅隔离会话，运行专用代理回合。
 
-Common `agentTurn` fields:
-- `message`: required text prompt.
-- `model` / `thinking`: optional overrides (see below).
-- `timeoutSeconds`: optional timeout override.
-- `deliver`: `true` to send output to a channel target.
-- `channel`: `last` or a specific channel.
-- `to`: channel-specific target (phone/chat/channel id).
-- `bestEffortDeliver`: avoid failing the job if delivery fails.
+常见的 `agentTurn` 字段：
+- `message`：必需的文本提示。
+- `model` / `thinking`：可选覆盖（见下文）。
+- `timeoutSeconds`：可选超时覆盖。
+- `deliver`：`true` 将输出发送到通道目标。
+- `channel`：`last` 或特定通道。
+- `to`：通道特定目标（电话/聊天/通道 ID）。
+- `bestEffortDeliver`：如果交付失败则避免作业失败。
 
-Isolation options (only for `session=isolated`):
-- `postToMainPrefix` (CLI: `--post-prefix`): prefix for the system event in main.
-- `postToMainMode`: `summary` (default) or `full`.
-- `postToMainMaxChars`: max chars when `postToMainMode=full` (default 8000).
+隔离选项（仅适用于 `session=isolated`）：
+- `postToMainPrefix`（CLI：`--post-prefix`）：主会话中系统事件的前缀。
+- `postToMainMode`：`summary`（默认）或 `full`。
+- `postToMainMaxChars`：当 `postToMainMode=full` 时的最大字符数（默认 8000）。
 
-### Model and thinking overrides
-Isolated jobs (`agentTurn`) can override the model and thinking level:
-- `model`: Provider/model string (e.g., `anthropic/claude-sonnet-4-20250514`) or alias (e.g., `opus`)
-- `thinking`: Thinking level (`off`, `minimal`, `low`, `medium`, `high`, `xhigh`; GPT-5.2 + Codex models only)
+### 模型和思考覆盖
+隔离作业（`agentTurn`）可以覆盖模型和思考级别：
+- `model`：提供者/模型字符串（例如，`anthropic/claude-sonnet-4-20250514`）或别名（例如，`opus`）
+- `thinking`：思考级别（`off`、`minimal`、`low`、`medium`、`high`、`xhigh`；仅 GPT-5.2 + Codex 模型）
 
-Note: You can set `model` on main-session jobs too, but it changes the shared main
-session model. We recommend model overrides only for isolated jobs to avoid
-unexpected context shifts.
+注意：您也可以在主会话作业上设置 `model`，但它会更改共享的主
+会话模型。我们建议仅对隔离作业进行模型覆盖，以避免
+意外的上下文转换。
 
-Resolution priority:
-1. Job payload override (highest)
-2. Hook-specific defaults (e.g., `hooks.gmail.model`)
-3. Agent config default
+解析优先级：
+1. 作业有效载荷覆盖（最高）
+2. 钩子特定默认值（例如，`hooks.gmail.model`）
+3. 代理配置默认值
 
-### Delivery (channel + target)
-Isolated jobs can deliver output to a channel. The job payload can specify:
-- `channel`: `whatsapp` / `telegram` / `discord` / `slack` / `mattermost` (plugin) / `signal` / `imessage` / `last`
-- `to`: channel-specific recipient target
+### 传递（通道 + 目标）
+隔离作业可以将输出传递到通道。作业有效载荷可以指定：
+- `channel`：`whatsapp` / `telegram` / `discord` / `slack` / `mattermost`（插件）/ `signal` / `imessage` / `last`
+- `to`：通道特定收件人目标
 
-If `channel` or `to` is omitted, cron can fall back to the main session’s “last route”
-(the last place the agent replied).
+如果省略 `channel` 或 `to`，cron 可以回退到主会话的"最后路由"
+（代理上次回复的地方）。
 
-Delivery notes:
-- If `to` is set, cron auto-delivers the agent’s final output even if `deliver` is omitted.
-- Use `deliver: true` when you want last-route delivery without an explicit `to`.
-- Use `deliver: false` to keep output internal even if a `to` is present.
+传递说明：
+- 如果设置了 `to`，即使省略了 `deliver`，cron 也会自动传递代理的最终输出。
+- 当您希望在没有显式 `to` 的情况下使用最后路由传递时，请使用 `deliver: true`。
+- 即使存在 `to`，使用 `deliver: false` 保持输出内部。
 
-Target format reminders:
-- Slack/Discord/Mattermost (plugin) targets should use explicit prefixes (e.g. `channel:<id>`, `user:<id>`) to avoid ambiguity.
-- Telegram topics should use the `:topic:` form (see below).
+目标格式提醒：
+- Slack/Discord/Mattermost（插件）目标应使用显式前缀（例如 `channel:<id>`，`user:<id>`）以避免歧义。
+- Telegram 主题应使用 `:topic:` 形式（见下文）。
 
-#### Telegram delivery targets (topics / forum threads)
-Telegram supports forum topics via `message_thread_id`. For cron delivery, you can encode
-the topic/thread into the `to` field:
+#### Telegram 传递目标（主题/论坛线程）
+Telegram 通过 `message_thread_id` 支持论坛主题。对于 cron 传递，您可以将
+主题/线程编码到 `to` 字段中：
 
-- `-1001234567890` (chat id only)
-- `-1001234567890:topic:123` (preferred: explicit topic marker)
-- `-1001234567890:123` (shorthand: numeric suffix)
+- `-1001234567890`（仅聊天 ID）
+- `-1001234567890:topic:123`（首选：显式主题标记）
+- `-1001234567890:123`（简写：数字后缀）
 
-Prefixed targets like `telegram:...` / `telegram:group:...` are also accepted:
+也接受像 `telegram:...` / `telegram:group:...` 这样的前缀目标：
 - `telegram:group:-1001234567890:topic:123`
 
-## Storage & history
-- Job store: `~/.clawdbot/cron/jobs.json` (Gateway-managed JSON).
-- Run history: `~/.clawdbot/cron/runs/<jobId>.jsonl` (JSONL, auto-pruned).
-- Override store path: `cron.store` in config.
+## 存储和历史
+- 作业存储：`~/.clawdbot/cron/jobs.json`（网关管理的 JSON）。
+- 运行历史：`~/.clawdbot/cron/runs/<jobId>.jsonl`（JSONL，自动修剪）。
+- 覆盖存储路径：配置中的 `cron.store`。
 
-## Configuration
+## 配置
 
 ```json5
 {
   cron: {
-    enabled: true, // default true
+    enabled: true, // 默认 true
     store: "~/.clawdbot/cron/jobs.json",
-    maxConcurrentRuns: 1 // default 1
+    maxConcurrentRuns: 1 // 默认 1
   }
 }
 ```
 
-Disable cron entirely:
-- `cron.enabled: false` (config)
-- `CLAWDBOT_SKIP_CRON=1` (env)
+完全禁用 cron：
+- `cron.enabled: false`（配置）
+- `CLAWDBOT_SKIP_CRON=1`（环境变量）
 
-## CLI quickstart
+## CLI 快速入门
 
-One-shot reminder (UTC ISO, auto-delete after success):
+一次性提醒（UTC ISO，成功后自动删除）：
 ```bash
 moltbot cron add \
-  --name "Send reminder" \
+  --name "发送提醒" \
   --at "2026-01-12T18:00:00Z" \
   --session main \
-  --system-event "Reminder: submit expense report." \
+  --system-event "提醒：提交费用报告。" \
   --wake now \
   --delete-after-run
 ```
 
-One-shot reminder (main session, wake immediately):
+一次性提醒（主会话，立即唤醒）：
 ```bash
 moltbot cron add \
-  --name "Calendar check" \
+  --name "日历检查" \
   --at "20m" \
   --session main \
-  --system-event "Next heartbeat: check calendar." \
+  --system-event "下次心跳：检查日历。" \
   --wake now
 ```
 
-Recurring isolated job (deliver to WhatsApp):
+重复隔离作业（传递到 WhatsApp）：
 ```bash
 moltbot cron add \
-  --name "Morning status" \
+  --name "早晨状态" \
   --cron "0 7 * * *" \
   --tz "America/Los_Angeles" \
   --session isolated \
-  --message "Summarize inbox + calendar for today." \
+  --message "总结今天的收件箱 + 日历。" \
   --deliver \
   --channel whatsapp \
   --to "+15551234567"
 ```
 
-Recurring isolated job (deliver to a Telegram topic):
+重复隔离作业（传递到 Telegram 主题）：
 ```bash
 moltbot cron add \
-  --name "Nightly summary (topic)" \
+  --name "夜间摘要（主题）" \
   --cron "0 22 * * *" \
   --tz "America/Los_Angeles" \
   --session isolated \
-  --message "Summarize today; send to the nightly topic." \
+  --message "总结今天；发送到夜间主题。" \
   --deliver \
   --channel telegram \
   --to "-1001234567890:topic:123"
 ```
 
-Isolated job with model and thinking override:
+具有模型和思考覆盖的隔离作业：
 ```bash
 moltbot cron add \
-  --name "Deep analysis" \
+  --name "深度分析" \
   --cron "0 6 * * 1" \
   --tz "America/Los_Angeles" \
   --session isolated \
-  --message "Weekly deep analysis of project progress." \
+  --message "每周对项目进度进行深度分析。" \
   --model "opus" \
   --thinking high \
   --deliver \
   --channel whatsapp \
   --to "+15551234567"
+```
 
-Agent selection (multi-agent setups):
+代理选择（多代理设置）：
 ```bash
-# Pin a job to agent "ops" (falls back to default if that agent is missing)
+# 将作业固定到代理 "ops"（如果该代理缺失则回退到默认值）
 moltbot cron add --name "Ops sweep" --cron "0 6 * * *" --session isolated --message "Check ops queue" --agent ops
 
-# Switch or clear the agent on an existing job
+# 在现有作业上切换或清除代理
 moltbot cron edit <jobId> --agent ops
 moltbot cron edit <jobId> --clear-agent
 ```
-```
 
-Manual run (debug):
+手动运行（调试）：
 ```bash
 moltbot cron run <jobId> --force
 ```
 
-Edit an existing job (patch fields):
+编辑现有作业（修补字段）：
 ```bash
 moltbot cron edit <jobId> \
-  --message "Updated prompt" \
+  --message "更新提示" \
   --model "opus" \
   --thinking low
 ```
 
-Run history:
+运行历史：
 ```bash
 moltbot cron runs --id <jobId> --limit 50
 ```
 
-Immediate system event without creating a job:
+无需创建作业即可立即系统事件：
 ```bash
-moltbot system event --mode now --text "Next heartbeat: check battery."
+moltbot system event --mode now --text "下次心跳：检查电池。"
 ```
 
-## Gateway API surface
+## 网关 API 表面
 - `cron.list`, `cron.status`, `cron.add`, `cron.update`, `cron.remove`
-- `cron.run` (force or due), `cron.runs`
-For immediate system events without a job, use [`moltbot system event`](/cli/system).
+- `cron.run`（强制或到期），`cron.runs`
+对于没有作业的立即系统事件，请使用 [`moltbot system event`](/cli/system)。
 
-## Troubleshooting
+## 故障排除
 
-### “Nothing runs”
-- Check cron is enabled: `cron.enabled` and `CLAWDBOT_SKIP_CRON`.
-- Check the Gateway is running continuously (cron runs inside the Gateway process).
-- For `cron` schedules: confirm timezone (`--tz`) vs the host timezone.
+### "什么都没运行"
+- 检查 cron 是否已启用：`cron.enabled` 和 `CLAWDBOT_SKIP_CRON`。
+- 检查网关是否持续运行（cron 在网关进程中运行）。
+- 对于 `cron` 计划：确认时区（`--tz`）与主机时区。
 
-### Telegram delivers to the wrong place
-- For forum topics, use `-100…:topic:<id>` so it’s explicit and unambiguous.
-- If you see `telegram:...` prefixes in logs or stored “last route” targets, that’s normal;
-  cron delivery accepts them and still parses topic IDs correctly.
+### Telegram 发送到错误的位置
+- 对于论坛主题，使用 `-100…:topic:<id>` 使其明确且无歧义。
+- 如果您在日志或存储的"最后路由"目标中看到 `telegram:...` 前缀，这很正常；
+  cron 传递接受它们并仍能正确解析主题 ID。

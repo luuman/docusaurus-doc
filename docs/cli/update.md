@@ -1,17 +1,17 @@
 ---
-summary: "CLI reference for `moltbot update` (safe-ish source update + gateway auto-restart)"
+summary: "`moltbot update` 的 CLI 参考（安全的源码更新 + 网关自动重启）"
 read_when:
-  - You want to update a source checkout safely
-  - You need to understand `--update` shorthand behavior
+  - 您想要安全地更新源码检出
+  - 您需要了解 `--update` 简写行为
 ---
 
 # `moltbot update`
 
-Safely update Moltbot and switch between stable/beta/dev channels.
+安全地更新 Moltbot 并在稳定版/测试版/开发版通道之间切换。
 
-If you installed via **npm/pnpm** (global install, no git metadata), updates happen via the package manager flow in [Updating](/install/updating).
+如果您通过 **npm/pnpm**（全局安装，无 git 元数据）安装，则更新通过 [更新](/install/updating) 中的包管理器流程进行。
 
-## Usage
+## 用法
 
 ```bash
 moltbot update
@@ -25,19 +25,19 @@ moltbot update --json
 moltbot --update
 ```
 
-## Options
+## 选项
 
-- `--no-restart`: skip restarting the Gateway service after a successful update.
-- `--channel <stable|beta|dev>`: set the update channel (git + npm; persisted in config).
-- `--tag <dist-tag|version>`: override the npm dist-tag or version for this update only.
-- `--json`: print machine-readable `UpdateRunResult` JSON.
-- `--timeout <seconds>`: per-step timeout (default is 1200s).
+- `--no-restart`: 成功更新后跳过重启网关服务。
+- `--channel <stable|beta|dev>`: 设置更新通道（git + npm；保存在配置中）。
+- `--tag <dist-tag|version>`: 仅覆盖此次更新的 npm 分发标签或版本。
+- `--json`: 打印机器可读的 `UpdateRunResult` JSON。
+- `--timeout <seconds>`: 每步超时（默认为 1200 秒）。
 
-Note: downgrades require confirmation because older versions can break configuration.
+注意：降级需要确认，因为旧版本可能会破坏配置。
 
 ## `update status`
 
-Show the active update channel + git tag/branch/SHA (for source checkouts), plus update availability.
+显示活动的更新通道 + git 标签/分支/SHA（对于源码检出），加上更新可用性。
 
 ```bash
 moltbot update status
@@ -45,52 +45,52 @@ moltbot update status --json
 moltbot update status --timeout 10
 ```
 
-Options:
-- `--json`: print machine-readable status JSON.
-- `--timeout <seconds>`: timeout for checks (default is 3s).
+选项：
+- `--json`: 打印机器可读的状态 JSON。
+- `--timeout <seconds>`: 检查超时（默认为 3 秒）。
 
 ## `update wizard`
 
-Interactive flow to pick an update channel and confirm whether to restart the Gateway
-after updating (default is to restart). If you select `dev` without a git checkout, it
-offers to create one.
+交互式流程以选择更新通道并确认是否在更新后重启网关
+（默认是重启）。如果您在没有 git 检出的情况下选择 `dev`，它
+会提供创建一个。
 
-## What it does
+## 功能说明
 
-When you switch channels explicitly (`--channel ...`), Moltbot also keeps the
-install method aligned:
+当您显式切换通道时（`--channel ...`），Moltbot 还会保持
+安装方法一致：
 
-- `dev` → ensures a git checkout (default: `~/moltbot`, override with `CLAWDBOT_GIT_DIR`),
-  updates it, and installs the global CLI from that checkout.
-- `stable`/`beta` → installs from npm using the matching dist-tag.
+- `dev` → 确保有 git 检出（默认：`~/moltbot`，用 `CLAWDBOT_GIT_DIR` 覆盖），
+  更新它，并从该检出安装全局 CLI。
+- `stable`/`beta` → 使用匹配的分发标签从 npm 安装。
 
-## Git checkout flow
+## Git 检出流程
 
-Channels:
+通道：
 
-- `stable`: checkout the latest non-beta tag, then build + doctor.
-- `beta`: checkout the latest `-beta` tag, then build + doctor.
-- `dev`: checkout `main`, then fetch + rebase.
+- `stable`: 检出最新的非测试版标签，然后构建 + 诊断。
+- `beta`: 检出最新的 `-beta` 标签，然后构建 + 诊断。
+- `dev`: 检出 `main`，然后获取 + 变基。
 
-High-level:
+高级别：
 
-1. Requires a clean worktree (no uncommitted changes).
-2. Switches to the selected channel (tag or branch).
-3. Fetches upstream (dev only).
-4. Dev only: preflight lint + TypeScript build in a temp worktree; if the tip fails, walks back up to 10 commits to find the newest clean build.
-5. Rebases onto the selected commit (dev only).
-6. Installs deps (pnpm preferred; npm fallback).
-7. Builds + builds the Control UI.
-8. Runs `moltbot doctor` as the final “safe update” check.
-9. Syncs plugins to the active channel (dev uses bundled extensions; stable/beta uses npm) and updates npm-installed plugins.
+1. 需要干净的工作树（无未提交的更改）。
+2. 切换到选定的通道（标签或分支）。
+3. 获取上游（仅 dev）。
+4. 仅 dev：临时工作树中的预检 lint + TypeScript 构建；如果提示失败，最多回溯 10 个提交以找到最新的干净构建。
+5. 变基到选定的提交（仅 dev）。
+6. 安装依赖（首选 pnpm；npm 回退）。
+7. 构建 + 构建控制 UI。
+8. 运行 `moltbot doctor` 作为最终的"安全更新"检查。
+9. 将插件同步到活动通道（dev 使用捆绑扩展；stable/beta 使用 npm）并更新 npm 安装的插件。
 
-## `--update` shorthand
+## `--update` 简写
 
-`moltbot --update` rewrites to `moltbot update` (useful for shells and launcher scripts).
+`moltbot --update` 重写为 `moltbot update`（对 shell 和启动器脚本有用）。
 
-## See also
+## 参见
 
-- `moltbot doctor` (offers to run update first on git checkouts)
-- [Development channels](/install/development-channels)
-- [Updating](/install/updating)
-- [CLI reference](/cli)
+- `moltbot doctor` （在 git 检出上首先提供运行更新）
+- [开发通道](/install/development-channels)
+- [更新](/install/updating)
+- [CLI 参考](/cli)

@@ -1,89 +1,89 @@
 ---
-summary: "Twitch chat bot configuration and setup"
+summary: "Twitch 聊天机器人配置和设置"
 read_when:
-  - Setting up Twitch chat integration for Moltbot
+  - 为 Moltbot 设置 Twitch 聊天集成
 ---
-# Twitch (plugin)
+# Twitch（插件）
 
-Twitch chat support via IRC connection. Moltbot connects as a Twitch user (bot account) to receive and send messages in channels.
+通过 IRC 连接支持 Twitch 聊天。Moltbot 作为 Twitch 用户（机器人账户）连接，以在频道中接收和发送消息。
 
-## Plugin required
+## 需要插件
 
-Twitch ships as a plugin and is not bundled with the core install.
+Twitch 作为插件提供，未与核心安装捆绑。
 
-Install via CLI (npm registry):
+通过 CLI（npm 注册表）安装：
 
 ```bash
 moltbot plugins install @moltbot/twitch
 ```
 
-Local checkout (when running from a git repo):
+本地检出（从 git 仓库运行时）：
 
 ```bash
 moltbot plugins install ./extensions/twitch
 ```
 
-Details: [Plugins](/plugin)
+详情：[插件](/plugin)
 
-## Quick setup (beginner)
+## 快速设置（初学者）
 
-1) Create a dedicated Twitch account for the bot (or use an existing account).
-2) Generate credentials: [Twitch Token Generator](https://twitchtokengenerator.com/)
-   - Select **Bot Token**
-   - Verify scopes `chat:read` and `chat:write` are selected
-   - Copy the **Client ID** and **Access Token**
-3) Find your Twitch user ID: https://www.streamweasels.com/tools/convert-twitch-username-to-user-id/
-4) Configure the token:
-   - Env: `CLAWDBOT_TWITCH_ACCESS_TOKEN=...` (default account only)
-   - Or config: `channels.twitch.accessToken`
-   - If both are set, config takes precedence (env fallback is default-account only).
-5) Start the gateway.
+1) 为机器人创建专用的 Twitch 账户（或使用现有账户）。
+2) 生成凭证：[Twitch Token Generator](https://twitchtokengenerator.com/)
+   - 选择 **机器人令牌**
+   - 确认选择了 `chat:read` 和 `chat:write` 范围
+   - 复制 **客户端 ID** 和 **访问令牌**
+3) 查找您的 Twitch 用户 ID：https://www.streamweasels.com/tools/convert-twitch-username-to-user-id/
+4) 配置令牌：
+   - 环境变量：`CLAWDBOT_TWITCH_ACCESS_TOKEN=...`（仅限默认账户）
+   - 或配置：`channels.twitch.accessToken`
+   - 如果两者都设置，配置优先（环境变量回退仅限默认账户）。
+5) 启动网关。
 
-**⚠️ Important:** Add access control (`allowFrom` or `allowedRoles`) to prevent unauthorized users from triggering the bot. `requireMention` defaults to `true`.
+**⚠️ 重要：** 添加访问控制（`allowFrom` 或 `allowedRoles`）以防止未经授权的用户触发机器人。`requireMention` 默认为 `true`。
 
-Minimal config:
+最小配置：
 
 ```json5
 {
   channels: {
     twitch: {
       enabled: true,
-      username: "moltbot",              // Bot's Twitch account
-      accessToken: "oauth:abc123...",    // OAuth Access Token (or use CLAWDBOT_TWITCH_ACCESS_TOKEN env var)
-      clientId: "xyz789...",             // Client ID from Token Generator
-      channel: "vevisk",                 // Which Twitch channel's chat to join (required)
-      allowFrom: ["123456789"]           // (recommended) Your Twitch user ID only - get it from https://www.streamweasels.com/tools/convert-twitch-username-to-user-id/
+      username: "moltbot",              // 机器人的 Twitch 账户
+      accessToken: "oauth:abc123...",    // OAuth 访问令牌（或使用 CLAWDBOT_TWITCH_ACCESS_TOKEN 环境变量）
+      clientId: "xyz789...",             // 令牌生成器中的客户端 ID
+      channel: "vevisk",                 // 加入哪个 Twitch 频道的聊天（必需）
+      allowFrom: ["123456789"]           // （推荐）仅您的 Twitch 用户 ID - 从 https://www.streamweasels.com/tools/convert-twitch-username-to-user-id/ 获取
     }
   }
 }
 ```
 
-## What it is
+## 它是什么
 
-- A Twitch channel owned by the Gateway.
-- Deterministic routing: replies always go back to Twitch.
-- Each account maps to an isolated session key `agent:<agentId>:twitch:<accountName>`.
-- `username` is the bot's account (who authenticates), `channel` is which chat room to join.
+- 由网关拥有的 Twitch 频道。
+- 确定性路由：回复始终返回到 Twitch。
+- 每个账户映射到一个隔离的会话键 `agent:<agentId>:twitch:<accountName>`。
+- `username` 是机器人的账户（谁进行身份验证），`channel` 是要加入的聊天室。
 
-## Setup (detailed)
+## 设置（详细）
 
-### Generate credentials
+### 生成凭证
 
-Use [Twitch Token Generator](https://twitchtokengenerator.com/):
-- Select **Bot Token**
-- Verify scopes `chat:read` and `chat:write` are selected
-- Copy the **Client ID** and **Access Token**
+使用 [Twitch Token Generator](https://twitchtokengenerator.com/)：
+- 选择 **机器人令牌**
+- 确认选择了 `chat:read` 和 `chat:write` 范围
+- 复制 **客户端 ID** 和 **访问令牌**
 
-No manual app registration needed. Tokens expire after several hours.
+无需手动应用注册。令牌在几小时后过期。
 
-### Configure the bot
+### 配置机器人
 
-**Env var (default account only):**
+**环境变量（仅限默认账户）：**
 ```bash
 CLAWDBOT_TWITCH_ACCESS_TOKEN=oauth:abc123...
 ```
 
-**Or config:**
+**或配置：**
 ```json5
 {
   channels: {
@@ -98,32 +98,32 @@ CLAWDBOT_TWITCH_ACCESS_TOKEN=oauth:abc123...
 }
 ```
 
-If both env and config are set, config takes precedence.
+如果同时设置了环境变量和配置，配置优先。
 
-### Access control (recommended)
+### 访问控制（推荐）
 
 ```json5
 {
   channels: {
     twitch: {
-      allowFrom: ["123456789"],       // (recommended) Your Twitch user ID only
-      allowedRoles: ["moderator"]     // Or restrict to roles
+      allowFrom: ["123456789"],       // （推荐）仅您的 Twitch 用户 ID
+      allowedRoles: ["moderator"]     // 或限制为角色
     }
   }
 }
 ```
 
-**Available roles:** `"moderator"`, `"owner"`, `"vip"`, `"subscriber"`, `"all"`.
+**可用角色：** `"moderator"`, `"owner"`, `"vip"`, `"subscriber"`, `"all"`。
 
-**Why user IDs?** Usernames can change, allowing impersonation. User IDs are permanent.
+**为什么使用用户 ID？** 用户名可能会更改，导致冒充。用户 ID 是永久的。
 
-Find your Twitch user ID: https://www.streamweasels.com/tools/convert-twitch-username-%20to-user-id/ (Convert your Twitch username to ID)
+查找您的 Twitch 用户 ID：https://www.streamweasels.com/tools/convert-twitch-username-%20to-user-id/（将您的 Twitch 用户名转换为 ID）
 
-## Token refresh (optional)
+## 令牌刷新（可选）
 
-Tokens from [Twitch Token Generator](https://twitchtokengenerator.com/) cannot be automatically refreshed - regenerate when expired.
+来自 [Twitch Token Generator](https://twitchtokengenerator.com/) 的令牌无法自动刷新 - 过期时重新生成。
 
-For automatic token refresh, create your own Twitch application at [Twitch Developer Console](https://dev.twitch.tv/console) and add to config:
+要实现自动令牌刷新，请在 [Twitch Developer Console](https://dev.twitch.tv/console) 中创建自己的 Twitch 应用并添加到配置中：
 
 ```json5
 {
@@ -136,13 +136,13 @@ For automatic token refresh, create your own Twitch application at [Twitch Devel
 }
 ```
 
-The bot automatically refreshes tokens before expiration and logs refresh events.
+机器人在到期前自动刷新令牌并记录刷新事件。
 
-## Multi-account support
+## 多账户支持
 
-Use `channels.twitch.accounts` with per-account tokens. See [`gateway/configuration`](/gateway/configuration) for the shared pattern.
+使用 `channels.twitch.accounts` 配置每个账户的令牌。参见 [`gateway/configuration`](/gateway/configuration) 了解共享模式。
 
-Example (one bot account in two channels):
+示例（一个机器人账户在两个频道中）：
 
 ```json5
 {
@@ -167,11 +167,11 @@ Example (one bot account in two channels):
 }
 ```
 
-**Note:** Each account needs its own token (one token per channel).
+**注意：** 每个账户都需要自己的令牌（每个频道一个令牌）。
 
-## Access control
+## 访问控制
 
-### Role-based restrictions
+### 基于角色的限制
 
 ```json5
 {
@@ -187,7 +187,7 @@ Example (one bot account in two channels):
 }
 ```
 
-### Allowlist by User ID (most secure)
+### 按用户 ID 允许列表（最安全）
 
 ```json5
 {
@@ -203,9 +203,9 @@ Example (one bot account in two channels):
 }
 ```
 
-### Combined allowlist + roles
+### 组合允许列表 + 角色
 
-Users in `allowFrom` bypass role checks:
+`allowFrom` 中的用户绕过角色检查：
 
 ```json5
 {
@@ -222,9 +222,9 @@ Users in `allowFrom` bypass role checks:
 }
 ```
 
-### Disable @mention requirement
+### 禁用 @提及要求
 
-By default, `requireMention` is `true`. To disable and respond to all messages:
+默认情况下，`requireMention` 为 `true`。要禁用并回复所有消息：
 
 ```json5
 {
@@ -240,65 +240,65 @@ By default, `requireMention` is `true`. To disable and respond to all messages:
 }
 ```
 
-## Troubleshooting
+## 故障排除
 
-First, run diagnostic commands:
+首先，运行诊断命令：
 
 ```bash
 moltbot doctor
 moltbot channels status --probe
 ```
 
-### Bot doesn't respond to messages
+### 机器人不回复消息
 
-**Check access control:** Temporarily set `allowedRoles: ["all"]` to test.
+**检查访问控制：** 临时设置 `allowedRoles: ["all"]` 进行测试。
 
-**Check the bot is in the channel:** The bot must join the channel specified in `channel`.
+**检查机器人是否在频道中：** 机器人必须加入 `channel` 中指定的频道。
 
-### Token issues
+### 令牌问题
 
-**"Failed to connect" or authentication errors:**
-- Verify `accessToken` is the OAuth access token value (typically starts with `oauth:` prefix)
-- Check token has `chat:read` and `chat:write` scopes
-- If using token refresh, verify `clientSecret` and `refreshToken` are set
+**"连接失败" 或身份验证错误：**
+- 验证 `accessToken` 是 OAuth 访问令牌值（通常以 `oauth:` 前缀开头）
+- 检查令牌是否具有 `chat:read` 和 `chat:write` 范围
+- 如果使用令牌刷新，验证 `clientSecret` 和 `refreshToken` 已设置
 
-### Token refresh not working
+### 令牌刷新不起作用
 
-**Check logs for refresh events:**
+**检查日志中的刷新事件：**
 ```
 Using env token source for mybot
 Access token refreshed for user 123456 (expires in 14400s)
 ```
 
-If you see "token refresh disabled (no refresh token)":
-- Ensure `clientSecret` is provided
-- Ensure `refreshToken` is provided
+如果您看到 "token refresh disabled (no refresh token)"：
+- 确保提供了 `clientSecret`
+- 确保提供了 `refreshToken`
 
-## Config
+## 配置
 
-**Account config:**
-- `username` - Bot username
-- `accessToken` - OAuth access token with `chat:read` and `chat:write`
-- `clientId` - Twitch Client ID (from Token Generator or your app)
-- `channel` - Channel to join (required)
-- `enabled` - Enable this account (default: `true`)
-- `clientSecret` - Optional: For automatic token refresh
-- `refreshToken` - Optional: For automatic token refresh
-- `expiresIn` - Token expiry in seconds
-- `obtainmentTimestamp` - Token obtained timestamp
-- `allowFrom` - User ID allowlist
-- `allowedRoles` - Role-based access control (`"moderator" | "owner" | "vip" | "subscriber" | "all"`)
-- `requireMention` - Require @mention (default: `true`)
+**账户配置：**
+- `username` - 机器人用户名
+- `accessToken` - OAuth 访问令牌，具有 `chat:read` 和 `chat:write`
+- `clientId` - Twitch 客户端 ID（来自令牌生成器或您的应用）
+- `channel` - 要加入的频道（必需）
+- `enabled` - 启用此账户（默认：`true`）
+- `clientSecret` - 可选：用于自动令牌刷新
+- `refreshToken` - 可选：用于自动令牌刷新
+- `expiresIn` - 令牌到期时间（秒）
+- `obtainmentTimestamp` - 令牌获取时间戳
+- `allowFrom` - 用户 ID 允许列表
+- `allowedRoles` - 基于角色的访问控制（`"moderator" | "owner" | "vip" | "subscriber" | "all"`）
+- `requireMention` - 需要 @提及（默认：`true`）
 
-**Provider options:**
-- `channels.twitch.enabled` - Enable/disable channel startup
-- `channels.twitch.username` - Bot username (simplified single-account config)
-- `channels.twitch.accessToken` - OAuth access token (simplified single-account config)
-- `channels.twitch.clientId` - Twitch Client ID (simplified single-account config)
-- `channels.twitch.channel` - Channel to join (simplified single-account config)
-- `channels.twitch.accounts.<accountName>` - Multi-account config (all account fields above)
+**提供者选项：**
+- `channels.twitch.enabled` - 启用/禁用频道启动
+- `channels.twitch.username` - 机器人用户名（简化单账户配置）
+- `channels.twitch.accessToken` - OAuth 访问令牌（简化单账户配置）
+- `channels.twitch.clientId` - Twitch 客户端 ID（简化单账户配置）
+- `channels.twitch.channel` - 要加入的频道（简化单账户配置）
+- `channels.twitch.accounts.<accountName>` - 多账户配置（上述所有账户字段）
 
-Full example:
+完整示例：
 
 ```json5
 {
@@ -333,12 +333,12 @@ Full example:
 }
 ```
 
-## Tool actions
+## 工具操作
 
-The agent can call `twitch` with action:
-- `send` - Send a message to a channel
+代理可以使用操作调用 `twitch`：
+- `send` - 向频道发送消息
 
-Example:
+示例：
 
 ```json5
 {
@@ -350,17 +350,17 @@ Example:
 }
 ```
 
-## Safety & ops
+## 安全与运维
 
-- **Treat tokens like passwords** - Never commit tokens to git
-- **Use automatic token refresh** for long-running bots
-- **Use user ID allowlists** instead of usernames for access control
-- **Monitor logs** for token refresh events and connection status
-- **Scope tokens minimally** - Only request `chat:read` and `chat:write`
-- **If stuck**: Restart the gateway after confirming no other process owns the session
+- **将令牌视为密码** - 切勿将令牌提交到 git
+- **对长期运行的机器人使用自动令牌刷新**
+- **使用用户 ID 允许列表而不是用户名进行访问控制**
+- **监控日志** 以获取令牌刷新事件和连接状态
+- **最小化令牌范围** - 仅请求 `chat:read` 和 `chat:write`
+- **如果卡住**：确认没有其他进程拥有会话后重启网关
 
-## Limits
+## 限制
 
-- **500 characters** per message (auto-chunked at word boundaries)
-- Markdown is stripped before chunking
-- No rate limiting (uses Twitch's built-in rate limits)
+- **每条消息 500 个字符**（在单词边界自动分块）
+- 在分块之前剥离 Markdown
+- 无速率限制（使用 Twitch 的内置速率限制）

@@ -7,7 +7,7 @@ read_when:
 
 # `moltbot setup`
 
-初始化 `~/.clawdbot/moltbot.json` 和代理工作空间。
+初始化 `~/.clawdbot/moltbot.json` 和智能体工作空间。
 
 相关：
 - 入门：[入门](/getting-started)

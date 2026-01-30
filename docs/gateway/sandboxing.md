@@ -1,68 +1,67 @@
 ---
-summary: "How Moltbot sandboxing works: modes, scopes, workspace access, and images"
-title: Sandboxing
-read_when: "You want a dedicated explanation of sandboxing or need to tune agents.defaults.sandbox."
+summary: "Moltbot 沙盒如何工作：模式、范围、工作区访问和镜像"
+title: 沙盒
+read_when: "您想要沙盒的专门解释或需要调整 agents.defaults.sandbox。"
 status: active
 ---
 
-# Sandboxing
+# 沙盒
 
-Moltbot can run **tools inside Docker containers** to reduce blast radius.
-This is **optional** and controlled by configuration (`agents.defaults.sandbox` or
-`agents.list[].sandbox`). If sandboxing is off, tools run on the host.
-The Gateway stays on the host; tool execution runs in an isolated sandbox
-when enabled.
+Moltbot 可以在 Docker 容器内运行 **工具** 以减少影响范围。
+这是 **可选的** 并由配置控制（`agents.defaults.sandbox` 或
+`agents.list[].sandbox`）。如果沙盒关闭，工具在主机上运行。
+网关保留在主机上；工具执行在启用时在隔离的沙盒中运行。
 
-This is not a perfect security boundary, but it materially limits filesystem
-and process access when the model does something dumb.
+这不是完美的安全边界，但它在模型做傻事时实质性地限制了文件系统
+和进程访问。
 
-## What gets sandboxed
-- Tool execution (`exec`, `read`, `write`, `edit`, `apply_patch`, `process`, etc.).
-- Optional sandboxed browser (`agents.defaults.sandbox.browser`).
-  - By default, the sandbox browser auto-starts (ensures CDP is reachable) when the browser tool needs it.
-    Configure via `agents.defaults.sandbox.browser.autoStart` and `agents.defaults.sandbox.browser.autoStartTimeoutMs`.
-  - `agents.defaults.sandbox.browser.allowHostControl` lets sandboxed sessions target the host browser explicitly.
-  - Optional allowlists gate `target: "custom"`: `allowedControlUrls`, `allowedControlHosts`, `allowedControlPorts`.
+## 什么是沙盒化的
+- 工具执行（`exec`、`read`、`write`、`edit`、`apply_patch`、`process` 等）。
+- 可选的沙盒浏览器（`agents.defaults.sandbox.browser`）。
+  - 默认情况下，当浏览器工具需要时，沙盒浏览器自动启动（确保 CDP 可访问）。
+    通过 `agents.defaults.sandbox.browser.autoStart` 和 `agents.defaults.sandbox.browser.autoStartTimeoutMs` 配置。
+  - `agents.defaults.sandbox.browser.allowHostControl` 允许沙盒会话明确针对主机浏览器。
+  - 可选白名单门控 `target: "custom"`：`allowedControlUrls`、`allowedControlHosts`、`allowedControlPorts`。
 
-Not sandboxed:
-- The Gateway process itself.
-- Any tool explicitly allowed to run on the host (e.g. `tools.elevated`).
-  - **Elevated exec runs on the host and bypasses sandboxing.**
-  - If sandboxing is off, `tools.elevated` does not change execution (already on host). See [Elevated Mode](/tools/elevated).
+非沙盒化：
+- 网关进程本身。
+- 任何明确允许在主机上运行的工具（例如 `tools.elevated`）。
+  - **提升的 exec 在主机上运行并绕过沙盒。**
+  - 如果沙盒关闭，`tools.elevated` 不改变执行（已在主机上）。参见 [提升模式](/tools/elevated)。
 
-## Modes
-`agents.defaults.sandbox.mode` controls **when** sandboxing is used:
-- `"off"`: no sandboxing.
-- `"non-main"`: sandbox only **non-main** sessions (default if you want normal chats on host).
-- `"all"`: every session runs in a sandbox.
-Note: `"non-main"` is based on `session.mainKey` (default `"main"`), not agent id.
-Group/channel sessions use their own keys, so they count as non-main and will be sandboxed.
+## 模式
+`agents.defaults.sandbox.mode` 控制何时使用沙盒：
+- `"off"`：无沙盒。
+- `"non-main"`：仅沙盒 **非主** 会话（如果您希望在主机上进行正常聊天，默认）。
+- `"all"`：每个会话都在沙盒中运行。
+注意：`"non-main"` 基于 `session.mainKey`（默认 `"main"`），而不是代理 ID。
+群组/频道会话使用它们自己的密钥，所以它们算作非主会话并将被沙盒化。
 
-## Scope
-`agents.defaults.sandbox.scope` controls **how many containers** are created:
-- `"session"` (default): one container per session.
-- `"agent"`: one container per agent.
-- `"shared"`: one container shared by all sandboxed sessions.
+## 范围
+`agents.defaults.sandbox.scope` 控制创建多少容器：
+- `"session"`（默认）：每个会话一个容器。
+- `"agent"`：每个代理一个容器。
+- `"shared"`：所有沙盒会话共享一个容器。
 
-## Workspace access
-`agents.defaults.sandbox.workspaceAccess` controls **what the sandbox can see**:
-- `"none"` (default): tools see a sandbox workspace under `~/.clawdbot/sandboxes`.
-- `"ro"`: mounts the agent workspace read-only at `/agent` (disables `write`/`edit`/`apply_patch`).
-- `"rw"`: mounts the agent workspace read/write at `/workspace`.
+## 工作区访问
+`agents.defaults.sandbox.workspaceAccess` 控制沙盒可以看到什么：
+- `"none"`（默认）：工具看到 `~/.clawdbot/sandboxes` 下的沙盒工作区。
+- `"ro"`：在 `/agent` 处以只读方式挂载代理工作区（禁用 `write`/`edit`/`apply_patch`）。
+- `"rw"`：在 `/workspace` 处以读写方式挂载代理工作区。
 
-Inbound media is copied into the active sandbox workspace (`media/inbound/*`).
-Skills note: the `read` tool is sandbox-rooted. With `workspaceAccess: "none"`,
-Moltbot mirrors eligible skills into the sandbox workspace (`.../skills`) so
-they can be read. With `"rw"`, workspace skills are readable from
-`/workspace/skills`.
+入站媒体被复制到活动沙盒工作区（`media/inbound/*`）。
+技能注意：`read` 工具以沙盒为根。使用 `workspaceAccess: "none"`，
+Moltbot 将符合条件的技能镜像到沙盒工作区（`.../skills`）以便
+它们可以被读取。使用 `"rw"`，工作区技能可以从
+`/workspace/skills` 读取。
 
-## Custom bind mounts
-`agents.defaults.sandbox.docker.binds` mounts additional host directories into the container.
-Format: `host:container:mode` (e.g., `"/home/user/source:/source:rw"`).
+## 自定义绑定挂载
+`agents.defaults.sandbox.docker.binds` 将额外的主机目录挂载到容器中。
+格式：`host:container:mode`（例如，`"/home/user/source:/source:rw"`）。
 
-Global and per-agent binds are **merged** (not replaced). Under `scope: "shared"`, per-agent binds are ignored.
+全局和按代理的绑定是 **合并的**（不是替换）。在 `scope: "shared"` 下，按代理的绑定被忽略。
 
-Example (read-only source + docker socket):
+示例（只读源 + docker 套接字）：
 
 ```json5
 {
@@ -91,71 +90,71 @@ Example (read-only source + docker socket):
 }
 ```
 
-Security notes:
-- Binds bypass the sandbox filesystem: they expose host paths with whatever mode you set (`:ro` or `:rw`).
-- Sensitive mounts (e.g., `docker.sock`, secrets, SSH keys) should be `:ro` unless absolutely required.
-- Combine with `workspaceAccess: "ro"` if you only need read access to the workspace; bind modes stay independent.
-- See [Sandbox vs Tool Policy vs Elevated](/gateway/sandbox-vs-tool-policy-vs-elevated) for how binds interact with tool policy and elevated exec.
+安全注意事项：
+- 绑定绕过沙盒文件系统：它们以您设置的任何模式（`:ro` 或 `:rw`）暴露主机路径。
+- 敏感挂载（例如，`docker.sock`、密钥、SSH 密钥）应该是 `:ro`，除非绝对需要。
+- 如果您只需要对工作区的只读访问，请与 `workspaceAccess: "ro"` 结合使用；绑定模式保持独立。
+- 参见 [沙盒 vs 工具策略 vs 提升](/gateway/sandbox-vs-tool-policy-vs-elevated) 了解绑定如何与工具策略和提升 exec 交互。
 
-## Images + setup
-Default image: `moltbot-sandbox:bookworm-slim`
+## 镜像 + 设置
+默认镜像：`moltbot-sandbox:bookworm-slim`
 
-Build it once:
+构建一次：
 ```bash
 scripts/sandbox-setup.sh
 ```
 
-Note: the default image does **not** include Node. If a skill needs Node (or
-other runtimes), either bake a custom image or install via
-`sandbox.docker.setupCommand` (requires network egress + writable root +
-root user).
+注意：默认镜像不包含 Node。如果技能需要 Node（或
+其他运行时），要么定制自定义镜像，要么通过
+`sandbox.docker.setupCommand` 安装（需要网络出口 + 可写根目录 +
+根用户）。
 
-Sandboxed browser image:
+沙盒浏览器镜像：
 ```bash
 scripts/sandbox-browser-setup.sh
 ```
 
-By default, sandbox containers run with **no network**.
-Override with `agents.defaults.sandbox.docker.network`.
+默认情况下，沙盒容器在 **无网络** 中运行。
+使用 `agents.defaults.sandbox.docker.network` 覆盖。
 
-Docker installs and the containerized gateway live here:
+Docker 安装和容器化网关在这里：
 [Docker](/install/docker)
 
-## setupCommand (one-time container setup)
-`setupCommand` runs **once** after the sandbox container is created (not on every run).
-It executes inside the container via `sh -lc`.
+## setupCommand（一次性容器设置）
+`setupCommand` 在创建沙盒容器后运行 **一次**（不是每次运行）。
+它通过 `sh -lc` 在容器内执行。
 
-Paths:
-- Global: `agents.defaults.sandbox.docker.setupCommand`
-- Per-agent: `agents.list[].sandbox.docker.setupCommand`
+路径：
+- 全局：`agents.defaults.sandbox.docker.setupCommand`
+- 按代理：`agents.list[].sandbox.docker.setupCommand`
 
 
-Common pitfalls:
-- Default `docker.network` is `"none"` (no egress), so package installs will fail.
-- `readOnlyRoot: true` prevents writes; set `readOnlyRoot: false` or bake a custom image.
-- `user` must be root for package installs (omit `user` or set `user: "0:0"`).
-- Sandbox exec does **not** inherit host `process.env`. Use
-  `agents.defaults.sandbox.docker.env` (or a custom image) for skill API keys.
+常见陷阱：
+- 默认 `docker.network` 是 `"none"`（无出口），所以包安装将失败。
+- `readOnlyRoot: true` 阻止写入；设置 `readOnlyRoot: false` 或定制自定义镜像。
+- `user` 必须是根用户才能安装包（省略 `user` 或设置 `user: "0:0"`）。
+- 沙盒 exec 不继承主机 `process.env`。使用
+  `agents.defaults.sandbox.docker.env`（或自定义镜像）获取技能 API 密钥。
 
-## Tool policy + escape hatches
-Tool allow/deny policies still apply before sandbox rules. If a tool is denied
-globally or per-agent, sandboxing doesn’t bring it back.
+## 工具策略 + 逃生舱口
+工具允许/拒绝策略仍在沙盒规则之前应用。如果工具被全局或按代理拒绝，
+沙盒不会将其带回。
 
-`tools.elevated` is an explicit escape hatch that runs `exec` on the host.
-`/exec` directives only apply for authorized senders and persist per session; to hard-disable
-`exec`, use tool policy deny (see [Sandbox vs Tool Policy vs Elevated](/gateway/sandbox-vs-tool-policy-vs-elevated)).
+`tools.elevated` 是在主机上运行 `exec` 的明确逃生舱口。
+`/exec` 指令仅适用于授权发送者并按会话持久化；要硬禁用
+`exec`，使用工具策略拒绝（参见 [沙盒 vs 工具策略 vs 提升](/gateway/sandbox-vs-tool-policy-vs-elevated)）。
 
-Debugging:
-- Use `moltbot sandbox explain` to inspect effective sandbox mode, tool policy, and fix-it config keys.
-- See [Sandbox vs Tool Policy vs Elevated](/gateway/sandbox-vs-tool-policy-vs-elevated) for the “why is this blocked?” mental model.
-Keep it locked down.
+调试：
+- 使用 `moltbot sandbox explain` 检查有效的沙盒模式、工具策略和修复配置键。
+- 参见 [沙盒 vs 工具策略 vs 提升](/gateway/sandbox-vs-tool-policy-vs-elevated) 获取"为什么被阻止？"的心理模型。
+保持锁定。
 
-## Multi-agent overrides
-Each agent can override sandbox + tools:
-`agents.list[].sandbox` and `agents.list[].tools` (plus `agents.list[].tools.sandbox.tools` for sandbox tool policy).
-See [Multi-Agent Sandbox & Tools](/multi-agent-sandbox-tools) for precedence.
+## 多代理覆盖
+每个代理都可以覆盖沙盒 + 工具：
+`agents.list[].sandbox` 和 `agents.list[].tools`（加上 `agents.list[].tools.sandbox.tools` 用于沙盒工具策略）。
+参见 [多代理沙盒和工具](/multi-agent-sandbox-tools) 了解优先级。
 
-## Minimal enable example
+## 最小启用示例
 ```json5
 {
   agents: {
@@ -170,7 +169,7 @@ See [Multi-Agent Sandbox & Tools](/multi-agent-sandbox-tools) for precedence.
 }
 ```
 
-## Related docs
-- [Sandbox Configuration](/gateway/configuration#agentsdefaults-sandbox)
-- [Multi-Agent Sandbox & Tools](/multi-agent-sandbox-tools)
-- [Security](/gateway/security)
+## 相关文档
+- [沙盒配置](/gateway/configuration#agentsdefaults-sandbox)
+- [多代理沙盒和工具](/multi-agent-sandbox-tools)
+- [安全](/gateway/security)

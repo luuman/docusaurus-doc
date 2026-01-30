@@ -34,7 +34,7 @@ curl -fsSL https://molt.bot/install.sh | bash
 - 了解您的网关运行方式：**前台终端** vs **监督服务**（launchd/systemd）。
 - 快照您的定制：
   - 配置：`~/.clawdbot/moltbot.json`
-  - 凭据：`~/.clawdbot/credentials/`
+  - 凭據：`~/.clawdbot/credentials/`
   - 工作区：`~/clawd`
 
 ## 更新（全局安装）

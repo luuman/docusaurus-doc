@@ -1,15 +1,15 @@
 ---
-summary: "Webhook ingress for wake and isolated agent runs"
+summary: "用于唤醒和隔离代理运行的 Webhook 入口"
 read_when:
-  - Adding or changing webhook endpoints
-  - Wiring external systems into Moltbot
+  - 添加或更改 webhook 端点
+  - 将外部系统连接到 Moltbot
 ---
 
 # Webhooks
 
-Gateway can expose a small HTTP webhook endpoint for external triggers.
+网关可以暴露一个小的 HTTP webhook 端点用于外部触发。
 
-## Enable
+## 启用
 
 ```json5
 {
@@ -21,36 +21,36 @@ Gateway can expose a small HTTP webhook endpoint for external triggers.
 }
 ```
 
-Notes:
-- `hooks.token` is required when `hooks.enabled=true`.
-- `hooks.path` defaults to `/hooks`.
+说明：
+- 当 `hooks.enabled=true` 时，`hooks.token` 是必需的。
+- `hooks.path` 默认为 `/hooks`。
 
-## Auth
+## 认证
 
-Every request must include the hook token. Prefer headers:
-- `Authorization: Bearer <token>` (recommended)
+每个请求都必须包含钩子令牌。优先使用头部：
+- `Authorization: Bearer <token>`（推荐）
 - `x-moltbot-token: <token>`
-- `?token=<token>` (deprecated; logs a warning and will be removed in a future major release)
+- `?token=<token>`（已弃用；记录警告，并将在未来的主要版本中移除）
 
-## Endpoints
+## 端点
 
 ### `POST /hooks/wake`
 
-Payload:
+有效载荷：
 ```json
 { "text": "System line", "mode": "now" }
 ```
 
-- `text` **required** (string): The description of the event (e.g., "New email received").
-- `mode` optional (`now` | `next-heartbeat`): Whether to trigger an immediate heartbeat (default `now`) or wait for the next periodic check.
+- `text` **必需**（字符串）：事件的描述（例如，"收到新邮件"）。
+- `mode` 可选（`now` | `next-heartbeat`）：是否触发立即心跳（默认 `now`）或等待下次定期检查。
 
-Effect:
-- Enqueues a system event for the **main** session
-- If `mode=now`, triggers an immediate heartbeat
+效果：
+- 为 **主** 会话排队系统事件
+- 如果 `mode=now`，触发立即心跳
 
 ### `POST /hooks/agent`
 
-Payload:
+有效载荷：
 ```json
 {
   "message": "Run this",
@@ -66,77 +66,77 @@ Payload:
 }
 ```
 
-- `message` **required** (string): The prompt or message for the agent to process.
-- `name` optional (string): Human-readable name for the hook (e.g., "GitHub"), used as a prefix in session summaries.
-- `sessionKey` optional (string): The key used to identify the agent's session. Defaults to a random `hook:<uuid>`. Using a consistent key allows for a multi-turn conversation within the hook context.
-- `wakeMode` optional (`now` | `next-heartbeat`): Whether to trigger an immediate heartbeat (default `now`) or wait for the next periodic check.
-- `deliver` optional (boolean): If `true`, the agent's response will be sent to the messaging channel. Defaults to `true`. Responses that are only heartbeat acknowledgments are automatically skipped.
-- `channel` optional (string): The messaging channel for delivery. One of: `last`, `whatsapp`, `telegram`, `discord`, `slack`, `mattermost` (plugin), `signal`, `imessage`, `msteams`. Defaults to `last`.
-- `to` optional (string): The recipient identifier for the channel (e.g., phone number for WhatsApp/Signal, chat ID for Telegram, channel ID for Discord/Slack/Mattermost (plugin), conversation ID for MS Teams). Defaults to the last recipient in the main session.
-- `model` optional (string): Model override (e.g., `anthropic/claude-3-5-sonnet` or an alias). Must be in the allowed model list if restricted.
-- `thinking` optional (string): Thinking level override (e.g., `low`, `medium`, `high`).
-- `timeoutSeconds` optional (number): Maximum duration for the agent run in seconds.
+- `message` **必需**（字符串）：代理要处理的提示或消息。
+- `name` 可选（字符串）：钩子的人类可读名称（例如，"GitHub"），用作会话摘要中的前缀。
+- `sessionKey` 可选（字符串）：用于标识代理会话的键。默认为随机的 `hook:<uuid>`。使用一致的键允许在钩子上下文中进行多轮对话。
+- `wakeMode` 可选（`now` | `next-heartbeat`）：是否触发立即心跳（默认 `now`）或等待下次定期检查。
+- `deliver` 可选（布尔值）：如果为 `true`，代理的响应将发送到消息通道。默认为 `true`。仅是心跳确认的响应会自动跳过。
+- `channel` 可选（字符串）：用于传递的消息通道。可以是：`last`、`whatsapp`、`telegram`、`discord`、`slack`、`mattermost`（插件）、`signal`、`imessage`、`msteams`。默认为 `last`。
+- `to` 可选（字符串）：通道的收件人标识符（例如，WhatsApp/Signal 的电话号码，Telegram 的聊天 ID，Discord/Slack/Mattermost（插件）的通道 ID，MS Teams 的对话 ID）。默认为主会话中的最后一个收件人。
+- `model` 可选（字符串）：模型覆盖（例如，`anthropic/claude-3-5-sonnet` 或别名）。如果受限，必须在允许的模型列表中。
+- `thinking` 可选（字符串）：思考级别覆盖（例如，`low`、`medium`、`high`）。
+- `timeoutSeconds` 可选（数字）：代理运行的最大持续时间（以秒为单位）。
 
-Effect:
-- Runs an **isolated** agent turn (own session key)
-- Always posts a summary into the **main** session
-- If `wakeMode=now`, triggers an immediate heartbeat
+效果：
+- 运行一个 **隔离** 代理回合（自己的会话键）
+- 总是在 **主** 会话中发布摘要
+- 如果 `wakeMode=now`，触发立即心跳
 
-### `POST /hooks/<name>` (mapped)
+### `POST /hooks/<name>`（映射）
 
-Custom hook names are resolved via `hooks.mappings` (see configuration). A mapping can
-turn arbitrary payloads into `wake` or `agent` actions, with optional templates or
-code transforms.
+自定义钩子名称通过 `hooks.mappings` 解析（参见配置）。映射可以
+将任意有效载荷转换为 `wake` 或 `agent` 操作，带有可选模板或
+代码转换。
 
-Mapping options (summary):
-- `hooks.presets: ["gmail"]` enables the built-in Gmail mapping.
-- `hooks.mappings` lets you define `match`, `action`, and templates in config.
-- `hooks.transformsDir` + `transform.module` loads a JS/TS module for custom logic.
-- Use `match.source` to keep a generic ingest endpoint (payload-driven routing).
-- TS transforms require a TS loader (e.g. `bun` or `tsx`) or precompiled `.js` at runtime.
-- Set `deliver: true` + `channel`/`to` on mappings to route replies to a chat surface
-  (`channel` defaults to `last` and falls back to WhatsApp).
-- `allowUnsafeExternalContent: true` disables the external content safety wrapper for that hook
-  (dangerous; only for trusted internal sources).
-- `moltbot webhooks gmail setup` writes `hooks.gmail` config for `moltbot webhooks gmail run`.
-See [Gmail Pub/Sub](/automation/gmail-pubsub) for the full Gmail watch flow.
+映射选项（摘要）：
+- `hooks.presets: ["gmail"]` 启用内置的 Gmail 映射。
+- `hooks.mappings` 允许您在配置中定义 `match`、`action` 和模板。
+- `hooks.transformsDir` + `transform.module` 加载 JS/TS 模块以进行自定义逻辑。
+- 使用 `match.source` 保持通用摄取端点（有效载荷驱动的路由）。
+- TS 转换需要 TS 加载器（例如 `bun` 或 `tsx`）或运行时的预编译 `.js`。
+- 在映射上设置 `deliver: true` + `channel`/`to` 以将回复路由到聊天界面
+  （`channel` 默认为 `last` 并回退到 WhatsApp）。
+- `allowUnsafeExternalContent: true` 为该钩子禁用外部内容安全包装器
+  （危险；仅用于受信任的内部源）。
+- `moltbot webhooks gmail setup` 为 `moltbot webhooks gmail run` 写入 `hooks.gmail` 配置。
+有关完整的 Gmail 监视流程，请参见 [Gmail Pub/Sub](/automation/gmail-pubsub)。
 
-## Responses
+## 响应
 
-- `200` for `/hooks/wake`
-- `202` for `/hooks/agent` (async run started)
-- `401` on auth failure
-- `400` on invalid payload
-- `413` on oversized payloads
+- `/hooks/wake` 的 `200`
+- `/hooks/agent` 的 `202`（异步运行已开始）
+- 认证失败时的 `401`
+- 无效有效载荷时的 `400`
+- 有效载荷过大时的 `413`
 
-## Examples
+## 示例
 
 ```bash
 curl -X POST http://127.0.0.1:18789/hooks/wake \
   -H 'Authorization: Bearer SECRET' \
   -H 'Content-Type: application/json' \
-  -d '{"text":"New email received","mode":"now"}'
+  -d '{"text":"收到新邮件","mode":"now"}'
 ```
 
 ```bash
 curl -X POST http://127.0.0.1:18789/hooks/agent \
   -H 'x-moltbot-token: SECRET' \
   -H 'Content-Type: application/json' \
-  -d '{"message":"Summarize inbox","name":"Email","wakeMode":"next-heartbeat"}'
+  -d '{"message":"总结收件箱","name":"Email","wakeMode":"next-heartbeat"}'
 ```
 
-### Use a different model
+### 使用不同的模型
 
-Add `model` to the agent payload (or mapping) to override the model for that run:
+在代理有效载荷（或映射）中添加 `model` 以覆盖该运行的模型：
 
 ```bash
 curl -X POST http://127.0.0.1:18789/hooks/agent \
   -H 'x-moltbot-token: SECRET' \
   -H 'Content-Type: application/json' \
-  -d '{"message":"Summarize inbox","name":"Email","model":"openai/gpt-5.2-mini"}'
+  -d '{"message":"总结收件箱","name":"Email","model":"openai/gpt-5.2-mini"}'
 ```
 
-If you enforce `agents.defaults.models`, make sure the override model is included there.
+如果您强制执行 `agents.defaults.models`，请确保覆盖模型包含在其中。
 
 ```bash
 curl -X POST http://127.0.0.1:18789/hooks/gmail \
@@ -145,11 +145,11 @@ curl -X POST http://127.0.0.1:18789/hooks/gmail \
   -d '{"source":"gmail","messages":[{"from":"Ada","subject":"Hello","snippet":"Hi"}]}'
 ```
 
-## Security
+## 安全
 
-- Keep hook endpoints behind loopback, tailnet, or trusted reverse proxy.
-- Use a dedicated hook token; do not reuse gateway auth tokens.
-- Avoid including sensitive raw payloads in webhook logs.
-- Hook payloads are treated as untrusted and wrapped with safety boundaries by default.
-  If you must disable this for a specific hook, set `allowUnsafeExternalContent: true`
-  in that hook's mapping (dangerous).
+- 将钩子端点保留在回环、tailnet 或受信任的反向代理后面。
+- 使用专用钩子令牌；不要重用网关认证令牌。
+- 避免在 webhook 日志中包含敏感的原始有效载荷。
+- 钩子有效载荷被视为不受信任，默认情况下用安全边界包装。
+  如果您必须为特定钩子禁用此功能，请在该钩子的映射中设置 `allowUnsafeExternalContent: true`
+  （危险）。

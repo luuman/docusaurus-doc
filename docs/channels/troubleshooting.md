@@ -1,25 +1,25 @@
 ---
-summary: "Channel-specific troubleshooting shortcuts (Discord/Telegram/WhatsApp)"
+summary: "特定通道的故障排除快捷方法（Discord/Telegram/WhatsApp）"
 read_when:
-  - A channel connects but messages don’t flow
-  - Investigating channel misconfiguration (intents, permissions, privacy mode)
+  - 通道连接但消息无法流动
+  - 调查通道错误配置（意图、权限、隐私模式）
 ---
-# Channel troubleshooting
+# 通道故障排除
 
-Start with:
+从以下命令开始：
 
 ```bash
 moltbot doctor
 moltbot channels status --probe
 ```
 
-`channels status --probe` prints warnings when it can detect common channel misconfigurations, and includes small live checks (credentials, some permissions/membership).
+`channels status --probe` 在能够检测到常见通道错误配置时打印警告，并包括一些小的实时检查（凭证、某些权限/成员资格）。
 
-## Channels
+## 通道
 - Discord: [/channels/discord#troubleshooting](/channels/discord#troubleshooting)
 - Telegram: [/channels/telegram#troubleshooting](/channels/telegram#troubleshooting)
 - WhatsApp: [/channels/whatsapp#troubleshooting-quick](/channels/whatsapp#troubleshooting-quick)
 
-## Telegram quick fixes
-- Logs show `HttpError: Network request for 'sendMessage' failed` or `sendChatAction` → check IPv6 DNS. If `api.telegram.org` resolves to IPv6 first and the host lacks IPv6 egress, force IPv4 or enable IPv6. See [/channels/telegram#troubleshooting](/channels/telegram#troubleshooting).
-- Logs show `setMyCommands failed` → check outbound HTTPS and DNS reachability to `api.telegram.org` (common on locked-down VPS or proxies).
+## Telegram 快速修复
+- 日志显示 `HttpError: Network request for 'sendMessage' failed` 或 `sendChatAction` → 检查 IPv6 DNS。如果 `api.telegram.org` 首先解析为 IPv6 且主机缺少 IPv6 出口，则强制使用 IPv4 或启用 IPv6。参见 [/channels/telegram#troubleshooting](/channels/telegram#troubleshooting)。
+- 日志显示 `setMyCommands failed` → 检查出站 HTTPS 和对 `api.telegram.org` 的 DNS 可达性（在受限的 VPS 或代理上很常见）。

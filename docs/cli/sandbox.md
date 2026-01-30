@@ -7,11 +7,11 @@ status: active
 
 # 沙盒 CLI
 
-管理基于 Docker 的沙盒容器以实现隔离的代理执行。
+管理基于 Docker 的沙盒容器以实现隔离的智能体执行。
 
 ## 概述
 
-Moltbot 可以在隔离的 Docker 容器中运行代理以确保安全。`sandbox` 命令帮助您管理这些容器，特别是在更新或配置更改后。
+Moltbot 可以在隔离的 Docker 容器中运行智能体以确保安全。`sandbox` 命令帮助您管理这些容器，特别是在更新或配置更改后。
 
 ## 命令
 
@@ -41,7 +41,7 @@ moltbot sandbox list --json     # JSON 输出
 - Docker 镜像以及是否与配置匹配
 - 年龄（自创建以来的时间）
 - 空闲时间（自上次使用以来的时间）
-- 关联的会话/代理
+- 关联的会话/智能体
 
 ### `moltbot sandbox recreate`
 
@@ -50,7 +50,7 @@ moltbot sandbox list --json     # JSON 输出
 ```bash
 moltbot sandbox recreate --all                # 重新创建所有容器
 moltbot sandbox recreate --session main       # 特定会话
-moltbot sandbox recreate --agent mybot        # 特定代理
+moltbot sandbox recreate --agent mybot        # 特定智能体
 moltbot sandbox recreate --browser            # 仅浏览器容器
 moltbot sandbox recreate --all --force        # 跳过确认
 ```
@@ -58,11 +58,11 @@ moltbot sandbox recreate --all --force        # 跳过确认
 **选项：**
 - `--all`: 重新创建所有沙盒容器
 - `--session <key>`: 为特定会话重新创建容器
-- `--agent <id>`: 为特定代理重新创建容器
+- `--agent <id>`: 为特定智能体重新创建容器
 - `--browser`: 仅重新创建浏览器容器
 - `--force`: 跳过确认提示
 
-**重要：** 容器在下次使用代理时自动重新创建。
+**重要：** 容器在下次使用智能体时自动重新创建。
 
 ## 用例
 
@@ -93,15 +93,15 @@ moltbot sandbox recreate --all
 
 ```bash
 moltbot sandbox recreate --all
-# 或仅一个代理：
+# 或仅一个智能体：
 moltbot sandbox recreate --agent family
 ```
 
 
-### 仅针对特定代理
+### 仅针对特定智能体
 
 ```bash
-# 仅更新一个代理的容器
+# 仅更新一个智能体的容器
 moltbot sandbox recreate --agent alfred
 ```
 
@@ -110,7 +110,7 @@ moltbot sandbox recreate --agent alfred
 **问题：** 当您更新沙盒 Docker 镜像或配置时：
 - 现有容器继续使用旧设置运行
 - 容器仅在 24 小时不活动后才会被修剪
-- 经常使用的代理会无限期地保持旧容器运行
+- 经常使用的智能体会无限期地保持旧容器运行
 
 **解决方案：** 使用 `moltbot sandbox recreate` 强制删除旧容器。它们将在下次需要时自动使用当前设置重新创建。
 
@@ -119,7 +119,7 @@ moltbot sandbox recreate --agent alfred
 
 ## 配置
 
-沙盒设置位于 `~/.clawdbot/moltbot.json` 下的 `agents.defaults.sandbox`（每个代理的覆盖项在 `agents.list[].sandbox` 中）：
+沙盒设置位于 `~/.clawdbot/moltbot.json` 下的 `agents.defaults.sandbox`（每个智能体的覆盖项在 `agents.list[].sandbox` 中）：
 
 ```jsonc
 {
@@ -146,5 +146,5 @@ moltbot sandbox recreate --agent alfred
 ## 参见
 
 - [沙盒文档](/gateway/sandboxing)
-- [代理配置](/concepts/agent-workspace)
+- [智能体配置](/concepts/agent-workspace)
 - [医生命令](/gateway/doctor) - 检查沙盒设置

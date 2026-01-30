@@ -43,6 +43,6 @@ moltbot approvals allowlist remove "~/Projects/**/bin/rg"
 ## 注意事项
 
 - `--node` 使用与 `moltbot nodes` 相同的解析器（id、name、ip 或 id 前缀）。
-- `--agent` 默认为 `"*"`，应用于所有代理。
+- `--agent` 默认为 `"*"`，应用于所有智能体。
 - 节点主机必须宣传 `system.execApprovals.get/set`（macOS 应用或无头节点主机）。
 - 批准文件按主机存储在 `~/.clawdbot/exec-approvals.json`。

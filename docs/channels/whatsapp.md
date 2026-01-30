@@ -1,20 +1,20 @@
 ---
-summary: "WhatsApp (web channel) integration: login, inbox, replies, media, and ops"
+summary: "WhatsApp（网络通道）集成：登录、收件箱、回复、媒体和运维"
 read_when:
-  - Working on WhatsApp/web channel behavior or inbox routing
+  - 处理 WhatsApp/网络通道行为或收件箱路由
 ---
-# WhatsApp (web channel)
+# WhatsApp（网络通道）
 
 
-Status: WhatsApp Web via Baileys only. Gateway owns the session(s).
+状态：仅 WhatsApp Web 通过 Baileys。网关拥有会话。
 
-## Quick setup (beginner)
-1) Use a **separate phone number** if possible (recommended).
-2) Configure WhatsApp in `~/.clawdbot/moltbot.json`.
-3) Run `moltbot channels login` to scan the QR code (Linked Devices).
-4) Start the gateway.
+## 快速设置（初学者）
+1) 如可能，使用**单独的电话号码**（推荐）。
+2) 在 `~/.clawdbot/moltbot.json` 中配置 WhatsApp。
+3) 运行 `moltbot channels login` 扫描二维码（已连接的设备）。
+4) 启动网关。
 
-Minimal config:
+最小配置：
 ```json5
 {
   channels: {
@@ -26,36 +26,36 @@ Minimal config:
 }
 ```
 
-## Goals
-- Multiple WhatsApp accounts (multi-account) in one Gateway process.
-- Deterministic routing: replies return to WhatsApp, no model routing.
-- Model sees enough context to understand quoted replies.
+## 目标
+- 一个网关进程中多个 WhatsApp 账户（多账户）。
+- 确定性路由：回复返回到 WhatsApp，无模型路由。
+- 模型看到足够的上下文以理解引用的回复。
 
-## Config writes
-By default, WhatsApp is allowed to write config updates triggered by `/config set|unset` (requires `commands.config: true`).
+## 配置写入
+默认情况下，WhatsApp 允许写入由 `/config set|unset` 触发的配置更新（需要 `commands.config: true`）。
 
-Disable with:
+禁用方法：
 ```json5
 {
   channels: { whatsapp: { configWrites: false } }
 }
 ```
 
-## Architecture (who owns what)
-- **Gateway** owns the Baileys socket and inbox loop.
-- **CLI / macOS app** talk to the gateway; no direct Baileys use.
-- **Active listener** is required for outbound sends; otherwise send fails fast.
+## 架构（谁拥有什么）
+- **网关** 拥有 Baileys 套接字和收件箱循环。
+- **CLI / macOS 应用** 与网关通信；不直接使用 Baileys。
+- **活跃监听器** 是出站发送所必需的；否则发送快速失败。
 
-## Getting a phone number (two modes)
+## 获取电话号码（两种模式）
 
-WhatsApp requires a real mobile number for verification. VoIP and virtual numbers are usually blocked. There are two supported ways to run Moltbot on WhatsApp:
+WhatsApp 需要真实手机号进行验证。VoIP 和虚拟号码通常被阻止。有两种支持的方式在 WhatsApp 上运行 Moltbot：
 
-### Dedicated number (recommended)
-Use a **separate phone number** for Moltbot. Best UX, clean routing, no self-chat quirks. Ideal setup: **spare/old Android phone + eSIM**. Leave it on Wi‑Fi and power, and link it via QR.
+### 专用号码（推荐）
+为 Moltbot 使用**单独的电话号码**。最佳用户体验，清晰路由，无自聊异常。理想设置：**备用/旧 Android 手机 + eSIM**。保持 Wi-Fi 和电源开启，并通过 QR 链接。
 
-**WhatsApp Business:** You can use WhatsApp Business on the same device with a different number. Great for keeping your personal WhatsApp separate — install WhatsApp Business and register the Moltbot number there.
+**WhatsApp Business：** 您可以在同一设备上使用 WhatsApp Business，使用不同的号码。非常适合将您的个人 WhatsApp 与之分离 — 安装 WhatsApp Business 并在那里注册 Moltbot 号码。
 
-**Sample config (dedicated number, single-user allowlist):**
+**示例配置（专用号码，单用户允许列表）：**
 ```json5
 {
   channels: {
@@ -67,15 +67,15 @@ Use a **separate phone number** for Moltbot. Best UX, clean routing, no self-cha
 }
 ```
 
-**Pairing mode (optional):**
-If you want pairing instead of allowlist, set `channels.whatsapp.dmPolicy` to `pairing`. Unknown senders get a pairing code; approve with:
+**配对模式（可选）：**
+如果您想要配对而不是允许列表，将 `channels.whatsapp.dmPolicy` 设置为 `pairing`。未知发送者获得配对码；通过以下方式批准：
 `moltbot pairing approve whatsapp <code>`
 
-### Personal number (fallback)
-Quick fallback: run Moltbot on **your own number**. Message yourself (WhatsApp “Message yourself”) for testing so you don’t spam contacts. Expect to read verification codes on your main phone during setup and experiments. **Must enable self-chat mode.**
-When the wizard asks for your personal WhatsApp number, enter the phone you will message from (the owner/sender), not the assistant number.
+### 个人号码（回退）
+快速回退：在**您的自己的号码**上运行 Moltbot。给自己发消息（WhatsApp "给自己发消息"）进行测试，以免骚扰联系人。在设置和实验期间预计在主手机上阅读验证码。**必须启用自聊模式。**
+当向导询问您的个人 WhatsApp 号码时，输入您将从中发送消息的电话（所有者/发送者），而不是助手号码。
 
-**Sample config (personal number, self-chat):**
+**示例配置（个人号码，自聊）：**
 ```json
 {
   "whatsapp": {
@@ -86,67 +86,67 @@ When the wizard asks for your personal WhatsApp number, enter the phone you will
 }
 ```
 
-Self-chat replies default to `[{identity.name}]` when set (otherwise `[moltbot]`)
-if `messages.responsePrefix` is unset. Set it explicitly to customize or disable
-the prefix (use `""` to remove it).
+自聊回复在设置时默认为 `[{identity.name}]`（否则为 `[moltbot]`）
+如果未设置 `messages.responsePrefix`。显式设置它以自定义或禁用
+前缀（使用 `""` 删除它）。
 
-### Number sourcing tips
-- **Local eSIM** from your country's mobile carrier (most reliable)
-  - Austria: [hot.at](https://www.hot.at)
-  - UK: [giffgaff](https://www.giffgaff.com) — free SIM, no contract
-- **Prepaid SIM** — cheap, just needs to receive one SMS for verification
+### 号码获取技巧
+- **本地 eSIM** 来自您国家的移动运营商（最可靠）
+  - 奥地利：[hot.at](https://www.hot.at)
+  - 英国：[giffgaff](https://www.giffgaff.com) — 免费 SIM，无合同
+- **预付费 SIM** — 便宜，只需接收一条 SMS 进行验证
 
-**Avoid:** TextNow, Google Voice, most "free SMS" services — WhatsApp blocks these aggressively.
+**避免：** TextNow、Google Voice、大多数"免费 SMS"服务 — WhatsApp 积极阻止这些。
 
-**Tip:** The number only needs to receive one verification SMS. After that, WhatsApp Web sessions persist via `creds.json`.
+**提示：** 号码只需要接收一条验证 SMS。之后，WhatsApp Web 会话通过 `creds.json` 持续。
 
-## Why Not Twilio?
-- Early Moltbot builds supported Twilio’s WhatsApp Business integration.
-- WhatsApp Business numbers are a poor fit for a personal assistant.
-- Meta enforces a 24‑hour reply window; if you haven’t responded in the last 24 hours, the business number can’t initiate new messages.
-- High-volume or “chatty” usage triggers aggressive blocking, because business accounts aren’t meant to send dozens of personal assistant messages.
-- Result: unreliable delivery and frequent blocks, so support was removed.
+## 为什么不使用 Twilio？
+- 早期 Moltbot 版本支持 Twilio 的 WhatsApp Business 集成。
+- WhatsApp Business 号码不适合个人助手。
+- Meta 强制执行 24 小时回复窗口；如果您在过去 24 小时内未回复，业务号码无法发起新消息。
+- 高容量或"健谈"使用触发积极阻止，因为业务账户不应用于发送数十条个人助手消息。
+- 结果：不可靠的传递和频繁阻止，因此支持被移除。
 
-## Login + credentials
-- Login command: `moltbot channels login` (QR via Linked Devices).
-- Multi-account login: `moltbot channels login --account <id>` (`<id>` = `accountId`).
-- Default account (when `--account` is omitted): `default` if present, otherwise the first configured account id (sorted).
-- Credentials stored in `~/.clawdbot/credentials/whatsapp/<accountId>/creds.json`.
-- Backup copy at `creds.json.bak` (restored on corruption).
-- Legacy compatibility: older installs stored Baileys files directly in `~/.clawdbot/credentials/`.
-- Logout: `moltbot channels logout` (or `--account <id>`) deletes WhatsApp auth state (but keeps shared `oauth.json`).
-- Logged-out socket => error instructs re-link.
+## 登录 + 凭据
+- 登录命令：`moltbot channels login`（通过已连接设备的 QR）。
+- 多账户登录：`moltbot channels login --account <id>`（`<id>` = `accountId`）。
+- 默认账户（当省略 `--account` 时）：如果存在为 `default`，否则为第一个配置的账户 ID（排序）。
+- 凭据存储在 `~/.clawdbot/credentials/whatsapp/<accountId>/creds.json`。
+- 备份副本在 `creds.json.bak`（在损坏时恢复）。
+- 旧版兼容性：较旧的安装直接将 Baileys 文件存储在 `~/.clawdbot/credentials/` 中。
+- 登出：`moltbot channels logout`（或 `--account <id>`）删除 WhatsApp 认证状态（但保留共享的 `oauth.json`）。
+- 登出套接字 => 错误指示重新链接。
 
-## Inbound flow (DM + group)
-- WhatsApp events come from `messages.upsert` (Baileys).
-- Inbox listeners are detached on shutdown to avoid accumulating event handlers in tests/restarts.
-- Status/broadcast chats are ignored.
-- Direct chats use E.164; groups use group JID.
-- **DM policy**: `channels.whatsapp.dmPolicy` controls direct chat access (default: `pairing`).
-  - Pairing: unknown senders get a pairing code (approve via `moltbot pairing approve whatsapp <code>`; codes expire after 1 hour).
-  - Open: requires `channels.whatsapp.allowFrom` to include `"*"`.
-  - Your linked WhatsApp number is implicitly trusted, so self messages skip ⁠`channels.whatsapp.dmPolicy` and `channels.whatsapp.allowFrom` checks.
+## 入站流程（私信 + 群组）
+- WhatsApp 事件来自 `messages.upsert`（Baileys）。
+- 关机时分离收件箱监听器，以避免在测试/重启中积累事件处理器。
+- 状态/广播聊天被忽略。
+- 直接聊天使用 E.164；群组使用群组 JID。
+- **私信策略**：`channels.whatsapp.dmPolicy` 控制直接聊天访问（默认：`pairing`）。
+  - 配对：未知发送者获得配对码（通过 `moltbot pairing approve whatsapp <code>` 批准；代码在 1 小时后过期）。
+  - 开放：需要 `channels.whatsapp.allowFrom` 包含 `"*`。
+  - 您的已链接 WhatsApp 号码被隐式信任，因此自消息跳过 `channels.whatsapp.dmPolicy` 和 `channels.whatsapp.allowFrom` 检查。
 
-### Personal-number mode (fallback)
-If you run Moltbot on your **personal WhatsApp number**, enable `channels.whatsapp.selfChatMode` (see sample above).
+### 个人号码模式（回退）
+如果您在**个人 WhatsApp 号码**上运行 Moltbot，启用 `channels.whatsapp.selfChatMode`（参见上面的示例）。
 
-Behavior:
-- Outbound DMs never trigger pairing replies (prevents spamming contacts).
-- Inbound unknown senders still follow `channels.whatsapp.dmPolicy`.
-- Self-chat mode (allowFrom includes your number) avoids auto read receipts and ignores mention JIDs.
-- Read receipts sent for non-self-chat DMs.
+行为：
+- 出站私信从不触发配对回复（防止骚扰联系人）。
+- 入站未知发送者仍遵循 `channels.whatsapp.dmPolicy`。
+- 自聊模式（allowFrom 包含您的号码）避免自动已读回执并忽略提及 JID。
+- 为非自聊私信发送已读回执。
 
-## Read receipts
-By default, the gateway marks inbound WhatsApp messages as read (blue ticks) once they are accepted.
+## 已读回执
+默认情况下，网关在入站 WhatsApp 消息被接受后将其标记为已读（蓝色勾号）。
 
-Disable globally:
+全局禁用：
 ```json5
 {
   channels: { whatsapp: { sendReadReceipts: false } }
 }
 ```
 
-Disable per account:
+按账户禁用：
 ```json5
 {
   channels: {
@@ -159,66 +159,66 @@ Disable per account:
 }
 ```
 
-Notes:
-- Self-chat mode always skips read receipts.
+注意事项：
+- 自聊模式始终跳过已读回执。
 
-## WhatsApp FAQ: sending messages + pairing
+## WhatsApp FAQ：发送消息 + 配对
 
-**Will Moltbot message random contacts when I link WhatsApp?**  
-No. Default DM policy is **pairing**, so unknown senders only get a pairing code and their message is **not processed**. Moltbot only replies to chats it receives, or to sends you explicitly trigger (agent/CLI).
+**当我链接 WhatsApp 时，Moltbot 会向随机联系人发送消息吗？**  
+不会。默认私信策略是**配对**，因此未知发送者只获得配对码，他们的消息**不会被处理**。Moltbot 只回复它收到的聊天，或您明确触发的发送（代理/CLI）。
 
-**How does pairing work on WhatsApp?**  
-Pairing is a DM gate for unknown senders:
-- First DM from a new sender returns a short code (message is not processed).
-- Approve with: `moltbot pairing approve whatsapp <code>` (list with `moltbot pairing list whatsapp`).
-- Codes expire after 1 hour; pending requests are capped at 3 per channel.
+**WhatsApp 上的配对如何工作？**  
+配对是针对未知发送者的私信门：
+- 新发送者的首次私信返回短代码（消息未被处理）。
+- 通过以下方式批准：`moltbot pairing approve whatsapp <code>`（通过 `moltbot pairing list whatsapp` 列出）。
+- 代码在 1 小时后过期；待处理请求限制为每个通道 3 个。
 
-**Can multiple people use different Moltbots on one WhatsApp number?**  
-Yes, by routing each sender to a different agent via `bindings` (peer `kind: "dm"`, sender E.164 like `+15551234567`). Replies still come from the **same WhatsApp account**, and direct chats collapse to each agent’s main session, so use **one agent per person**. DM access control (`dmPolicy`/`allowFrom`) is global per WhatsApp account. See [Multi-Agent Routing](/concepts/multi-agent).
+**多人可以在一个 WhatsApp 号码上使用不同的 Moltbots 吗？**  
+是的，通过 `bindings` 将每个发送者路由到不同代理（对等 `kind: "dm"`，发送者 E.164 如 `+15551234567`）。回复仍来自**同一 WhatsApp 账户**，直接聊天折叠到每个代理的主会话，因此为每人使用**一个代理**。私信访问控制（`dmPolicy`/`allowFrom`）是每个 WhatsApp 账户的全局设置。参见 [多代理路由](/concepts/multi-agent)。
 
-**Why do you ask for my phone number in the wizard?**  
-The wizard uses it to set your **allowlist/owner** so your own DMs are permitted. It’s not used for auto-sending. If you run on your personal WhatsApp number, use that same number and enable `channels.whatsapp.selfChatMode`.
+**为什么向导询问我的电话号码？**  
+向导使用它设置您的**允许列表/所有者**，以便您的私信被允许。它不用于自动发送。如果您在个人 WhatsApp 号码上运行，请使用相同号码并启用 `channels.whatsapp.selfChatMode`。
 
-## Message normalization (what the model sees)
-- `Body` is the current message body with envelope.
-- Quoted reply context is **always appended**:
+## 消息规范化（模型看到的内容）
+- `Body` 是带有信封的当前消息正文。
+- 引用回复上下文**始终追加**：
   ```
-  [Replying to +1555 id:ABC123]
-  <quoted text or <media:...>>
-  [/Replying]
+  [回复给 +1555 id:ABC123]
+  <引用文本或 <media:...>>
+  [/回复]
   ```
-- Reply metadata also set:
+- 回复元数据也设置：
   - `ReplyToId` = stanzaId
-  - `ReplyToBody` = quoted body or media placeholder
-  - `ReplyToSender` = E.164 when known
-- Media-only inbound messages use placeholders:
+  - `ReplyToBody` = 引用正文或媒体占位符
+  - `ReplyToSender` = 已知时的 E.164
+- 仅媒体入站消息使用占位符：
   - `<media:image|video|audio|document|sticker>`
 
-## Groups
-- Groups map to `agent:<agentId>:whatsapp:group:<jid>` sessions.
-- Group policy: `channels.whatsapp.groupPolicy = open|disabled|allowlist` (default `allowlist`).
-- Activation modes:
-  - `mention` (default): requires @mention or regex match.
-  - `always`: always triggers.
-- `/activation mention|always` is owner-only and must be sent as a standalone message.
-- Owner = `channels.whatsapp.allowFrom` (or self E.164 if unset).
-- **History injection** (pending-only):
-  - Recent *unprocessed* messages (default 50) inserted under:
-    `[Chat messages since your last reply - for context]` (messages already in the session are not re-injected)
-  - Current message under:
-    `[Current message - respond to this]`
-  - Sender suffix appended: `[from: Name (+E164)]`
-- Group metadata cached 5 min (subject + participants).
+## 群组
+- 群组映射到 `agent:<agentId>:whatsapp:group:<jid>` 会话。
+- 群组策略：`channels.whatsapp.groupPolicy = open|disabled|allowlist`（默认 `allowlist`）。
+- 激活模式：
+  - `mention`（默认）：需要 @提及或正则表达式匹配。
+  - `always`：始终触发。
+- `/activation mention|always` 仅所有者，必须作为独立消息发送。
+- 所有者 = `channels.whatsapp.allowFrom`（或未设置时的自 E.164）。
+- **历史注入**（仅待处理）：
+  - 最近的*未处理*消息（默认 50）插入在：
+    `[自您上次回复以来的聊天消息 - 用于上下文]`（已在会话中的消息不会重新注入）
+  - 当前消息在：
+    `[当前消息 - 回复此消息]`
+  - 发送者后缀追加：`[来自：姓名 (+E164)]`
+- 群组元数据缓存 5 分钟（主题 + 参与者）。
 
-## Reply delivery (threading)
-- WhatsApp Web sends standard messages (no quoted reply threading in the current gateway).
-- Reply tags are ignored on this channel.
+## 回复传递（线程）
+- WhatsApp Web 发送标准消息（当前网关中无引用回复线程）。
+- 此通道忽略回复标签。
 
-## Acknowledgment reactions (auto-react on receipt)
+## 确认反应（接收时自动反应）
 
-WhatsApp can automatically send emoji reactions to incoming messages immediately upon receipt, before the bot generates a reply. This provides instant feedback to users that their message was received.
+WhatsApp 可以在接收消息后立即自动发送表情符号反应，然后在机器人生成回复之前。这为用户提供即时反馈，表明他们的消息已被接收。
 
-**Configuration:**
+**配置：**
 ```json
 {
   "whatsapp": {
@@ -231,15 +231,15 @@ WhatsApp can automatically send emoji reactions to incoming messages immediately
 }
 ```
 
-**Options:**
-- `emoji` (string): Emoji to use for acknowledgment (e.g., "👀", "✅", "📨"). Empty or omitted = feature disabled.
-- `direct` (boolean, default: `true`): Send reactions in direct/DM chats.
-- `group` (string, default: `"mentions"`): Group chat behavior:
-  - `"always"`: React to all group messages (even without @mention)
-  - `"mentions"`: React only when bot is @mentioned
-  - `"never"`: Never react in groups
+**选项：**
+- `emoji`（字符串）：用于确认的表情符号（例如，"👀"，"✅"，"📨"）。空或省略 = 功能禁用。
+- `direct`（布尔值，默认：`true`）：在直接/私信聊天中发送反应。
+- `group`（字符串，默认：`"mentions"`）：群组聊天行为：
+  - `"always"`：对所有群组消息反应（即使没有 @提及）
+  - `"mentions"`：仅在机器人被 @提及 时反应
+  - `"never"`：从不在群组中反应
 
-**Per-account override:**
+**按账户覆盖：**
 ```json
 {
   "whatsapp": {
@@ -256,107 +256,107 @@ WhatsApp can automatically send emoji reactions to incoming messages immediately
 }
 ```
 
-**Behavior notes:**
-- Reactions are sent **immediately** upon message receipt, before typing indicators or bot replies.
-- In groups with `requireMention: false` (activation: always), `group: "mentions"` will react to all messages (not just @mentions).
-- Fire-and-forget: reaction failures are logged but don't prevent the bot from replying.
-- Participant JID is automatically included for group reactions.
-- WhatsApp ignores `messages.ackReaction`; use `channels.whatsapp.ackReaction` instead.
+**行为注意事项：**
+- 反应在消息接收时**立即**发送，在输入指示器或机器人回复之前。
+- 在 `requireMention: false`（激活：始终）的群组中，`group: "mentions"` 将对所有消息反应（不仅 @提及）。
+- 一次性发送：反应失败被记录但不阻止机器人回复。
+- 参与者 JID 自动包含在群组反应中。
+- WhatsApp 忽略 `messages.ackReaction`；使用 `channels.whatsapp.ackReaction`。
 
-## Agent tool (reactions)
-- Tool: `whatsapp` with `react` action (`chatJid`, `messageId`, `emoji`, optional `remove`).
-- Optional: `participant` (group sender), `fromMe` (reacting to your own message), `accountId` (multi-account).
-- Reaction removal semantics: see [/tools/reactions](/tools/reactions).
-- Tool gating: `channels.whatsapp.actions.reactions` (default: enabled).
+## 代理工具（反应）
+- 工具：`whatsapp` 与 `react` 动作（`chatJid`，`messageId`，`emoji`，可选 `remove`）。
+- 可选：`participant`（群组发送者），`fromMe`（对自己消息的反应），`accountId`（多账户）。
+- 反应移除语义：参见 [/tools/reactions](/tools/reactions)。
+- 工具门控：`channels.whatsapp.actions.reactions`（默认：启用）。
 
-## Limits
-- Outbound text is chunked to `channels.whatsapp.textChunkLimit` (default 4000).
-- Optional newline chunking: set `channels.whatsapp.chunkMode="newline"` to split on blank lines (paragraph boundaries) before length chunking.
-- Inbound media saves are capped by `channels.whatsapp.mediaMaxMb` (default 50 MB).
-- Outbound media items are capped by `agents.defaults.mediaMaxMb` (default 5 MB).
+## 限制
+- 出站文本分割到 `channels.whatsapp.textChunkLimit`（默认 4000）。
+- 可选的换行分割：设置 `channels.whatsapp.chunkMode="newline"` 以在长度分割之前按空行（段落边界）分割。
+- 入站媒体保存限制为 `channels.whatsapp.mediaMaxMb`（默认 50 MB）。
+- 出站媒体项目限制为 `agents.defaults.mediaMaxMb`（默认 5 MB）。
 
-## Outbound send (text + media)
-- Uses active web listener; error if gateway not running.
-- Text chunking: 4k max per message (configurable via `channels.whatsapp.textChunkLimit`, optional `channels.whatsapp.chunkMode`).
-- Media:
-  - Image/video/audio/document supported.
-  - Audio sent as PTT; `audio/ogg` => `audio/ogg; codecs=opus`.
-  - Caption only on first media item.
-  - Media fetch supports HTTP(S) and local paths.
-  - Animated GIFs: WhatsApp expects MP4 with `gifPlayback: true` for inline looping.
-    - CLI: `moltbot message send --media <mp4> --gif-playback`
-    - Gateway: `send` params include `gifPlayback: true`
+## 出站发送（文本 + 媒体）
+- 使用活跃的网络监听器；如果网关未运行则出错。
+- 文本分割：每消息最大 4k（可通过 `channels.whatsapp.textChunkLimit` 配置，可选 `channels.whatsapp.chunkMode`）。
+- 媒体：
+  - 支持图像/视频/音频/文档。
+  - 音频作为 PTT 发送；`audio/ogg` => `audio/ogg; codecs=opus`。
+  - 标题仅在第一个媒体项目上。
+  - 媒体获取支持 HTTP(S) 和本地路径。
+  - 动画 GIF：WhatsApp 期望 MP4 与 `gifPlayback: true` 用于内联循环播放。
+    - CLI：`moltbot message send --media <mp4> --gif-playback`
+    - 网关：`send` 参数包括 `gifPlayback: true`
 
-## Voice notes (PTT audio)
-WhatsApp sends audio as **voice notes** (PTT bubble).
-- Best results: OGG/Opus. Moltbot rewrites `audio/ogg` to `audio/ogg; codecs=opus`.
-- `[[audio_as_voice]]` is ignored for WhatsApp (audio already ships as voice note).
+## 语音笔记（PTT 音频）
+WhatsApp 将音频作为**语音笔记**（PTT 气泡）发送。
+- 最佳结果：OGG/Opus。Moltbot 将 `audio/ogg` 重写为 `audio/ogg; codecs=opus`。
+- `[[audio_as_voice]]` 对 WhatsApp 被忽略（音频已作为语音笔记发送）。
 
-## Media limits + optimization
-- Default outbound cap: 5 MB (per media item).
-- Override: `agents.defaults.mediaMaxMb`.
-- Images are auto-optimized to JPEG under cap (resize + quality sweep).
-- Oversize media => error; media reply falls back to text warning.
+## 媒体限制 + 优化
+- 默认出站限制：5 MB（每个媒体项目）。
+- 覆盖：`agents.defaults.mediaMaxMb`。
+- 图像自动优化为低于限制的 JPEG（调整大小 + 质量扫描）。
+- 超大媒体 => 错误；媒体回复回退到文本警告。
 
-## Heartbeats
-- **Gateway heartbeat** logs connection health (`web.heartbeatSeconds`, default 60s).
-- **Agent heartbeat** can be configured per agent (`agents.list[].heartbeat`) or globally
-  via `agents.defaults.heartbeat` (fallback when no per-agent entries are set).
-  - Uses the configured heartbeat prompt (default: `Read HEARTBEAT.md if it exists (workspace context). Follow it strictly. Do not infer or repeat old tasks from prior chats. If nothing needs attention, reply HEARTBEAT_OK.`) + `HEARTBEAT_OK` skip behavior.
-  - Delivery defaults to the last used channel (or configured target).
+## 心跳
+- **网关心跳** 记录连接健康状况（`web.heartbeatSeconds`，默认 60s）。
+- **代理心跳** 可以按代理配置（`agents.list[].heartbeat`）或全局
+  通过 `agents.defaults.heartbeat`（当未设置按代理条目时回退）。
+  - 使用配置的心跳提示（默认：`如果存在 HEARTBEAT.md（工作区上下文）请阅读。严格遵循。不要从之前的聊天中推断或重复旧任务。如果无需关注，回复 HEARTBEAT_OK。`）+ `HEARTBEAT_OK` 跳过行为。
+  - 传递默认为最后使用的通道（或配置的目标）。
 
-## Reconnect behavior
-- Backoff policy: `web.reconnect`:
-  - `initialMs`, `maxMs`, `factor`, `jitter`, `maxAttempts`.
-- If maxAttempts reached, web monitoring stops (degraded).
-- Logged-out => stop and require re-link.
+## 重连行为
+- 退避策略：`web.reconnect`：
+  - `initialMs`，`maxMs`，`factor`，`jitter`，`maxAttempts`。
+- 如果达到最大尝试次数，网络监控停止（降级）。
+- 登出 => 停止并要求重新链接。
 
-## Config quick map
-- `channels.whatsapp.dmPolicy` (DM policy: pairing/allowlist/open/disabled).
-- `channels.whatsapp.selfChatMode` (same-phone setup; bot uses your personal WhatsApp number).
-- `channels.whatsapp.allowFrom` (DM allowlist). WhatsApp uses E.164 phone numbers (no usernames).
-- `channels.whatsapp.mediaMaxMb` (inbound media save cap).
-- `channels.whatsapp.ackReaction` (auto-reaction on message receipt: `{emoji, direct, group}`).
-- `channels.whatsapp.accounts.<accountId>.*` (per-account settings + optional `authDir`).
-- `channels.whatsapp.accounts.<accountId>.mediaMaxMb` (per-account inbound media cap).
-- `channels.whatsapp.accounts.<accountId>.ackReaction` (per-account ack reaction override).
-- `channels.whatsapp.groupAllowFrom` (group sender allowlist).
-- `channels.whatsapp.groupPolicy` (group policy).
-- `channels.whatsapp.historyLimit` / `channels.whatsapp.accounts.<accountId>.historyLimit` (group history context; `0` disables).
-- `channels.whatsapp.dmHistoryLimit` (DM history limit in user turns). Per-user overrides: `channels.whatsapp.dms["<phone>"].historyLimit`.
-- `channels.whatsapp.groups` (group allowlist + mention gating defaults; use `"*"` to allow all)
-- `channels.whatsapp.actions.reactions` (gate WhatsApp tool reactions).
-- `agents.list[].groupChat.mentionPatterns` (or `messages.groupChat.mentionPatterns`)
+## 配置快速映射
+- `channels.whatsapp.dmPolicy`（私信策略：配对/允许列表/开放/禁用）。
+- `channels.whatsapp.selfChatMode`（同电话设置；机器人使用您的个人 WhatsApp 号码）。
+- `channels.whatsapp.allowFrom`（私信允许列表）。WhatsApp 使用 E.164 电话号码（无用户名）。
+- `channels.whatsapp.mediaMaxMb`（入站媒体保存限制）。
+- `channels.whatsapp.ackReaction`（消息接收时自动反应：`{emoji, direct, group}`）。
+- `channels.whatsapp.accounts.<accountId>.*`（按账户设置 + 可选 `authDir`）。
+- `channels.whatsapp.accounts.<accountId>.mediaMaxMb`（按账户入站媒体限制）。
+- `channels.whatsapp.accounts.<accountId>.ackReaction`（按账户确认反应覆盖）。
+- `channels.whatsapp.groupAllowFrom`（群组发送者允许列表）。
+- `channels.whatsapp.groupPolicy`（群组策略）。
+- `channels.whatsapp.historyLimit` / `channels.whatsapp.accounts.<accountId>.historyLimit`（群组历史上下文；`0` 禁用）。
+- `channels.whatsapp.dmHistoryLimit`（私信历史限制（用户回合））。按用户覆盖：`channels.whatsapp.dms["<phone>"].historyLimit`。
+- `channels.whatsapp.groups`（群组允许列表 + 提及门控默认值；使用 `"*"` 允许所有）
+- `channels.whatsapp.actions.reactions`（门控 WhatsApp 工具反应）。
+- `agents.list[].groupChat.mentionPatterns`（或 `messages.groupChat.mentionPatterns`）
 - `messages.groupChat.historyLimit`
-- `channels.whatsapp.messagePrefix` (inbound prefix; per-account: `channels.whatsapp.accounts.<accountId>.messagePrefix`; deprecated: `messages.messagePrefix`)
-- `messages.responsePrefix` (outbound prefix)
+- `channels.whatsapp.messagePrefix`（入站前缀；按账户：`channels.whatsapp.accounts.<accountId>.messagePrefix`；已弃用：`messages.messagePrefix`）
+- `messages.responsePrefix`（出站前缀）
 - `agents.defaults.mediaMaxMb`
 - `agents.defaults.heartbeat.every`
-- `agents.defaults.heartbeat.model` (optional override)
+- `agents.defaults.heartbeat.model`（可选覆盖）
 - `agents.defaults.heartbeat.target`
 - `agents.defaults.heartbeat.to`
 - `agents.defaults.heartbeat.session`
-- `agents.list[].heartbeat.*` (per-agent overrides)
-- `session.*` (scope, idle, store, mainKey)
-- `web.enabled` (disable channel startup when false)
+- `agents.list[].heartbeat.*`（按代理覆盖）
+- `session.*`（范围，空闲，存储，主键）
+- `web.enabled`（为假时禁用通道启动）
 - `web.heartbeatSeconds`
 - `web.reconnect.*`
 
-## Logs + troubleshooting
-- Subsystems: `whatsapp/inbound`, `whatsapp/outbound`, `web-heartbeat`, `web-reconnect`.
-- Log file: `/tmp/moltbot/moltbot-YYYY-MM-DD.log` (configurable).
-- Troubleshooting guide: [Gateway troubleshooting](/gateway/troubleshooting).
+## 日志 + 故障排除
+- 子系统：`whatsapp/inbound`，`whatsapp/outbound`，`web-heartbeat`，`web-reconnect`。
+- 日志文件：`/tmp/moltbot/moltbot-YYYY-MM-DD.log`（可配置）。
+- 故障排除指南：[网关故障排除](/gateway/troubleshooting)。
 
-## Troubleshooting (quick)
+## 故障排除（快速）
 
-**Not linked / QR login required**
-- Symptom: `channels status` shows `linked: false` or warns “Not linked”.
-- Fix: run `moltbot channels login` on the gateway host and scan the QR (WhatsApp → Settings → Linked Devices).
+**未链接 / 需要 QR 登录**
+- 症状：`channels status` 显示 `linked: false` 或警告"未链接"。
+- 修复：在网关主机上运行 `moltbot channels login` 并扫描 QR（WhatsApp → 设置 → 已连接的设备）。
 
-**Linked but disconnected / reconnect loop**
-- Symptom: `channels status` shows `running, disconnected` or warns “Linked but disconnected”.
-- Fix: `moltbot doctor` (or restart the gateway). If it persists, relink via `channels login` and inspect `moltbot logs --follow`.
+**已链接但断开连接 / 重连循环**
+- 症状：`channels status` 显示 `running, disconnected` 或警告"已链接但断开连接"。
+- 修复：`moltbot doctor`（或重启网关）。如果持续，请通过 `channels login` 重新链接并检查 `moltbot logs --follow`。
 
-**Bun runtime**
-- Bun is **not recommended**. WhatsApp (Baileys) and Telegram are unreliable on Bun.
-  Run the gateway with **Node**. (See Getting Started runtime note.)
+**Bun 运行时**
+- 不推荐**Bun**。WhatsApp（Baileys）和 Telegram 在 Bun 上不可靠。
+  使用**Node**运行网关。（参见入门运行时说明。）

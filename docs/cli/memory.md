@@ -32,7 +32,7 @@ moltbot memory index --agent main --verbose
 
 通用：
 
-- `--agent <id>`: 限定为单个代理（默认：所有配置的代理）。
+- `--agent <id>`: 限定为单个智能体（默认：所有配置的智能体）。
 - `--verbose`: 在探测和索引期间输出详细日志。
 
 注意事项：
