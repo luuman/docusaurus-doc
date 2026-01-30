@@ -5,7 +5,7 @@ import type * as Preset from "@docusaurus/preset-classic";
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
 const config: Config = {
-  title: "ElectronDoc",
+  title: "ClaudeDoc",
   tagline: "Dinosaurs are cool",
   favicon: "img/favicon.ico",
 
@@ -18,12 +18,12 @@ const config: Config = {
   url: "https://luuman.github.io/",
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
-  baseUrl: "/docusaurus-doc/",
+  baseUrl: "/claude-doc/",
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
   organizationName: "luuman", // Usually your GitHub org/user name.
-  projectName: "docusaurus-doc", // Usually your repo name.
+  projectName: "claude-doc", // Usually your repo name.
 
   trailingSlash: false,
 
@@ -87,9 +87,9 @@ const config: Config = {
     // Replace with your project's social card
     image: "img/docusaurus-social-card.jpg",
     navbar: {
-      title: "ElectronDoc",
+      title: "ClaudeDoc",
       // logo: {
-      //   alt: "ElectronDoc Logo",
+      //   alt: "ClaudeDoc Logo",
       //   src: "img/logo.svg",
       // },
       items: [
@@ -101,7 +101,7 @@ const config: Config = {
         // },
         {
           label: "Docs",
-          to: "docs/guide/",
+          to: "docs/claude-code/",
           position: "left",
           activeBasePath: "docs",
           // items: [

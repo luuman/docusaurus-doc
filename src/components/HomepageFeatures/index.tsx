@@ -9,7 +9,7 @@ type FeatureItem = {
   description: ReactNode;
 };
 
-const ElectronDocWinList: FeatureItem[] = [
+const ClaudeDocWinList: FeatureItem[] = [
   {
     title: "桌面端App",
     // name: 'Matrix Windows',
@@ -139,7 +139,7 @@ const ElectronDocWinList: FeatureItem[] = [
   // },
 ];
 
-const ElectronDocWebList: FeatureItem[] = [
+const ClaudeDocWebList: FeatureItem[] = [
   {
     title: "首页",
     // name: 'Home',
@@ -190,12 +190,12 @@ export default function HomepageFeatures(): ReactNode {
     <section className={styles.features}>
       <div className="container">
         <div className="row">
-          {ElectronDocWinList.map((props, idx) => (
+          {ClaudeDocWinList.map((props, idx) => (
             <Feature key={idx} {...props} />
           ))}
         </div>
         <div className="row">
-          {ElectronDocWebList.map((props, idx) => (
+          {ClaudeDocWebList.map((props, idx) => (
             <Feature key={idx} {...props} />
           ))}
         </div>
