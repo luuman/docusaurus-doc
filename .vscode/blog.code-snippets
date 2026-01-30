@@ -1,0 +1,25 @@
+{
+  "Docusaurus Blog Post": {
+    "prefix": "docusaurus-blog",
+    "body": [
+      "---",
+      "slug: ${1:blog-slug}",
+      "title: ${2:Blog Title}",
+      "authors: [${3:author-name}]",
+      "tags: [${4:tag1}, ${5:tag2}]",
+      "date: ${CURRENT_YEAR}-${CURRENT_MONTH}-${CURRENT_DATE}",
+      "description: ${6:A brief description of the blog post}",
+      "---",
+      "",
+      "${7:## Introduction}",
+      "",
+      "Start writing your blog post here...",
+      "",
+      "<!-- truncate -->",
+      "",
+      "Content after the truncation marker will appear in the full post page.",
+      ""
+    ],
+    "description": "Create a new Docusaurus blog post"
+  }
+}
