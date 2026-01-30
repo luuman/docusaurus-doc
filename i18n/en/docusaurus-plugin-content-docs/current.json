@@ -50,5 +50,485 @@
   "sidebar.tutorialSidebar.category.Introduction": {
     "message": "Introduction",
     "description": "The label for category Introduction in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Start Here": {
+    "message": "Start Here",
+    "description": "The label for category 'Start Here' in sidebar 'tutorialSidebar'"
+  },
+  "sidebar.tutorialSidebar.category.Help": {
+    "message": "Help",
+    "description": "The label for category 'Help' in sidebar 'tutorialSidebar'"
+  },
+  "sidebar.tutorialSidebar.category.Install Updates": {
+    "message": "Install Updates",
+    "description": "The label for category 'Install Updates' in sidebar 'tutorialSidebar'"
+  },
+  "sidebar.tutorialSidebar.category.CLI": {
+    "message": "CLI",
+    "description": "The label for category 'CLI' in sidebar 'tutorialSidebar'"
+  },
+  "sidebar.tutorialSidebar.category.Core Concepts": {
+    "message": "Core Concepts",
+    "description": "The label for category 'Core Concepts' in sidebar 'tutorialSidebar'"
+  },
+  "sidebar.tutorialSidebar.category.Gateway Ops": {
+    "message": "Gateway Ops",
+    "description": "The label for category 'Gateway Ops' in sidebar 'tutorialSidebar'"
+  },
+  "sidebar.tutorialSidebar.category.Automation Hooks": {
+    "message": "Automation Hooks",
+    "description": "The label for category 'Automation Hooks' in sidebar 'tutorialSidebar'"
+  },
+  "sidebar.tutorialSidebar.category.Tools Skills": {
+    "message": "Tools Skills",
+    "description": "The label for category 'Tools Skills' in sidebar 'tutorialSidebar'"
+  },
+  "sidebar.tutorialSidebar.category.Platforms": {
+    "message": "Platforms",
+    "description": "The label for category 'Platforms' in sidebar 'tutorialSidebar'"
+  },
+  "sidebar.tutorialSidebar.category.macOS Companion App": {
+    "message": "macOS Companion App",
+    "description": "The label for category 'macOS Companion App' in sidebar 'tutorialSidebar'"
+  },
+  "sidebar.tutorialSidebar.category.Reference Templates": {
+    "message": "Reference Templates",
+    "description": "The label for category 'Reference Templates' in sidebar 'tutorialSidebar'"
+  },
+  "sidebar.tutorialSidebar.doc.start_index": {
+    "message": "Index",
+    "description": "The label for the doc item 'Index' in sidebar 'tutorialSidebar', linking to the doc index"
+  },
+  "sidebar.tutorialSidebar.doc.start_getting": {
+    "message": "Getting started",
+    "description": "The label for the doc item 'Getting started' in sidebar 'tutorialSidebar', linking to the doc start/getting-started"
+  },
+  "sidebar.tutorialSidebar.doc.start_wizard": {
+    "message": "Wizard",
+    "description": "The label for the doc item 'Wizard' in sidebar 'tutorialSidebar', linking to the doc start/wizard"
+  },
+  "sidebar.tutorialSidebar.doc.start_setup": {
+    "message": "Setup",
+    "description": "The label for the doc item 'Setup' in sidebar 'tutorialSidebar', linking to the doc start/setup"
+  },
+  "sidebar.tutorialSidebar.doc.start_pairing": {
+    "message": "Pairing",
+    "description": "The label for the doc item 'Pairing' in sidebar 'tutorialSidebar', linking to the doc start/pairing"
+  },
+  "sidebar.tutorialSidebar.doc.start_clawd": {
+    "message": "Clawd",
+    "description": "The label for the doc item 'Clawd' in sidebar 'tutorialSidebar', linking to the doc start/clawd"
+  },
+  "sidebar.tutorialSidebar.doc.start_showcase": {
+    "message": "Showcase",
+    "description": "The label for the doc item 'Showcase' in sidebar 'tutorialSidebar', linking to the doc start/showcase"
+  },
+  "sidebar.tutorialSidebar.doc.start_hubs": {
+    "message": "Hubs",
+    "description": "The label for the doc item 'Hubs' in sidebar 'tutorialSidebar', linking to the doc start/hubs"
+  },
+  "sidebar.tutorialSidebar.doc.start_onboarding": {
+    "message": "Onboarding",
+    "description": "The label for the doc item 'Onboarding' in sidebar 'tutorialSidebar', linking to the doc start/onboarding"
+  },
+  "sidebar.tutorialSidebar.doc.start_lore": {
+    "message": "Lore",
+    "description": "The label for the doc item 'Lore' in sidebar 'tutorialSidebar', linking to the doc start/lore"
+  },
+  "sidebar.tutorialSidebar.doc.help_index": {
+    "message": "Index",
+    "description": "The label for the doc item 'Index' in sidebar 'tutorialSidebar', linking to the doc help/index"
+  },
+  "sidebar.tutorialSidebar.doc.help_troubleshooting": {
+    "message": "Troubleshooting",
+    "description": "The label for the doc item 'Troubleshooting' in sidebar 'tutorialSidebar', linking to the doc help/troubleshooting"
+  },
+  "sidebar.tutorialSidebar.doc.help_faq": {
+    "message": "Faq",
+    "description": "The label for the doc item 'Faq' in sidebar 'tutorialSidebar', linking to the doc help/faq"
+  },
+  "sidebar.tutorialSidebar.doc.install_index": {
+    "message": "Index",
+    "description": "The label for the doc item 'Index' in sidebar 'tutorialSidebar', linking to the doc install/index"
+  },
+  "sidebar.tutorialSidebar.doc.install_installer": {
+    "message": "Installer",
+    "description": "The label for the doc item 'Installer' in sidebar 'tutorialSidebar', linking to the doc install/installer"
+  },
+  "sidebar.tutorialSidebar.doc.install_updating": {
+    "message": "Updating",
+    "description": "The label for the doc item 'Updating' in sidebar 'tutorialSidebar', linking to the doc install/updating"
+  },
+  "sidebar.tutorialSidebar.doc.install_development": {
+    "message": "Development channels",
+    "description": "The label for the doc item 'Development channels' in sidebar 'tutorialSidebar', linking to the doc install/development-channels"
+  },
+  "sidebar.tutorialSidebar.doc.install_uninstall": {
+    "message": "Uninstall",
+    "description": "The label for the doc item 'Uninstall' in sidebar 'tutorialSidebar', linking to the doc install/uninstall"
+  },
+  "sidebar.tutorialSidebar.doc.install_ansible": {
+    "message": "Ansible",
+    "description": "The label for the doc item 'Ansible' in sidebar 'tutorialSidebar', linking to the doc install/ansible"
+  },
+  "sidebar.tutorialSidebar.doc.install_nix": {
+    "message": "Nix",
+    "description": "The label for the doc item 'Nix' in sidebar 'tutorialSidebar', linking to the doc install/nix"
+  },
+  "sidebar.tutorialSidebar.doc.install_docker": {
+    "message": "Docker",
+    "description": "The label for the doc item 'Docker' in sidebar 'tutorialSidebar', linking to the doc install/docker"
+  },
+  "sidebar.tutorialSidebar.doc.railway_": {
+    "message": "Deploy on Railway",
+    "description": "The label for the doc item 'Deploy on Railway' in sidebar 'tutorialSidebar', linking to the doc railway"
+  },
+  "sidebar.tutorialSidebar.doc.render_": {
+    "message": "Deploy on Render",
+    "description": "The label for the doc item 'Deploy on Render' in sidebar 'tutorialSidebar', linking to the doc render"
+  },
+  "sidebar.tutorialSidebar.doc.northflank_": {
+    "message": "Deploy on Northflank",
+    "description": "The label for the doc item 'Deploy on Northflank' in sidebar 'tutorialSidebar', linking to the doc northflank"
+  },
+  "sidebar.tutorialSidebar.doc.install_bun": {
+    "message": "Bun",
+    "description": "The label for the doc item 'Bun' in sidebar 'tutorialSidebar', linking to the doc install/bun"
+  },
+  "sidebar.tutorialSidebar.doc.cli_index": {
+    "message": "Index",
+    "description": "The label for the doc item 'Index' in sidebar 'tutorialSidebar', linking to the doc cli/index"
+  },
+  "sidebar.tutorialSidebar.doc.cli_setup": {
+    "message": "Setup",
+    "description": "The label for the doc item 'Setup' in sidebar 'tutorialSidebar', linking to the doc cli/setup"
+  },
+  "sidebar.tutorialSidebar.doc.cli_onboard": {
+    "message": "Onboard",
+    "description": "The label for the doc item 'Onboard' in sidebar 'tutorialSidebar', linking to the doc cli/onboard"
+  },
+  "sidebar.tutorialSidebar.doc.cli_configure": {
+    "message": "Configure",
+    "description": "The label for the doc item 'Configure' in sidebar 'tutorialSidebar', linking to the doc cli/configure"
+  },
+  "sidebar.tutorialSidebar.doc.cli_doctor": {
+    "message": "Doctor",
+    "description": "The label for the doc item 'Doctor' in sidebar 'tutorialSidebar', linking to the doc cli/doctor"
+  },
+  "sidebar.tutorialSidebar.doc.cli_dashboard": {
+    "message": "Dashboard",
+    "description": "The label for the doc item 'Dashboard' in sidebar 'tutorialSidebar', linking to the doc cli/dashboard"
+  },
+  "sidebar.tutorialSidebar.doc.cli_reset": {
+    "message": "Reset",
+    "description": "The label for the doc item 'Reset' in sidebar 'tutorialSidebar', linking to the doc cli/reset"
+  },
+  "sidebar.tutorialSidebar.doc.cli_uninstall": {
+    "message": "Uninstall",
+    "description": "The label for the doc item 'Uninstall' in sidebar 'tutorialSidebar', linking to the doc cli/uninstall"
+  },
+  "sidebar.tutorialSidebar.doc.cli_browser": {
+    "message": "Browser",
+    "description": "The label for the doc item 'Browser' in sidebar 'tutorialSidebar', linking to the doc cli/browser"
+  },
+  "sidebar.tutorialSidebar.doc.cli_message": {
+    "message": "Message",
+    "description": "The label for the doc item 'Message' in sidebar 'tutorialSidebar', linking to the doc cli/message"
+  },
+  "sidebar.tutorialSidebar.doc.cli_agent": {
+    "message": "Agent",
+    "description": "The label for the doc item 'Agent' in sidebar 'tutorialSidebar', linking to the doc cli/agent"
+  },
+  "sidebar.tutorialSidebar.doc.cli_agents": {
+    "message": "Agents",
+    "description": "The label for the doc item 'Agents' in sidebar 'tutorialSidebar', linking to the doc cli/agents"
+  },
+  "sidebar.tutorialSidebar.doc.cli_status": {
+    "message": "Status",
+    "description": "The label for the doc item 'Status' in sidebar 'tutorialSidebar', linking to the doc cli/status"
+  },
+  "sidebar.tutorialSidebar.doc.cli_health": {
+    "message": "Health",
+    "description": "The label for the doc item 'Health' in sidebar 'tutorialSidebar', linking to the doc cli/health"
+  },
+  "sidebar.tutorialSidebar.doc.cli_sessions": {
+    "message": "Sessions",
+    "description": "The label for the doc item 'Sessions' in sidebar 'tutorialSidebar', linking to the doc cli/sessions"
+  },
+  "sidebar.tutorialSidebar.doc.cli_channels": {
+    "message": "Channels",
+    "description": "The label for the doc item 'Channels' in sidebar 'tutorialSidebar', linking to the doc cli/channels"
+  },
+  "sidebar.tutorialSidebar.doc.cli_directory": {
+    "message": "Directory",
+    "description": "The label for the doc item 'Directory' in sidebar 'tutorialSidebar', linking to the doc cli/directory"
+  },
+  "sidebar.tutorialSidebar.doc.cli_skills": {
+    "message": "Skills",
+    "description": "The label for the doc item 'Skills' in sidebar 'tutorialSidebar', linking to the doc cli/skills"
+  },
+  "sidebar.tutorialSidebar.doc.cli_plugins": {
+    "message": "Plugins",
+    "description": "The label for the doc item 'Plugins' in sidebar 'tutorialSidebar', linking to the doc cli/plugins"
+  },
+  "sidebar.tutorialSidebar.doc.cli_memory": {
+    "message": "Memory",
+    "description": "The label for the doc item 'Memory' in sidebar 'tutorialSidebar', linking to the doc cli/memory"
+  },
+  "sidebar.tutorialSidebar.doc.cli_models": {
+    "message": "Models",
+    "description": "The label for the doc item 'Models' in sidebar 'tutorialSidebar', linking to the doc cli/models"
+  },
+  "sidebar.tutorialSidebar.doc.cli_logs": {
+    "message": "Logs",
+    "description": "The label for the doc item 'Logs' in sidebar 'tutorialSidebar', linking to the doc cli/logs"
+  },
+  "sidebar.tutorialSidebar.doc.cli_system": {
+    "message": "System",
+    "description": "The label for the doc item 'System' in sidebar 'tutorialSidebar', linking to the doc cli/system"
+  },
+  "sidebar.tutorialSidebar.doc.cli_nodes": {
+    "message": "Nodes",
+    "description": "The label for the doc item 'Nodes' in sidebar 'tutorialSidebar', linking to the doc cli/nodes"
+  },
+  "sidebar.tutorialSidebar.doc.cli_approvals": {
+    "message": "Approvals",
+    "description": "The label for the doc item 'Approvals' in sidebar 'tutorialSidebar', linking to the doc cli/approvals"
+  },
+  "sidebar.tutorialSidebar.doc.cli_gateway": {
+    "message": "Gateway",
+    "description": "The label for the doc item 'Gateway' in sidebar 'tutorialSidebar', linking to the doc cli/gateway"
+  },
+  "sidebar.tutorialSidebar.doc.cli_tui": {
+    "message": "Tui",
+    "description": "The label for the doc item 'Tui' in sidebar 'tutorialSidebar', linking to the doc cli/tui"
+  },
+  "sidebar.tutorialSidebar.doc.cli_voicecall": {
+    "message": "Voicecall",
+    "description": "The label for the doc item 'Voicecall' in sidebar 'tutorialSidebar', linking to the doc cli/voicecall"
+  },
+  "sidebar.tutorialSidebar.doc.cli_cron": {
+    "message": "Cron",
+    "description": "The label for the doc item 'Cron' in sidebar 'tutorialSidebar', linking to the doc cli/cron"
+  },
+  "sidebar.tutorialSidebar.doc.cli_dns": {
+    "message": "Dns",
+    "description": "The label for the doc item 'Dns' in sidebar 'tutorialSidebar', linking to the doc cli/dns"
+  },
+  "sidebar.tutorialSidebar.doc.cli_docs": {
+    "message": "Docs",
+    "description": "The label for the doc item 'Docs' in sidebar 'tutorialSidebar', linking to the doc cli/docs"
+  },
+  "sidebar.tutorialSidebar.doc.cli_hooks": {
+    "message": "Hooks",
+    "description": "The label for the doc item 'Hooks' in sidebar 'tutorialSidebar', linking to the doc cli/hooks"
+  },
+  "sidebar.tutorialSidebar.doc.cli_pairing": {
+    "message": "Pairing",
+    "description": "The label for the doc item 'Pairing' in sidebar 'tutorialSidebar', linking to the doc cli/pairing"
+  },
+  "sidebar.tutorialSidebar.doc.cli_security": {
+    "message": "Security",
+    "description": "The label for the doc item 'Security' in sidebar 'tutorialSidebar', linking to the doc cli/security"
+  },
+  "sidebar.tutorialSidebar.doc.cli_update": {
+    "message": "Update",
+    "description": "The label for the doc item 'Update' in sidebar 'tutorialSidebar', linking to the doc cli/update"
+  },
+  "sidebar.tutorialSidebar.doc.cli_sandbox": {
+    "message": "Sandbox CLI",
+    "description": "The label for the doc item 'Sandbox CLI' in sidebar 'tutorialSidebar', linking to the doc cli/sandbox"
+  },
+  "sidebar.tutorialSidebar.doc.concepts_architecture": {
+    "message": "Architecture",
+    "description": "The label for the doc item 'Architecture' in sidebar 'tutorialSidebar', linking to the doc concepts/architecture"
+  },
+  "sidebar.tutorialSidebar.doc.concepts_agent_main": {
+    "message": "Agent",
+    "description": "The label for the doc item 'Agent' in sidebar 'tutorialSidebar', linking to the doc concepts/agent"
+  },
+  "sidebar.tutorialSidebar.doc.concepts_agent_loop": {
+    "message": "Agent loop",
+    "description": "The label for the doc item 'Agent loop' in sidebar 'tutorialSidebar', linking to the doc concepts/agent-loop"
+  },
+  "sidebar.tutorialSidebar.doc.concepts_agent_workspace": {
+    "message": "Agent workspace",
+    "description": "The label for the doc item 'Agent workspace' in sidebar 'tutorialSidebar', linking to the doc concepts/agent-workspace"
+  },
+  "sidebar.tutorialSidebar.doc.concepts_session_main": {
+    "message": "Session",
+    "description": "The label for the doc item 'Session' in sidebar 'tutorialSidebar', linking to the doc concepts/session"
+  },
+  "sidebar.tutorialSidebar.doc.concepts_session_pruning": {
+    "message": "Session pruning",
+    "description": "The label for the doc item 'Session pruning' in sidebar 'tutorialSidebar', linking to the doc concepts/session-pruning"
+  },
+  "sidebar.tutorialSidebar.doc.concepts_session_tool": {
+    "message": "Session tool",
+    "description": "The label for the doc item 'Session tool' in sidebar 'tutorialSidebar', linking to the doc concepts/session-tool"
+  },
+  "sidebar.tutorialSidebar.doc.concepts_model_providers": {
+    "message": "Model providers",
+    "description": "The label for the doc item 'Model providers' in sidebar 'tutorialSidebar', linking to the doc concepts/model-providers"
+  },
+  "sidebar.tutorialSidebar.doc.concepts_model_failover": {
+    "message": "Model failover",
+    "description": "The label for the doc item 'Model failover' in sidebar 'tutorialSidebar', linking to the doc concepts/model-failover"
+  },
+  "sidebar.tutorialSidebar.doc.gateway_configuration_main": {
+    "message": "Configuration",
+    "description": "The label for the doc item 'Configuration' in sidebar 'tutorialSidebar', linking to the doc gateway/configuration"
+  },
+  "sidebar.tutorialSidebar.doc.gateway_configuration_examples": {
+    "message": "Configuration examples",
+    "description": "The label for the doc item 'Configuration examples' in sidebar 'tutorialSidebar', linking to the doc gateway/configuration-examples"
+  },
+  "sidebar.tutorialSidebar.doc.gateway_remote_main": {
+    "message": "Remote",
+    "description": "The label for the doc item 'Remote' in sidebar 'tutorialSidebar', linking to the doc gateway/remote"
+  },
+  "sidebar.tutorialSidebar.doc.gateway_remote_readme": {
+    "message": "Remote gateway readme",
+    "description": "The label for the doc item 'Remote gateway readme' in sidebar 'tutorialSidebar', linking to the doc gateway/remote-gateway-readme"
+  },
+  "sidebar.tutorialSidebar.doc.automation_cron_jobs": {
+    "message": "Cron jobs",
+    "description": "The label for the doc item 'Cron jobs' in sidebar 'tutorialSidebar', linking to the doc automation/cron-jobs"
+  },
+  "sidebar.tutorialSidebar.doc.automation_cron_vs_heartbeat": {
+    "message": "Cron vs heartbeat",
+    "description": "The label for the doc item 'Cron vs heartbeat' in sidebar 'tutorialSidebar', linking to the doc automation/cron-vs-heartbeat"
+  },
+  "sidebar.tutorialSidebar.doc.tools_browser_main": {
+    "message": "Browser",
+    "description": "The label for the doc item 'Browser' in sidebar 'tutorialSidebar', linking to the doc tools/browser"
+  },
+  "sidebar.tutorialSidebar.doc.tools_browser_login": {
+    "message": "Browser login",
+    "description": "The label for the doc item 'Browser login' in sidebar 'tutorialSidebar', linking to the doc tools/browser-login"
+  },
+  "sidebar.tutorialSidebar.doc.tools_browser_linux": {
+    "message": "Browser linux troubleshooting",
+    "description": "The label for the doc item 'Browser linux troubleshooting' in sidebar 'tutorialSidebar', linking to the doc tools/browser-linux-troubleshooting"
+  },
+  "sidebar.tutorialSidebar.doc.tools_skills_main": {
+    "message": "Skills",
+    "description": "The label for the doc item 'Skills' in sidebar 'tutorialSidebar', linking to the doc tools/skills"
+  },
+  "sidebar.tutorialSidebar.doc.tools_skills_config": {
+    "message": "Skills config",
+    "description": "The label for the doc item 'Skills config' in sidebar 'tutorialSidebar', linking to the doc tools/skills-config"
+  },
+  "sidebar.tutorialSidebar.doc.platforms_macos_main": {
+    "message": "Macos",
+    "description": "The label for the doc item 'Macos' in sidebar 'tutorialSidebar', linking to the doc platforms/macos"
+  },
+  "sidebar.tutorialSidebar.doc.platforms_macos_vm": {
+    "message": "Macos vm",
+    "description": "The label for the doc item 'Macos vm' in sidebar 'tutorialSidebar', linking to the doc platforms/macos-vm"
+  },
+  "sidebar.tutorialSidebar.doc.platforms_mac_dev_setup": {
+    "message": "Dev setup",
+    "description": "The label for the doc item 'Dev setup' in sidebar 'tutorialSidebar', linking to the doc platforms/mac/dev-setup"
+  },
+  "sidebar.tutorialSidebar.doc.platforms_mac_menu_bar": {
+    "message": "Menu bar",
+    "description": "The label for the doc item 'Menu bar' in sidebar 'tutorialSidebar', linking to the doc platforms/mac/menu-bar"
+  },
+  "sidebar.tutorialSidebar.doc.platforms_mac_voicewake": {
+    "message": "Voicewake",
+    "description": "The label for the doc item 'Voicewake' in sidebar 'tutorialSidebar', linking to the doc platforms/mac/voicewake"
+  },
+  "sidebar.tutorialSidebar.doc.platforms_mac_voice_overlay": {
+    "message": "Voice overlay",
+    "description": "The label for the doc item 'Voice overlay' in sidebar 'tutorialSidebar', linking to the doc platforms/mac/voice-overlay"
+  },
+  "sidebar.tutorialSidebar.doc.platforms_mac_webchat": {
+    "message": "Webchat",
+    "description": "The label for the doc item 'Webchat' in sidebar 'tutorialSidebar', linking to the doc platforms/mac/webchat"
+  },
+  "sidebar.tutorialSidebar.doc.platforms_mac_canvas": {
+    "message": "Canvas",
+    "description": "The label for the doc item 'Canvas' in sidebar 'tutorialSidebar', linking to the doc platforms/mac/canvas"
+  },
+  "sidebar.tutorialSidebar.doc.platforms_mac_child_process": {
+    "message": "Child process",
+    "description": "The label for the doc item 'Child process' in sidebar 'tutorialSidebar', linking to the doc platforms/mac/child-process"
+  },
+  "sidebar.tutorialSidebar.doc.platforms_mac_health": {
+    "message": "Health",
+    "description": "The label for the doc item 'Health' in sidebar 'tutorialSidebar', linking to the doc platforms/mac/health"
+  },
+  "sidebar.tutorialSidebar.doc.platforms_mac_icon": {
+    "message": "Icon",
+    "description": "The label for the doc item 'Icon' in sidebar 'tutorialSidebar', linking to the doc platforms/mac/icon"
+  },
+  "sidebar.tutorialSidebar.doc.platforms_mac_logging": {
+    "message": "Logging",
+    "description": "The label for the doc item 'Logging' in sidebar 'tutorialSidebar', linking to the doc platforms/mac/logging"
+  },
+  "sidebar.tutorialSidebar.doc.platforms_mac_permissions": {
+    "message": "Permissions",
+    "description": "The label for the doc item 'Permissions' in sidebar 'tutorialSidebar', linking to the doc platforms/mac/permissions"
+  },
+  "sidebar.tutorialSidebar.doc.platforms_mac_remote": {
+    "message": "Remote",
+    "description": "The label for the doc item 'Remote' in sidebar 'tutorialSidebar', linking to the doc platforms/mac/remote"
+  },
+  "sidebar.tutorialSidebar.doc.platforms_mac_signing": {
+    "message": "Signing",
+    "description": "The label for the doc item 'Signing' in sidebar 'tutorialSidebar', linking to the doc platforms/mac/signing"
+  },
+  "sidebar.tutorialSidebar.doc.platforms_mac_release": {
+    "message": "Release",
+    "description": "The label for the doc item 'Release' in sidebar 'tutorialSidebar', linking to the doc platforms/mac/release"
+  },
+  "sidebar.tutorialSidebar.doc.platforms_mac_bundled_gateway": {
+    "message": "Bundled gateway",
+    "description": "The label for the doc item 'Bundled gateway' in sidebar 'tutorialSidebar', linking to the doc platforms/mac/bundled-gateway"
+  },
+  "sidebar.tutorialSidebar.doc.platforms_mac_xpc": {
+    "message": "Xpc",
+    "description": "The label for the doc item 'Xpc' in sidebar 'tutorialSidebar', linking to the doc platforms/mac/xpc"
+  },
+  "sidebar.tutorialSidebar.doc.platforms_mac_skills": {
+    "message": "Skills",
+    "description": "The label for the doc item 'Skills' in sidebar 'tutorialSidebar', linking to the doc platforms/mac/skills"
+  },
+  "sidebar.tutorialSidebar.doc.platforms_mac_peekaboo": {
+    "message": "Peekaboo",
+    "description": "The label for the doc item 'Peekaboo' in sidebar 'tutorialSidebar', linking to the doc platforms/mac/peekaboo"
+  },
+  "sidebar.tutorialSidebar.doc.reference_template_agents": {
+    "message": "AGENTS",
+    "description": "The label for the doc item 'AGENTS' in sidebar 'tutorialSidebar', linking to the doc reference/templates/AGENTS"
+  },
+  "sidebar.tutorialSidebar.doc.reference_template_boot": {
+    "message": "BOOT",
+    "description": "The label for the doc item 'BOOT' in sidebar 'tutorialSidebar', linking to the doc reference/templates/BOOT"
+  },
+  "sidebar.tutorialSidebar.doc.reference_template_bootstrap": {
+    "message": "BOOTSTRAP",
+    "description": "The label for the doc item 'BOOTSTRAP' in sidebar 'tutorialSidebar', linking to the doc reference/templates/BOOTSTRAP"
+  },
+  "sidebar.tutorialSidebar.doc.reference_template_heartbeat": {
+    "message": "HEARTBEAT",
+    "description": "The label for the doc item 'HEARTBEAT' in sidebar 'tutorialSidebar', linking to the doc reference/templates/HEARTBEAT"
+  },
+  "sidebar.tutorialSidebar.doc.reference_template_identity": {
+    "message": "IDENTITY",
+    "description": "The label for the doc item 'IDENTITY' in sidebar 'tutorialSidebar', linking to the doc reference/templates/IDENTITY"
+  },
+  "sidebar.tutorialSidebar.doc.reference_template_soul": {
+    "message": "SOUL",
+    "description": "The label for the doc item 'SOUL' in sidebar 'tutorialSidebar', linking to the doc reference/templates/SOUL"
+  },
+  "sidebar.tutorialSidebar.doc.reference_template_tools": {
+    "message": "TOOLS",
+    "description": "The label for the doc item 'TOOLS' in sidebar 'tutorialSidebar', linking to the doc reference/templates/TOOLS"
+  },
+  "sidebar.tutorialSidebar.doc.reference_template_user": {
+    "message": "USER",
+    "description": "The label for the doc item 'USER' in sidebar 'tutorialSidebar', linking to the doc reference/templates/USER"
   }
 }

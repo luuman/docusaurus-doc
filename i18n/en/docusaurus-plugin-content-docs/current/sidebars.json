@@ -1,0 +1,699 @@
+{
+  "tutorialSidebar": [
+    {
+      "type": "category",
+      "label": "Start Here",
+      "items": [
+        {
+          "type": "doc",
+          "id": "index",
+          "label": "Index",
+          "key": "start_index"
+        },
+        {
+          "type": "doc",
+          "key": "start_getting",
+          "id": "start/getting-started",
+          "label": "Getting started"
+        },
+        {
+          "type": "doc",
+          "key": "start_wizard",
+          "id": "start/wizard",
+          "label": "Wizard"
+        },
+        {
+          "type": "doc",
+          "key": "start_setup",
+          "id": "start/setup",
+          "label": "Setup"
+        },
+        {
+          "type": "doc",
+          "key": "start_pairing",
+          "id": "start/pairing",
+          "label": "Pairing"
+        },
+        {
+          "type": "doc",
+          "key": "start_clawd",
+          "id": "start/clawd",
+          "label": "Clawd"
+        },
+        {
+          "type": "doc",
+          "key": "start_showcase",
+          "id": "start/showcase",
+          "label": "Showcase"
+        },
+        {
+          "type": "doc",
+          "key": "start_hubs",
+          "id": "start/hubs",
+          "label": "Hubs"
+        },
+        {
+          "type": "doc",
+          "key": "start_onboarding",
+          "id": "start/onboarding",
+          "label": "Onboarding"
+        },
+        {
+          "type": "doc",
+          "key": "start_lore",
+          "id": "start/lore",
+          "label": "Lore"
+        }
+      ]
+    },
+    {
+      "type": "category",
+      "label": "Help",
+      "items": [
+        {
+          "type": "doc",
+          "key": "help_index",
+          "id": "help/index",
+          "label": "Index"
+        },
+        {
+          "type": "doc",
+          "key": "help_troubleshooting",
+          "id": "help/troubleshooting",
+          "label": "Troubleshooting"
+        },
+        {
+          "type": "doc",
+          "key": "help_faq",
+          "id": "help/faq",
+          "label": "Faq"
+        }
+      ]
+    },
+    {
+      "type": "category",
+      "label": "Install Updates",
+      "items": [
+        {
+          "type": "doc",
+          "key": "install_index",
+          "id": "install/index",
+          "label": "Index"
+        },
+        {
+          "type": "doc",
+          "key": "install_installer",
+          "id": "install/installer",
+          "label": "Installer"
+        },
+        {
+          "type": "doc",
+          "key": "install_updating",
+          "id": "install/updating",
+          "label": "Updating"
+        },
+        {
+          "type": "doc",
+          "key": "install_development",
+          "id": "install/development-channels",
+          "label": "Development channels"
+        },
+        {
+          "type": "doc",
+          "key": "install_uninstall",
+          "id": "install/uninstall",
+          "label": "Uninstall"
+        },
+        {
+          "type": "doc",
+          "key": "install_ansible",
+          "id": "install/ansible",
+          "label": "Ansible"
+        },
+        {
+          "type": "doc",
+          "key": "install_nix",
+          "id": "install/nix",
+          "label": "Nix"
+        },
+        {
+          "type": "doc",
+          "key": "install_docker",
+          "id": "install/docker",
+          "label": "Docker"
+        },
+        {
+          "type": "doc",
+          "key": "railway_",
+          "id": "railway",
+          "label": "Deploy on Railway"
+        },
+        {
+          "type": "doc",
+          "key": "render_",
+          "id": "render",
+          "label": "Deploy on Render"
+        },
+        {
+          "type": "doc",
+          "key": "northflank_",
+          "id": "northflank",
+          "label": "Deploy on Northflank"
+        },
+        {
+          "type": "doc",
+          "key": "install_bun",
+          "id": "install/bun",
+          "label": "Bun"
+        }
+      ]
+    },
+    {
+      "type": "category",
+      "label": "CLI",
+      "items": [
+        {
+          "type": "doc",
+          "key": "cli_index",
+          "id": "cli/index",
+          "label": "Index"
+        },
+        {
+          "type": "doc",
+          "key": "cli_setup",
+          "id": "cli/setup",
+          "label": "Setup"
+        },
+        {
+          "type": "doc",
+          "key": "cli_onboard",
+          "id": "cli/onboard",
+          "label": "Onboard"
+        },
+        {
+          "type": "doc",
+          "key": "cli_configure",
+          "id": "cli/configure",
+          "label": "Configure"
+        },
+        {
+          "type": "doc",
+          "key": "cli_doctor",
+          "id": "cli/doctor",
+          "label": "Doctor"
+        },
+        {
+          "type": "doc",
+          "key": "cli_dashboard",
+          "id": "cli/dashboard",
+          "label": "Dashboard"
+        },
+        {
+          "type": "doc",
+          "key": "cli_reset",
+          "id": "cli/reset",
+          "label": "Reset"
+        },
+        {
+          "type": "doc",
+          "key": "cli_uninstall",
+          "id": "cli/uninstall",
+          "label": "Uninstall"
+        },
+        {
+          "type": "doc",
+          "key": "cli_browser",
+          "id": "cli/browser",
+          "label": "Browser"
+        },
+        {
+          "type": "doc",
+          "key": "cli_message",
+          "id": "cli/message",
+          "label": "Message"
+        },
+        {
+          "type": "doc",
+          "key": "cli_agent",
+          "id": "cli/agent",
+          "label": "Agent"
+        },
+        {
+          "type": "doc",
+          "key": "cli_agents",
+          "id": "cli/agents",
+          "label": "Agents"
+        },
+        {
+          "type": "doc",
+          "key": "cli_status",
+          "id": "cli/status",
+          "label": "Status"
+        },
+        {
+          "type": "doc",
+          "key": "cli_health",
+          "id": "cli/health",
+          "label": "Health"
+        },
+        {
+          "type": "doc",
+          "key": "cli_sessions",
+          "id": "cli/sessions",
+          "label": "Sessions"
+        },
+        {
+          "type": "doc",
+          "key": "cli_channels",
+          "id": "cli/channels",
+          "label": "Channels"
+        },
+        {
+          "type": "doc",
+          "key": "cli_directory",
+          "id": "cli/directory",
+          "label": "Directory"
+        },
+        {
+          "type": "doc",
+          "key": "cli_skills",
+          "id": "cli/skills",
+          "label": "Skills"
+        },
+        {
+          "type": "doc",
+          "key": "cli_plugins",
+          "id": "cli/plugins",
+          "label": "Plugins"
+        },
+        {
+          "type": "doc",
+          "key": "cli_memory",
+          "id": "cli/memory",
+          "label": "Memory"
+        },
+        {
+          "type": "doc",
+          "key": "cli_models",
+          "id": "cli/models",
+          "label": "Models"
+        },
+        { "type": "doc", "key": "cli_logs", "id": "cli/logs", "label": "Logs" },
+        {
+          "type": "doc",
+          "key": "cli_system",
+          "id": "cli/system",
+          "label": "System"
+        },
+        {
+          "type": "doc",
+          "key": "cli_nodes",
+          "id": "cli/nodes",
+          "label": "Nodes"
+        },
+        {
+          "type": "doc",
+          "key": "cli_approvals",
+          "id": "cli/approvals",
+          "label": "Approvals"
+        },
+        {
+          "type": "doc",
+          "key": "cli_gateway",
+          "id": "cli/gateway",
+          "label": "Gateway"
+        },
+        { "type": "doc", "key": "cli_tui", "id": "cli/tui", "label": "Tui" },
+        {
+          "type": "doc",
+          "key": "cli_voicecall",
+          "id": "cli/voicecall",
+          "label": "Voicecall"
+        },
+        { "type": "doc", "key": "cli_cron", "id": "cli/cron", "label": "Cron" },
+        { "type": "doc", "key": "cli_dns", "id": "cli/dns", "label": "Dns" },
+        { "type": "doc", "key": "cli_docs", "id": "cli/docs", "label": "Docs" },
+        {
+          "type": "doc",
+          "key": "cli_hooks",
+          "id": "cli/hooks",
+          "label": "Hooks"
+        },
+        {
+          "type": "doc",
+          "key": "cli_pairing",
+          "id": "cli/pairing",
+          "label": "Pairing"
+        },
+        {
+          "type": "doc",
+          "key": "cli_security",
+          "id": "cli/security",
+          "label": "Security"
+        },
+        {
+          "type": "doc",
+          "key": "cli_update",
+          "id": "cli/update",
+          "label": "Update"
+        },
+        {
+          "type": "doc",
+          "key": "cli_sandbox",
+          "id": "cli/sandbox",
+          "label": "Sandbox CLI"
+        }
+      ]
+    },
+    {
+      "type": "category",
+      "label": "Core Concepts",
+      "items": [
+        {
+          "type": "doc",
+          "key": "concepts_architecture",
+          "id": "concepts/architecture",
+          "label": "Architecture"
+        },
+        {
+          "type": "doc",
+          "key": "concepts_agent_main",
+          "id": "concepts/agent",
+          "label": "Agent"
+        },
+        {
+          "type": "doc",
+          "key": "concepts_agent_loop",
+          "id": "concepts/agent-loop",
+          "label": "Agent loop"
+        },
+        {
+          "type": "doc",
+          "key": "concepts_agent_workspace",
+          "id": "concepts/agent-workspace",
+          "label": "Agent workspace"
+        },
+        {
+          "type": "doc",
+          "key": "concepts_session_main",
+          "id": "concepts/session",
+          "label": "Session"
+        },
+        {
+          "type": "doc",
+          "key": "concepts_session_pruning",
+          "id": "concepts/session-pruning",
+          "label": "Session pruning"
+        },
+        {
+          "type": "doc",
+          "key": "concepts_session_tool",
+          "id": "concepts/session-tool",
+          "label": "Session tool"
+        },
+        {
+          "type": "doc",
+          "key": "concepts_model_providers",
+          "id": "concepts/model-providers",
+          "label": "Model providers"
+        },
+        {
+          "type": "doc",
+          "key": "concepts_model_failover",
+          "id": "concepts/model-failover",
+          "label": "Model failover"
+        }
+      ]
+    },
+    {
+      "type": "category",
+      "label": "Gateway Ops",
+      "items": [
+        {
+          "type": "doc",
+          "key": "gateway_configuration_main",
+          "id": "gateway/configuration",
+          "label": "Configuration"
+        },
+        {
+          "type": "doc",
+          "key": "gateway_configuration_examples",
+          "id": "gateway/configuration-examples",
+          "label": "Configuration examples"
+        },
+        {
+          "type": "doc",
+          "key": "gateway_remote_main",
+          "id": "gateway/remote",
+          "label": "Remote"
+        },
+        {
+          "type": "doc",
+          "key": "gateway_remote_readme",
+          "id": "gateway/remote-gateway-readme",
+          "label": "Remote gateway readme"
+        }
+      ]
+    },
+    {
+      "type": "category",
+      "label": "Automation Hooks",
+      "items": [
+        {
+          "type": "doc",
+          "key": "automation_cron_jobs",
+          "id": "automation/cron-jobs",
+          "label": "Cron jobs"
+        },
+        {
+          "type": "doc",
+          "key": "automation_cron_vs_heartbeat",
+          "id": "automation/cron-vs-heartbeat",
+          "label": "Cron vs heartbeat"
+        }
+      ]
+    },
+    {
+      "type": "category",
+      "label": "Tools Skills",
+      "items": [
+        {
+          "type": "doc",
+          "key": "tools_browser_main",
+          "id": "tools/browser",
+          "label": "Browser"
+        },
+        {
+          "type": "doc",
+          "key": "tools_browser_login",
+          "id": "tools/browser-login",
+          "label": "Browser login"
+        },
+        {
+          "type": "doc",
+          "key": "tools_browser_linux",
+          "id": "tools/browser-linux-troubleshooting",
+          "label": "Browser linux troubleshooting"
+        },
+        {
+          "type": "doc",
+          "key": "tools_skills_main",
+          "id": "tools/skills",
+          "label": "Skills"
+        },
+        {
+          "type": "doc",
+          "key": "tools_skills_config",
+          "id": "tools/skills-config",
+          "label": "Skills config"
+        }
+      ]
+    },
+    {
+      "type": "category",
+      "label": "Platforms",
+      "items": [
+        {
+          "type": "doc",
+          "key": "platforms_macos_main",
+          "id": "platforms/macos",
+          "label": "Macos"
+        },
+        {
+          "type": "doc",
+          "key": "platforms_macos_vm",
+          "id": "platforms/macos-vm",
+          "label": "Macos vm"
+        }
+      ]
+    },
+    {
+      "type": "category",
+      "label": "macOS Companion App",
+      "items": [
+        {
+          "type": "doc",
+          "key": "platforms_mac_dev_setup",
+          "id": "platforms/mac/dev-setup",
+          "label": "Dev setup"
+        },
+        {
+          "type": "doc",
+          "key": "platforms_mac_menu_bar",
+          "id": "platforms/mac/menu-bar",
+          "label": "Menu bar"
+        },
+        {
+          "type": "doc",
+          "key": "platforms_mac_voicewake",
+          "id": "platforms/mac/voicewake",
+          "label": "Voicewake"
+        },
+        {
+          "type": "doc",
+          "key": "platforms_mac_voice_overlay",
+          "id": "platforms/mac/voice-overlay",
+          "label": "Voice overlay"
+        },
+        {
+          "type": "doc",
+          "key": "platforms_mac_webchat",
+          "id": "platforms/mac/webchat",
+          "label": "Webchat"
+        },
+        {
+          "type": "doc",
+          "key": "platforms_mac_canvas",
+          "id": "platforms/mac/canvas",
+          "label": "Canvas"
+        },
+        {
+          "type": "doc",
+          "key": "platforms_mac_child_process",
+          "id": "platforms/mac/child-process",
+          "label": "Child process"
+        },
+        {
+          "type": "doc",
+          "key": "platforms_mac_health",
+          "id": "platforms/mac/health",
+          "label": "Health"
+        },
+        {
+          "type": "doc",
+          "key": "platforms_mac_icon",
+          "id": "platforms/mac/icon",
+          "label": "Icon"
+        },
+        {
+          "type": "doc",
+          "key": "platforms_mac_logging",
+          "id": "platforms/mac/logging",
+          "label": "Logging"
+        },
+        {
+          "type": "doc",
+          "key": "platforms_mac_permissions",
+          "id": "platforms/mac/permissions",
+          "label": "Permissions"
+        },
+        {
+          "type": "doc",
+          "key": "platforms_mac_remote",
+          "id": "platforms/mac/remote",
+          "label": "Remote"
+        },
+        {
+          "type": "doc",
+          "key": "platforms_mac_signing",
+          "id": "platforms/mac/signing",
+          "label": "Signing"
+        },
+        {
+          "type": "doc",
+          "key": "platforms_mac_release",
+          "id": "platforms/mac/release",
+          "label": "Release"
+        },
+        {
+          "type": "doc",
+          "key": "platforms_mac_bundled_gateway",
+          "id": "platforms/mac/bundled-gateway",
+          "label": "Bundled gateway"
+        },
+        {
+          "type": "doc",
+          "key": "platforms_mac_xpc",
+          "id": "platforms/mac/xpc",
+          "label": "Xpc"
+        },
+        {
+          "type": "doc",
+          "key": "platforms_mac_skills",
+          "id": "platforms/mac/skills",
+          "label": "Skills"
+        },
+        {
+          "type": "doc",
+          "key": "platforms_mac_peekaboo",
+          "id": "platforms/mac/peekaboo",
+          "label": "Peekaboo"
+        }
+      ]
+    },
+    {
+      "type": "category",
+      "label": "Reference Templates",
+      "items": [
+        {
+          "type": "doc",
+          "key": "reference_template_agents",
+          "id": "reference/templates/AGENTS",
+          "label": "AGENTS"
+        },
+        {
+          "type": "doc",
+          "key": "reference_template_boot",
+          "id": "reference/templates/BOOT",
+          "label": "BOOT"
+        },
+        {
+          "type": "doc",
+          "key": "reference_template_bootstrap",
+          "id": "reference/templates/BOOTSTRAP",
+          "label": "BOOTSTRAP"
+        },
+        {
+          "type": "doc",
+          "key": "reference_template_heartbeat",
+          "id": "reference/templates/HEARTBEAT",
+          "label": "HEARTBEAT"
+        },
+        {
+          "type": "doc",
+          "key": "reference_template_identity",
+          "id": "reference/templates/IDENTITY",
+          "label": "IDENTITY"
+        },
+        {
+          "type": "doc",
+          "key": "reference_template_soul",
+          "id": "reference/templates/SOUL",
+          "label": "SOUL"
+        },
+        {
+          "type": "doc",
+          "key": "reference_template_tools",
+          "id": "reference/templates/TOOLS",
+          "label": "TOOLS"
+        },
+        {
+          "type": "doc",
+          "key": "reference_template_user",
+          "id": "reference/templates/USER",
+          "label": "USER"
+        }
+      ]
+    }
+  ]
+}
