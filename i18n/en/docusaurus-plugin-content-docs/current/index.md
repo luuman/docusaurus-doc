@@ -1,136 +1,136 @@
 ---
-summary: "Moltbot、功能和目的的顶层概述"
+summary: "Top-level overview of Moltbot, features, and purpose"
 read_when:
-  - 向新手介绍 Moltbot
+  - Introducing Moltbot to newcomers
 ---
 # Moltbot 🦞
 
-> *"蜕壳！蜕壳！"* — 一只太空龙虾，大概是
+> *"EXFOLIATE! EXFOLIATE!"* — A space lobster, probably
 
 <p align="center">
   <img src="whatsapp-clawd.jpg" alt="Moltbot" width="420" />
 </p>
 
 <p align="center">
-  <strong>跨平台 + WhatsApp/Telegram/Discord/iMessage 网关，用于 AI 代理（Pi）。</strong><br />
-  插件增加 Mattermost 等更多功能。
-  发送一条消息，从你的口袋中获得代理回复。
+  <strong>Any OS + WhatsApp/Telegram/Discord/iMessage gateway for AI agents (Pi).</strong><br />
+  Plugins add Mattermost and more.
+  Send a message, get an agent response — from your pocket.
 </p>
 
 <p align="center">
   <a href="https://github.com/moltbot/moltbot">GitHub</a> ·
-  <a href="https://github.com/moltbot/moltbot/releases">发布版本</a> ·
-  <a href="/">文档</a> ·
-  <a href="/start/clawd">Moltbot 助手设置</a>
+  <a href="https://github.com/moltbot/moltbot/releases">Releases</a> ·
+  <a href="/">Docs</a> ·
+  <a href="/start/clawd">Moltbot assistant setup</a>
 </p>
 
-Moltbot 连接了 WhatsApp（通过 WhatsApp Web / Baileys）、Telegram（Bot API / grammY）、Discord（Bot API / channels.discord.js）和 iMessage（imsg CLI）到像 [Pi](https://github.com/badlogic/pi-mono) 这样的编码代理。插件增加 Mattermost（Bot API + WebSocket）等更多功能。
-Moltbot 还为 [Clawd](https://clawd.me) 提供支持，这是一个太空龙虾助手。
+Moltbot bridges WhatsApp (via WhatsApp Web / Baileys), Telegram (Bot API / grammY), Discord (Bot API / channels.discord.js), and iMessage (imsg CLI) to coding agents like [Pi](https://github.com/badlogic/pi-mono). Plugins add Mattermost (Bot API + WebSocket) and more.
+Moltbot also powers [Clawd](https://clawd.me), the space‑lobster assistant.
 
-## 从此开始
+## Start here
 
-- **从零开始的新安装：** [入门指南](/start/getting-started)
-- **引导式设置（推荐）：** [向导](/start/wizard) (`moltbot onboard`)
-- **打开仪表板（本地网关）：** http://127.0.0.1:18789/ (或 http://localhost:18789/)
+- **New install from zero:** [Getting Started](/start/getting-started)
+- **Guided setup (recommended):** [Wizard](/start/wizard) (`moltbot onboard`)
+- **Open the dashboard (local Gateway):** http://127.0.0.1:18789/ (or http://localhost:18789/)
 
-如果网关在同一台计算机上运行，该链接会立即打开浏览器控制界面
-。如果失败，请先启动网关：`moltbot gateway`。
+If the Gateway is running on the same computer, that link opens the browser Control UI
+immediately. If it fails, start the Gateway first: `moltbot gateway`.
 
-## 仪表板（浏览器控制界面）
+## Dashboard (browser Control UI)
 
-仪表板是用于聊天、配置、节点、会话等的浏览器控制界面。
-本地默认：http://127.0.0.1:18789/
-远程访问：[Web 界面](/web) 和 [Tailscale](/gateway/tailscale)
+The dashboard is the browser Control UI for chat, config, nodes, sessions, and more.
+Local default: http://127.0.0.1:18789/
+Remote access: [Web surfaces](/web) and [Tailscale](/gateway/tailscale)
 
-## 工作原理
+## How it works
 
 ```
-WhatsApp / Telegram / Discord / iMessage (+ 插件)
+WhatsApp / Telegram / Discord / iMessage (+ plugins)
         │
         ▼
   ┌───────────────────────────┐
-  │          网关          │  ws://127.0.0.1:18789 (仅回环)
-  │     (单一来源)       │
-  │                           │  http://<网关主机>:18793
-  │                           │    /__moltbot__/canvas/ (Canvas 主机)
+  │          Gateway          │  ws://127.0.0.1:18789 (loopback-only)
+  │     (single source)       │
+  │                           │  http://<gateway-host>:18793
+  │                           │    /__moltbot__/canvas/ (Canvas host)
   └───────────┬───────────────┘
               │
-              ├─ Pi 代理 (RPC)
+              ├─ Pi agent (RPC)
               ├─ CLI (moltbot …)
-              ├─ 聊天界面 (SwiftUI)
-              ├─ macOS 应用 (Moltbot.app)
-              ├─ iOS 节点通过网关 WS + 配对
-              └─ Android 节点通过网关 WS + 配对
+              ├─ Chat UI (SwiftUI)
+              ├─ macOS app (Moltbot.app)
+              ├─ iOS node via Gateway WS + pairing
+              └─ Android node via Gateway WS + pairing
 ```
 
-大多数操作通过 **网关** (`moltbot gateway`) 流转，这是一个长期运行的单一进程，拥有通道连接和 WebSocket 控制平面。
+Most operations flow through the **Gateway** (`moltbot gateway`), a single long-running process that owns channel connections and the WebSocket control plane.
 
-## 网络模型
+## Network model
 
-- **每台主机一个网关（推荐）**：这是唯一被允许拥有 WhatsApp Web 会话的进程。如果你需要救援机器人或严格的隔离，请使用隔离的配置文件和端口运行多个网关；请参见 [多个网关](/gateway/multiple-gateways)。
-- **回环优先**：网关 WS 默认为 `ws://127.0.0.1:18789`。
-  - 向导现在默认生成网关令牌（即使是回环）。
-  - 要访问 Tailnet，请运行 `moltbot gateway --bind tailnet --token ...`（非回环绑定需要令牌）。
-- **节点**：连接到网关 WebSocket（根据需要使用 LAN/tailnet/SSH）；旧版 TCP 桥已弃用/移除。
-- **Canvas 主机**：HTTP 文件服务器在 `canvasHost.port` 上（默认 `18793`），为节点 WebViews 提供 `/__moltbot__/canvas/`；请参见 [网关配置](/gateway/configuration) (`canvasHost`)。
-- **远程使用**：SSH 隧道或 tailnet/VPN；请参见 [远程访问](/gateway/remote) 和 [发现](/gateway/discovery)。
+- **One Gateway per host (recommended)**: it is the only process allowed to own the WhatsApp Web session. If you need a rescue bot or strict isolation, run multiple gateways with isolated profiles and ports; see [Multiple gateways](/gateway/multiple-gateways).
+- **Loopback-first**: Gateway WS defaults to `ws://127.0.0.1:18789`.
+  - The wizard now generates a gateway token by default (even for loopback).
+  - For Tailnet access, run `moltbot gateway --bind tailnet --token ...` (token is required for non-loopback binds).
+- **Nodes**: connect to the Gateway WebSocket (LAN/tailnet/SSH as needed); legacy TCP bridge is deprecated/removed.
+- **Canvas host**: HTTP file server on `canvasHost.port` (default `18793`), serving `/__moltbot__/canvas/` for node WebViews; see [Gateway configuration](/gateway/configuration) (`canvasHost`).
+- **Remote use**: SSH tunnel or tailnet/VPN; see [Remote access](/gateway/remote) and [Discovery](/gateway/discovery).
 
-## 功能（高级别）
+## Features (high level)
 
-- 📱 **WhatsApp 集成** — 使用 Baileys 进行 WhatsApp Web 协议
-- ✈️ **Telegram 机器人** — 通过 grammY 进行私信 + 群组
-- 🎮 **Discord 机器人** — 通过 channels.discord.js 进行私信 + 服务器频道
-- 🧩 **Mattermost 机器人（插件）** — 机器人令牌 + WebSocket 事件
-- 💬 **iMessage** — 本地 imsg CLI 集成（macOS）
-- 🤖 **代理桥** — Pi（RPC 模式）带有工具流
-- ⏱️ **流式传输 + 分块** — 块流 + Telegram 草稿流细节 ([/concepts/streaming](/concepts/streaming))
-- 🧠 **多代理路由** — 将提供者账户/对等方路由到隔离的代理（工作空间 + 每代理会话）
-- 🔐 **订阅认证** — 通过 OAuth 进行 Anthropic（Claude Pro/Max）+ OpenAI（ChatGPT/Codex）
-- 💬 **会话** — 直接聊天折叠成共享的 `main`（默认）；群组是隔离的
-- 👥 **群聊支持** — 默认基于提及；所有者可以切换 `/activation always|mention`
-- 📎 **媒体支持** — 发送和接收图像、音频、文档
-- 🎤 **语音笔记** — 可选的转录钩子
-- 🖥️ **WebChat + macOS 应用** — 本地 UI + 菜单栏配套用于操作和语音唤醒
-- 📱 **iOS 节点** — 作为节点配对并暴露 Canvas 界面
-- 📱 **Android 节点** — 作为节点配对并暴露 Canvas + 聊天 + 相机
+- 📱 **WhatsApp Integration** — Uses Baileys for WhatsApp Web protocol
+- ✈️ **Telegram Bot** — DMs + groups via grammY
+- 🎮 **Discord Bot** — DMs + guild channels via channels.discord.js
+- 🧩 **Mattermost Bot (plugin)** — Bot token + WebSocket events
+- 💬 **iMessage** — Local imsg CLI integration (macOS)
+- 🤖 **Agent bridge** — Pi (RPC mode) with tool streaming
+- ⏱️ **Streaming + chunking** — Block streaming + Telegram draft streaming details ([/concepts/streaming](/concepts/streaming))
+- 🧠 **Multi-agent routing** — Route provider accounts/peers to isolated agents (workspace + per-agent sessions)
+- 🔐 **Subscription auth** — Anthropic (Claude Pro/Max) + OpenAI (ChatGPT/Codex) via OAuth
+- 💬 **Sessions** — Direct chats collapse into shared `main` (default); groups are isolated
+- 👥 **Group Chat Support** — Mention-based by default; owner can toggle `/activation always|mention`
+- 📎 **Media Support** — Send and receive images, audio, documents
+- 🎤 **Voice notes** — Optional transcription hook
+- 🖥️ **WebChat + macOS app** — Local UI + menu bar companion for ops and voice wake
+- 📱 **iOS node** — Pairs as a node and exposes a Canvas surface
+- 📱 **Android node** — Pairs as a node and exposes Canvas + Chat + Camera
 
-注意：旧的 Claude/Codex/Gemini/Opencode 路径已被移除；Pi 是唯一的编码代理路径。
+Note: legacy Claude/Codex/Gemini/Opencode paths have been removed; Pi is the only coding-agent path.
 
-## 快速开始
+## Quick start
 
-运行时要求：**Node ≥ 22**。
+Runtime requirement: **Node ≥ 22**.
 
 ```bash
-# 推荐：全局安装（npm/pnpm）
+# Recommended: global install (npm/pnpm)
 npm install -g moltbot@latest
-# 或：pnpm add -g moltbot@latest
+# or: pnpm add -g moltbot@latest
 
-# 入门 + 安装服务（launchd/systemd 用户服务）
+# Onboard + install the service (launchd/systemd user service)
 moltbot onboard --install-daemon
 
-# 配对 WhatsApp Web（显示 QR 码）
+# Pair WhatsApp Web (shows QR)
 moltbot channels login
 
-# 网关在入门后通过服务运行；手动运行仍然是可能的：
+# Gateway runs via the service after onboarding; manual run is still possible:
 moltbot gateway --port 18789
 ```
 
-稍后在 npm 和 git 安装之间切换很容易：安装另一种风格并运行 `moltbot doctor` 以更新网关服务入口点。
+Switching between npm and git installs later is easy: install the other flavor and run `moltbot doctor` to update the gateway service entrypoint.
 
-从源码（开发）：
+From source (development):
 
 ```bash
 git clone https://github.com/moltbot/moltbot.git
 cd moltbot
 pnpm install
-pnpm ui:build # 首次运行时自动安装 UI 依赖
+pnpm ui:build # auto-installs UI deps on first run
 pnpm build
 moltbot onboard --install-daemon
 ```
 
-如果你还没有全局安装，请通过 `pnpm moltbot ...` 从仓库运行入门步骤。
+If you don’t have a global install yet, run the onboarding step via `pnpm moltbot ...` from the repo.
 
-多实例快速开始（可选）：
+Multi-instance quickstart (optional):
 
 ```bash
 CLAWDBOT_CONFIG_PATH=~/.clawdbot/a.json \
@@ -138,20 +138,20 @@ CLAWDBOT_STATE_DIR=~/.clawdbot-a \
 moltbot gateway --port 19001
 ```
 
-发送测试消息（需要运行中的网关）：
+Send a test message (requires a running Gateway):
 
 ```bash
 moltbot message send --target +15555550123 --message "Hello from Moltbot"
 ```
 
-## 配置（可选）
+## Configuration (optional)
 
-配置位于 `~/.clawdbot/moltbot.json`。
+Config lives at `~/.clawdbot/moltbot.json`.
 
-- 如果你 **什么都不做**，Moltbot 会在 RPC 模式下使用捆绑的 Pi 二进制文件，每个发送者都有独立会话。
-- 如果你想锁定它，请从 `channels.whatsapp.allowFrom` 开始，（对于群组）提及规则。
+- If you **do nothing**, Moltbot uses the bundled Pi binary in RPC mode with per-sender sessions.
+- If you want to lock it down, start with `channels.whatsapp.allowFrom` and (for groups) mention rules.
 
-示例：
+Example:
 
 ```json5
 {
@@ -165,76 +165,76 @@ moltbot message send --target +15555550123 --message "Hello from Moltbot"
 }
 ```
 
-## 文档
+## Docs
 
-- 从此开始：
-  - [文档中心（所有页面链接）](/start/hubs)
-  - [帮助](/help) ← *常见修复 + 故障排除*
-  - [配置](/gateway/configuration)
-  - [配置示例](/gateway/configuration-examples)
-  - [斜杠命令](/tools/slash-commands)
-  - [多代理路由](/concepts/multi-agent)
-  - [更新 / 回滚](/install/updating)
-  - [配对（DM + 节点）](/start/pairing)
-  - [Nix 模式](/install/nix)
-  - [Moltbot 助手设置（Clawd）](/start/clawd)
-  - [技能](/tools/skills)
-  - [技能配置](/tools/skills-config)
-  - [工作空间模板](/reference/templates/AGENTS)
-  - [RPC 适配器](/reference/rpc)
-  - [网关运行手册](/gateway)
-  - [节点（iOS/Android）](/nodes)
-  - [Web 界面（控制 UI）](/web)
-  - [发现 + 传输](/gateway/discovery)
-  - [远程访问](/gateway/remote)
-- 提供者和用户体验：
+- Start here:
+  - [Docs hubs (all pages linked)](/start/hubs)
+  - [Help](/help) ← *common fixes + troubleshooting*
+  - [Configuration](/gateway/configuration)
+  - [Configuration examples](/gateway/configuration-examples)
+  - [Slash commands](/tools/slash-commands)
+  - [Multi-agent routing](/concepts/multi-agent)
+  - [Updating / rollback](/install/updating)
+  - [Pairing (DM + nodes)](/start/pairing)
+  - [Nix mode](/install/nix)
+  - [Moltbot assistant setup (Clawd)](/start/clawd)
+  - [Skills](/tools/skills)
+  - [Skills config](/tools/skills-config)
+  - [Workspace templates](/reference/templates/AGENTS)
+  - [RPC adapters](/reference/rpc)
+  - [Gateway runbook](/gateway)
+  - [Nodes (iOS/Android)](/nodes)
+  - [Web surfaces (Control UI)](/web)
+  - [Discovery + transports](/gateway/discovery)
+  - [Remote access](/gateway/remote)
+- Providers and UX:
   - [WebChat](/web/webchat)
-  - [控制 UI（浏览器）](/web/control-ui)
+  - [Control UI (browser)](/web/control-ui)
   - [Telegram](/channels/telegram)
   - [Discord](/channels/discord)
-  - [Mattermost（插件）](/channels/mattermost)
+  - [Mattermost (plugin)](/channels/mattermost)
   - [iMessage](/channels/imessage)
-  - [群组](/concepts/groups)
-  - [WhatsApp 群消息](/concepts/group-messages)
-  - [媒体：图像](/nodes/images)
-  - [媒体：音频](/nodes/audio)
-- 伴侣应用：
-  - [macOS 应用](/platforms/macos)
-  - [iOS 应用](/platforms/ios)
-  - [Android 应用](/platforms/android)
-  - [Windows（WSL2）](/platforms/windows)
-  - [Linux 应用](/platforms/linux)
-- 运维和安全：
-  - [会话](/concepts/session)
-  - [Cron 作业](/automation/cron-jobs)
+  - [Groups](/concepts/groups)
+  - [WhatsApp group messages](/concepts/group-messages)
+  - [Media: images](/nodes/images)
+  - [Media: audio](/nodes/audio)
+- Companion apps:
+  - [macOS app](/platforms/macos)
+  - [iOS app](/platforms/ios)
+  - [Android app](/platforms/android)
+  - [Windows (WSL2)](/platforms/windows)
+  - [Linux app](/platforms/linux)
+- Ops and safety:
+  - [Sessions](/concepts/session)
+  - [Cron jobs](/automation/cron-jobs)
   - [Webhooks](/automation/webhook)
-  - [Gmail 钩子（Pub/Sub）](/automation/gmail-pubsub)
-  - [安全](/gateway/security)
-  - [故障排除](/gateway/troubleshooting)
+  - [Gmail hooks (Pub/Sub)](/automation/gmail-pubsub)
+  - [Security](/gateway/security)
+  - [Troubleshooting](/gateway/troubleshooting)
 
-## 名称
+## The name
 
-**Moltbot = CLAW + TARDIS** — 因为每只太空龙虾都需要一台时空机器。
-
----
-
-*"我们都在玩自己的提示词。"* — 一个人工智能，大概对 token 很兴奋
-
-## 致谢
-
-- **Peter Steinberger** ([@steipete](https://twitter.com/steipete)) — 创造者，龙虾密语者
-- **Mario Zechner** ([@badlogicc](https://twitter.com/badlogicgames)) — Pi 创造者，安全渗透测试员
-- **Clawd** — 那只要求更好名字的太空龙虾
-
-## 核心贡献者
-
-- **Maxim Vovshin** (@Hyaxia, 36747317+Hyaxia@users.noreply.github.com) — Blogwatcher 技能
-- **Nacho Iacovino** (@nachoiacovino, nacho.iacovino@gmail.com) — 位置解析（Telegram + WhatsApp）
-
-## 许可证
-
-MIT — 像海洋中的龙虾一样自由 🦞
+**Moltbot = CLAW + TARDIS** — because every space lobster needs a time-and-space machine.
 
 ---
 
-*"我们都在玩自己的提示词。"* — 一个人工智能，大概对 token 很兴奋
+*"We're all just playing with our own prompts."* — an AI, probably high on tokens
+
+## Credits
+
+- **Peter Steinberger** ([@steipete](https://twitter.com/steipete)) — Creator, lobster whisperer
+- **Mario Zechner** ([@badlogicc](https://twitter.com/badlogicgames)) — Pi creator, security pen-tester
+- **Clawd** — The space lobster who demanded a better name
+
+## Core Contributors
+
+- **Maxim Vovshin** (@Hyaxia, 36747317+Hyaxia@users.noreply.github.com) — Blogwatcher skill
+- **Nacho Iacovino** (@nachoiacovino, nacho.iacovino@gmail.com) — Location parsing (Telegram + WhatsApp)
+
+## License
+
+MIT — Free as a lobster in the ocean 🦞
+
+---
+
+*"We're all just playing with our own prompts."* — An AI, probably high on tokens
