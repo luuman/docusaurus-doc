@@ -1,0 +1,32 @@
+.cmd-tabs {
+  margin-bottom: 1rem;
+}
+.tab-buttons {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+.tab-btn {
+  padding: 0.4em 1em;
+  border: 1px solid #d1d5db;
+  background: #f3f4f6;
+  cursor: pointer;
+  border-radius: 6px;
+}
+.tab-btn.active {
+  background: #6366f1;
+  color: #fff;
+  border-color: #4f46e5;
+}
+.tab-panel {
+  margin-top: 0.75rem;
+  background: #f9fafb;
+  padding: 1em;
+  border-radius: 6px;
+  border: 1px solid #e5e7eb;
+}
+.code-block {
+  margin: 0;
+  font-family: ui-monospace, monospace;
+  white-space: pre-wrap;
+}

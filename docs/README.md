@@ -1,3 +1,7 @@
+---
+slug: /
+---
+
 # Matrx Windows 开发文档
 
 > 本文档旨在帮助新人快速熟悉 Matrx Windows 项目的架构、模块和开发流程。

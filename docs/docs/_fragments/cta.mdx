@@ -1,0 +1,49 @@
+export const metadata = {
+  title: 'Call to Action',
+};
+
+import { useState } from 'react';
+import './CommandTabs.css';
+
+export default function Cta() {
+    const tabs = [
+    { label: 'Bash', code: `sh <(curl https://create.tauri.app/sh)` },
+    { label: 'PowerShell', code: `irm https://create.tauri.app/ps | iex` },
+    { label: 'Fish', code: `sh (curl -sSL https://create.tauri.app/sh | psub)` },
+    { label: 'npm', code: `npm create tauri-app@latest` },
+    { label: 'Yarn', code: `yarn create tauri-app` },
+    { label: 'pnpm', code: `pnpm create tauri-app` },
+    { label: 'deno', code: `deno run -A npm:create-tauri-app` },
+    { label: 'bun', code: `bun create tauri-app` },
+    {
+      label: 'Cargo',
+      code: `cargo install create-tauri-app --locked
+cargo create-tauri-app`,
+    },
+  ];
+  function Tabs() {
+    const [active, setActive] = useState(tabs[0].label);
+    return (
+      <>
+        <div className="tabs">
+          {tabs.map((t) => (
+            <button
+              key={t.label}
+              className={`tab-button${active === t.label ? ' active' : ''}`}
+              onClick={() => setActive(t.label)}
+            >
+              {t.label}
+            </button>
+          ))}
+        </div>
+        <div className="tab-content">
+          <div className="code-block">
+            <code>{tabs.find((t) => t.label === active).code}</code>
+          </div>
+        </div>
+      </>
+    );
+  }
+  return <Tabs />;
+}
+
