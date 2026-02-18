@@ -1,0 +1,8 @@
+{
+  "label": "真实场景案例库",
+  "position": 5,
+  "link": {
+    "type": "generated-index",
+    "description": "Claude Code 在实际工作中的应用案例，包括具体的步骤、效率数据、和最佳实践"
+  }
+}

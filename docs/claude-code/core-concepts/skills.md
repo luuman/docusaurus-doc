@@ -204,3 +204,257 @@ Skills 的无状态设计使其非常适合以下场景：
 - **一次性分析任务**：代码审查、文档生成
 - **批量处理**：多文件格式化、批量翻译
 - **专业领域工作**：需要特定领域知识的任务
+
+---
+
+## 🎯 实战案例：提高工作效率
+
+### 案例 1：代码审查自动化
+
+**场景：** 团队代码库有 200+ 个文件，代码风格不统一，需要大规模审查和重构。
+
+**传统方式：** 2-3 周人工审查 + 修复
+
+**使用 Claude Code + Skills：**
+
+```bash
+# 创建团队代码审查 Skill
+npx skills-installer install ./my-custom-skill --client claude-code
+
+# 执行自动审查
+/review-all-files
+
+# Claude Code 会自动：
+# ✅ 遍历所有文件
+# ✅ 按照 Skill 标准检查
+# ✅ 生成审查报告
+# ✅ 提出改进建议
+```
+
+**效果对比：**
+| 指标 | 传统方式 | Claude Code |
+|------|---------|-------------|
+| 审查时间 | 2-3 周 | 2-3 小时 |
+| 覆盖率 | 70% | 100% |
+| 一致性 | 中等 | 高度统一 |
+| 成本 | 3-4 人周 | 1-2 小时 |
+
+**效率提升：** **50-100 倍**
+
+---
+
+### 案例 2：测试用例自动生成
+
+**场景：** 新增 50 个 API 端点，需要为每个端点编写完整的单元测试。
+
+**传统方式：** 每个 API 10-20 分钟手写测试，共需 8-16 小时
+
+**使用 Claude Code + Skills：**
+
+```bash
+# 使用测试生成 Skill
+/generate-tests --coverage=100%
+
+# Claude Code 会：
+# ✅ 分析 API 签名
+# ✅ 生成正常案例、边界案例、异常案例
+# ✅ 添加 mock 数据
+# ✅ 生成完整的测试套件
+```
+
+**实际执行：**
+```
+输入：50 个 API 定义（OpenAPI spec）
+处理时间：15-20 分钟
+输出：500+ 完整测试用例
+覆盖率：95%+
+```
+
+**效率提升：** **30-50 倍**
+
+---
+
+### 案例 3：文档自动化
+
+**场景：** 项目有 30 个模块，需要生成 API 文档、使用说明、变更日志。
+
+**传统方式：** 手工编写 + 维护，耗时 3-5 天，容易过时
+
+**使用 Claude Code + doc-coauthoring Skill：**
+
+```bash
+# 安装官方 doc-coauthoring Skill
+npx skills-installer install @anthropics/claude-code/doc-coauthoring --client claude-code
+
+# 执行自动文档生成
+/generate-documentation
+
+# Claude Code 会：
+# ✅ 分析代码结构
+# ✅ 提取 JSDoc / Docstring
+# ✅ 生成 API 参考文档
+# ✅ 创建快速开始指南
+# ✅ 自动更新变更日志
+```
+
+**效果：**
+- API 文档：自动从代码注释生成，与代码同步更新
+- 使用说明：自动示例代码生成
+- 变更日志：从 Git commit 自动整理
+
+**效率提升：** **10-20 倍**，且保持文档始终最新
+
+---
+
+### 案例 4：批量代码迁移
+
+**场景：** 从 Webpack 4 升级到 Webpack 5，需要更新 50 个项目配置、依赖、兼容代码。
+
+**传统方式：** 逐个手工升级，2-3 周时间，容易遗漏
+
+**使用 Claude Code + 自定义 Skill：**
+
+```bash
+# 创建升级 Skill
+npx skills-installer install ./webpack5-upgrade-skill --client claude-code
+
+# 执行批量升级
+/batch-migrate-to-webpack5
+
+# Claude Code 会自动处理：
+# ✅ 更新所有 package.json
+# ✅ 修改配置文件语法
+# ✅ 适配不兼容的 API
+# ✅ 运行测试确保可用性
+# ✅ 生成升级报告
+```
+
+**执行结果：**
+```
+升级 50 个项目配置
+更新 200+ 文件
+自动修复 95% 兼容性问题
+生成详细升级报告
+总耗时：3-4 小时（vs 2-3 周）
+```
+
+**效率提升：** **50-100 倍**
+
+---
+
+### 案例 5：性能优化分析
+
+**场景：** 大型应用性能下降，需要找出瓶颈、生成优化方案。
+
+**传统方式：** 人工使用各种工具分析，1-2 天
+
+**使用 Claude Code + Performance Skill：**
+
+```bash
+# 执行性能分析 Skill
+/analyze-performance --generate-fixes
+
+# Claude Code 会：
+# ✅ 扫描所有代码文件
+# ✅ 识别常见的性能问题
+# ✅ 生成优化建议
+# ✅ 提供修复代码示例
+# ✅ 估算性能提升幅度
+```
+
+**生成的报告：**
+- 性能问题列表（按优先级）
+- 每个问题的详细说明
+- 修复代码示例
+- 预期性能提升
+- 测试验证方案
+
+**时间对比：**
+| 工作 | 传统方式 | Claude Code |
+|------|---------|-------------|
+| 问题识别 | 4-6 小时 | 15 分钟 |
+| 方案制定 | 4-6 小时 | 20 分钟 |
+| 代码修复 | 8-12 小时 | 1-2 小时 |
+| **合计** | **16-24 小时** | **2-3 小时** |
+
+**效率提升：** **8-12 倍**
+
+---
+
+## 🚀 快速创建你的第一个 Skill
+
+### 为团队创建代码审查 Skill
+
+**步骤 1：创建目录结构**
+
+```bash
+mkdir my-code-review-skill
+cd my-code-review-skill
+```
+
+**步骤 2：创建 skill.json**
+
+```json
+{
+  "name": "code-review",
+  "version": "1.0.0",
+  "description": "团队标准代码审查工作流",
+  "skill": {
+    "file": "skill.md",
+    "description": "执行代码质量审查、安全检查和性能分析"
+  }
+}
+```
+
+**步骤 3：创建 skill.md**
+
+```markdown
+# 代码审查工作流
+
+## 你的职责
+作为代码审查专家，按照以下流程审查代码：
+
+### 代码质量检查
+- [ ] 命名规范符合 camelCase / PascalCase
+- [ ] 函数长度 &lt;50 行
+- [ ] 注释清晰
+- [ ] 无重复代码
+
+### 安全检查
+- [ ] 没有 SQL 注入风险
+- [ ] 输入数据已验证
+- [ ] 敏感信息没有硬编码
+
+### 性能检查
+- [ ] 没有 N+1 问题
+- [ ] 循环嵌套合理
+- [ ] 内存使用正常
+
+## 输出格式
+生成 Markdown 审查报告，包含：
+1. 总体评分（1-10）
+2. 关键问题（按严重程度）
+3. 改进建议
+4. 优点总结
+```
+
+**步骤 4：安装和使用**
+
+```bash
+# 安装 Skill
+npx skills-installer install ./my-code-review-skill --client claude-code
+
+# 使用 Skill
+claude
+> /code-review
+```
+
+---
+
+## 💡 最佳实践
+
+1. **Keep it focused** — 每个 Skill 解决一个明确的问题
+2. **Clear documentation** — 说明 Skill 的输入、处理逻辑、输出
+3. **Team sharing** — 将团队 Skills 托管在 Git，统一版本管理
+4. **Version control** — 在 skill.json 中明确版本号，跟踪演变
+5. **Reusability** — 设计 Skill 时考虑多个项目的通用性

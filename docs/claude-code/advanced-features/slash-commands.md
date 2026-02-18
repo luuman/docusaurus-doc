@@ -317,8 +317,8 @@ npm run deploy:production
 **`/model`** — 按需切换模型
 
 ```
-/model claude-opus-4-5      # 最强能力，适合复杂架构设计
-/model claude-sonnet-4-5    # 性能平衡，日常开发首选
+/model claude-opus-4-6      # 最强能力，适合复杂架构设计
+/model claude-sonnet-4-6    # 性能平衡，日常开发首选
 /model claude-haiku-4-5     # 最快最省，适合简单问答
 ```
 

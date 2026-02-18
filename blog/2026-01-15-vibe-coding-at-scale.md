@@ -1,12 +1,17 @@
 ---
-sidebar_position: 2
+slug: vibe-coding-at-scale
 title: 大规模 Vibe Coding 实战：10 个 Claude Code 并行开发
+date: 2026-01-15
+authors: [claude-team]
+tags: [claude-code, tutorial, parallel, productivity]
 description: Meshy AI 创始人胡渊鸣如何用 10 个 Claude Code 实例并行开发，并将成功率从 20% 提升至 95%
 ---
 
 # 大规模 Vibe Coding 实战：10 个 Claude Code 并行开发
 
 > 本文整理自 Meshy AI 创始人胡渊鸣（Ethan Hu）的公开分享，记录了他从单机 Cursor Agent 到 10 个 Claude Code 实例并行运行的完整进化路径。这是目前最系统、最具工程深度的 Agentic Coding 实践案例之一。
+
+<!-- truncate -->
 
 ---
 
