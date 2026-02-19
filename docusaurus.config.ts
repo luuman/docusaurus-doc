@@ -84,6 +84,12 @@ const config: Config = {
   },
   themes: ["@docusaurus/theme-mermaid"],
   themeConfig: {
+    // Set dark theme as default
+    colorMode: {
+      defaultMode: 'dark',
+      disableSwitch: false,
+      respectPrefersColorScheme: false,
+    },
     // Replace with your project's social card
     image: "img/docusaurus-social-card.jpg",
     navbar: {
