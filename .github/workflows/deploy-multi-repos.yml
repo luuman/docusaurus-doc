@@ -1,0 +1,130 @@
+name: Deploy to Multiple Repos
+
+on:
+  push:
+    branches:
+      - feat/**
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # 读取配置文件并确定部署目标
+      - name: Determine deploy target
+        id: config
+        run: |
+          BRANCH_NAME=${GITHUB_REF#refs/heads/}
+          echo "branch_name=$BRANCH_NAME" >> $GITHUB_OUTPUT
+
+          # 读取配置文件
+          CONFIG=$(cat .github/deploy-config.json)
+          SOURCE_DIR=$(echo "$CONFIG" | jq -r '.source_dir')
+
+          # 从配置文件中查询分支映射
+          TARGET_REPO=$(echo "$CONFIG" | jq -r ".branch_mapping[\"$BRANCH_NAME\"] // empty")
+
+          if [ -z "$TARGET_REPO" ]; then
+            echo "❌ No mapping found for branch: $BRANCH_NAME"
+            echo "should_deploy=false" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          echo "should_deploy=true" >> $GITHUB_OUTPUT
+          echo "target_repo=$TARGET_REPO" >> $GITHUB_OUTPUT
+          echo "source_dir=$SOURCE_DIR" >> $GITHUB_OUTPUT
+
+          echo "✅ Branch: $BRANCH_NAME"
+          echo "✅ Target Repo: $TARGET_REPO"
+          echo "✅ Source Dir: $SOURCE_DIR"
+
+      # 跳过未配置的分支
+      - name: Skip if no config
+        if: steps.config.outputs.should_deploy == 'false'
+        run: echo "⏭️  Skipping deployment - no config for this branch"
+
+      # 只在有配置时继续
+      - name: Setup Node.js
+        if: steps.config.outputs.should_deploy == 'true'
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Setup Node.js
+        if: steps.config.outputs.should_deploy == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        if: steps.config.outputs.should_deploy == 'true'
+        working-directory: ${{ steps.config.outputs.source_dir }}
+        run: pnpm install --frozen-lockfile
+
+      - name: Build documentation
+        if: steps.config.outputs.should_deploy == 'true'
+        working-directory: ${{ steps.config.outputs.source_dir }}
+        run: pnpm build
+
+      # 推送到目标仓库的 gh-pages 分支
+      - name: Deploy to target repository
+        if: steps.config.outputs.should_deploy == 'true'
+        env:
+          TARGET_REPO: ${{ steps.config.outputs.target_repo }}
+          SOURCE_DIR: ${{ steps.config.outputs.source_dir }}/build
+          BRANCH_NAME: ${{ steps.config.outputs.branch_name }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # 生成唯一的临时目录
+          TEMP_DIR="/tmp/deploy-$(date +%s)"
+          mkdir -p "$TEMP_DIR"
+          cd "$TEMP_DIR"
+
+          echo "📦 Cloning target repository: $TARGET_REPO"
+          git clone --depth 1 \
+            https://x-access-token:${GITHUB_TOKEN}@github.com/${TARGET_REPO}.git \
+            repo
+
+          cd repo
+
+          # 清空所有文件（除了 .git）
+          find . -mindepth 1 -not -path './.git' -not -path './.git/*' -delete
+
+          # 复制构建文件
+          echo "📋 Copying built files from: $SOURCE_DIR"
+          cp -r "${GITHUB_WORKSPACE}/${SOURCE_DIR}"/* .
+
+          # Git 提交和推送
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git add .
+
+          # 如果有变化则提交
+          if git diff --cached --exit-code; then
+            echo "ℹ️  No changes to commit"
+          else
+            git commit -m "🚀 Deploy from $BRANCH_NAME branch
+
+            - Source: ${{ github.repository }}/$BRANCH_NAME
+            - Commit: ${{ github.sha }}
+            - Author: ${{ github.actor }}"
+
+            echo "⬆️  Pushing to $TARGET_REPO (gh-pages branch)"
+            git push origin gh-pages || git push -u origin gh-pages
+            echo "✅ Deployment successful!"
+          fi
+
+      - name: Deployment Summary
+        if: steps.config.outputs.should_deploy == 'true'
+        run: |
+          echo "🎉 Deployment Summary"
+          echo "===================="
+          echo "Source Branch: ${{ steps.config.outputs.branch_name }}"
+          echo "Target Repo: ${{ steps.config.outputs.target_repo }}"
+          echo "GitHub Pages URL:"
+          echo "  https://$(echo ${{ steps.config.outputs.target_repo }} | cut -d'/' -f1).github.io/$(echo ${{ steps.config.outputs.target_repo }} | cut -d'/' -f2)/"
