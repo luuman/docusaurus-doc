@@ -5,6 +5,9 @@ on:
     branches:
       - feat/**
 
+permissions:
+  contents: read
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -77,8 +80,15 @@ jobs:
           TARGET_REPO: ${{ steps.config.outputs.target_repo }}
           SOURCE_DIR: ${{ steps.config.outputs.source_dir }}/build
           BRANCH_NAME: ${{ steps.config.outputs.branch_name }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DEPLOY_TOKEN: ${{ secrets.DEPLOY_TOKEN }}
         run: |
+          # 检查是否配置了 DEPLOY_TOKEN
+          if [ -z "$DEPLOY_TOKEN" ]; then
+            echo "❌ Error: DEPLOY_TOKEN is not set"
+            echo "Please create a Personal Access Token and add it as DEPLOY_TOKEN secret"
+            exit 1
+          fi
+
           # 生成唯一的临时目录
           TEMP_DIR="/tmp/deploy-$(date +%s)"
           mkdir -p "$TEMP_DIR"
@@ -86,7 +96,7 @@ jobs:
 
           echo "📦 Cloning target repository: $TARGET_REPO"
           git clone --depth 1 \
-            https://x-access-token:${GITHUB_TOKEN}@github.com/${TARGET_REPO}.git \
+            https://x-access-token:${DEPLOY_TOKEN}@github.com/${TARGET_REPO}.git \
             repo
 
           cd repo
