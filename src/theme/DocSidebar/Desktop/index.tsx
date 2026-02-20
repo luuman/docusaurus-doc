@@ -1,8 +1,7 @@
 import React from 'react';
 import OriginalDocSidebarDesktop from '@theme-original/DocSidebar/Desktop';
-import {useColorMode} from '@docusaurus/theme-common';
-import ErrorBoundary from '@docusaurus/ErrorBoundary';
 import styles from './styles.module.css';
+import {useColorModeDom} from '../../useColorModeDom';
 
 type Props = React.ComponentProps<typeof OriginalDocSidebarDesktop>;
 
@@ -23,7 +22,7 @@ function MoonIcon(): JSX.Element {
 }
 
 function ThemeToggleFooter(): JSX.Element {
-  const {colorMode, setColorMode} = useColorMode();
+  const {colorMode, setColorMode} = useColorModeDom();
 
   return (
     <div className={styles.sidebarFooter}>
@@ -53,9 +52,7 @@ export default function DocSidebarDesktop(props: Props): JSX.Element {
   return (
     <>
       <OriginalDocSidebarDesktop {...props} />
-      <ErrorBoundary fallback={() => null}>
-        <ThemeToggleFooter />
-      </ErrorBoundary>
+      <ThemeToggleFooter />
     </>
   );
 }

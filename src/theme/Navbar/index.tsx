@@ -1,12 +1,12 @@
 import React, {useRef} from 'react';
 import Link from '@docusaurus/Link';
-import {useThemeConfig, useColorMode} from '@docusaurus/theme-common';
-import ErrorBoundary from '@docusaurus/ErrorBoundary';
+import {useThemeConfig} from '@docusaurus/theme-common';
 import NavbarMobileSidebarToggle from '@theme/Navbar/MobileSidebar/Toggle';
 import NavbarMobileSidebar from '@theme/Navbar/MobileSidebar';
 import SearchBar from '@theme/SearchBar';
 import clsx from 'clsx';
 import styles from './styles.module.css';
+import {useColorModeDom} from '../useColorModeDom';
 
 function BrainboardIcon(): JSX.Element {
   return (
@@ -34,7 +34,7 @@ function MoonIcon(): JSX.Element {
 }
 
 function ThemeToggle(): JSX.Element {
-  const {colorMode, setColorMode} = useColorMode();
+  const {colorMode, setColorMode} = useColorModeDom();
   return (
     <button
       className={styles.themeToggle}
@@ -94,9 +94,7 @@ export default function Navbar(): JSX.Element {
           <div className={styles.navbarRight}>
             <Link to="/docs/README" className={styles.navLink}>Docs</Link>
             <Link to="/blog" className={styles.navLink}>Blog</Link>
-            <ErrorBoundary fallback={() => null}>
-              <ThemeToggle />
-            </ErrorBoundary>
+            <ThemeToggle />
           </div>
         </div>
       </nav>
