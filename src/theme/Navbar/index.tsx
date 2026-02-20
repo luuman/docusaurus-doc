@@ -1,9 +1,6 @@
 import React, {useRef} from 'react';
 import Link from '@docusaurus/Link';
 import {useThemeConfig, useColorMode} from '@docusaurus/theme-common';
-import {
-  useNavbarMobileSidebar,
-} from '@docusaurus/theme-common/internal';
 import NavbarMobileSidebarToggle from '@theme/Navbar/MobileSidebar/Toggle';
 import NavbarMobileSidebar from '@theme/Navbar/MobileSidebar';
 import SearchBar from '@theme/SearchBar';
