@@ -881,7 +881,7 @@ pre code {
   font-size: var(--ifm-code-font-size);
   box-shadow: none !important;
   white-space: pre;
-  tab-size: 2;
+  word-spacing: 2px;
 }
 
 /* Prism code block container — single border here */
@@ -908,7 +908,7 @@ div[class*="codeBlockContainer"] .prism-code *,
 pre code,
 pre code * {
   white-space: pre !important;
-  tab-size: 2;
+  tab-size: 4;
 }
 
 .docusaurus-highlight-code-line {
