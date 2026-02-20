@@ -128,7 +128,7 @@ html[data-theme='dark'],
   --ifm-menu-color-background-active: rgba(130, 170, 255, 0.12);
   --ifm-menu-color-active: #82AAFF;
 
-  --ifm-code-background: #0B2942;
+  --ifm-code-background: #001122;
   --ifm-code-color: #D6DEEB;
   --docusaurus-highlighted-code-line-bg: rgba(130, 170, 255, 0.12);
   --docusaurus-highlighted-code-line-border-l-color: #82AAFF;
@@ -880,6 +880,8 @@ pre code {
   border-radius: 0;
   font-size: var(--ifm-code-font-size);
   box-shadow: none !important;
+  white-space: pre;
+  tab-size: 2;
 }
 
 /* Prism code block container — single border here */
@@ -895,6 +897,13 @@ div[class*="codeBlockContainer"] pre {
   border: none !important;
   border-radius: 0;
   margin: 0;
+  padding: var(--ifm-pre-padding);
+}
+
+/* Prism code lines — preserve indentation */
+div[class*="codeBlockContainer"] pre code {
+  white-space: pre;
+  tab-size: 2;
 }
 
 .docusaurus-highlight-code-line {

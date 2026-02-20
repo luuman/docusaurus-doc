@@ -108,6 +108,7 @@ const config: Config = {
       },
       options: {
         look: 'handDrawn',
+        maxWidth: '100%',
       },
     },
     // Set dark theme as default
