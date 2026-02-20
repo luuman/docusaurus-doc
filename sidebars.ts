@@ -10,7 +10,7 @@ import type { SidebarsConfig } from "@docusaurus/plugin-content-docs";
 const sidebars: SidebarsConfig = {
   tutorialSidebar: [
     // ── Top-level welcome ──────────────────────────────────────────────────
-    "README",
+    "index",
 
     // ── GETTING STARTED ────────────────────────────────────────────────────
     { type: "html", value: "Getting Started", className: "sidebar-section-header" },

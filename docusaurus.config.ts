@@ -126,7 +126,7 @@ const config: Config = {
       //   src: "img/logo.svg",
       // },
       items: [
-        { type: "doc", docId: "README", position: "right", label: "Docs" },
+        { type: "doc", to: "/blog", position: "right", label: "Docs" },
         { to: "/blog", label: "Blog", position: "right" },
       ],
     },

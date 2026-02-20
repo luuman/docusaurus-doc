@@ -69,6 +69,7 @@ function NavbarLogo(): JSX.Element {
 
 export default function Navbar(): JSX.Element {
   const navbarRef = useRef<HTMLElement>(null);
+  const {navbar} = useThemeConfig();
 
   return (
     <>
@@ -92,8 +93,17 @@ export default function Navbar(): JSX.Element {
 
           {/* Right: nav links + theme toggle */}
           <div className={styles.navbarRight}>
-            <Link to="/docs/README" className={styles.navLink}>Docs</Link>
-            <Link to="/blog" className={styles.navLink}>Blog</Link>
+            {navbar.items
+              ?.filter((item: any) => item.position === 'right')
+              .map((item: any, i: number) => (
+                <Link
+                  key={i}
+                  to={item.to || (item.type === 'doc' ? '/docs/' : '#')}
+                  className={styles.navLink}
+                >
+                  {item.label}
+                </Link>
+              ))}
             <ThemeToggle />
           </div>
         </div>
