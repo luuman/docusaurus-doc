@@ -9,7 +9,7 @@
 /* ── Fonts ──────────────────────────────────────────────────────────────── */
 @import url('https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
 
-/* ── Light Theme ─────────────────────────────────────────────────────────── */
+/* ── Light Theme (Winter is Coming Light) ────────────────────────────────── */
 :root {
   /* Typography */
   --ifm-font-family-base: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -17,47 +17,47 @@
   --ifm-line-height-base: 1.75;
   --ifm-code-font-size: 14px;
 
-  /* Primary (Brainboard purple: #714EFF = rgb(113 78 255)) */
-  --ifm-color-primary: #714EFF;
-  --ifm-color-primary-dark: #5D38FF;
-  --ifm-color-primary-darker: #4E27FF;
-  --ifm-color-primary-darkest: #3A12F5;
-  --ifm-color-primary-light: #8567FF;
-  --ifm-color-primary-lighter: #9A80FF;
-  --ifm-color-primary-lightest: #B8A8FF;
+  /* Primary (Winter blue-purple) */
+  --ifm-color-primary: #4C6EF5;
+  --ifm-color-primary-dark: #3B5BDB;
+  --ifm-color-primary-darker: #364FC7;
+  --ifm-color-primary-darkest: #2B44A3;
+  --ifm-color-primary-light: #748FFC;
+  --ifm-color-primary-lighter: #91A7FF;
+  --ifm-color-primary-lightest: #BAC8FF;
 
   /* Backgrounds */
-  --ifm-background-color: #FFFFFF;
-  --ifm-background-surface-primary: #F9F9FB;
-  --ifm-background-surface-color: #F3F4F6;
+  --ifm-background-color: #FBFCFD;
+  --ifm-background-surface-primary: #F0F4F8;
+  --ifm-background-surface-color: #E8EEF4;
 
   /* Text */
-  --ifm-color-emphasis-100: #1D1D1F;
-  --ifm-color-emphasis-200: #3D3D42;
-  --ifm-color-emphasis-300: #6D6D7A;
-  --ifm-color-emphasis-400: #9393A0;
+  --ifm-color-emphasis-100: #112B3C;
+  --ifm-color-emphasis-200: #2C4356;
+  --ifm-color-emphasis-300: #5A7184;
+  --ifm-color-emphasis-400: #8899A6;
 
   /* Links */
-  --ifm-link-color: #714EFF;
-  --ifm-link-hover-color: #5D38FF;
+  --ifm-link-color: #4C6EF5;
+  --ifm-link-hover-color: #3B5BDB;
 
   /* Borders */
-  --ifm-divider-color: rgba(0, 0, 0, 0.07);
-  --ifm-toc-border-color: rgba(0, 0, 0, 0.07);
-  --ifm-border-color: rgba(0, 0, 0, 0.07);
+  --ifm-divider-color: rgba(17, 43, 60, 0.08);
+  --ifm-toc-border-color: rgba(17, 43, 60, 0.08);
+  --ifm-border-color: rgba(17, 43, 60, 0.08);
 
   /* Navbar */
-  --ifm-navbar-background-color: rgba(255, 255, 255, 0.92);
+  --ifm-navbar-background-color: rgba(251, 252, 253, 0.92);
   --ifm-navbar-shadow: 0 1px 0 var(--ifm-divider-color);
-  --ifm-navbar-text-color: #1D1D1F;
+  --ifm-navbar-text-color: #112B3C;
   --ifm-navbar-item-padding-vertical: 0.5rem;
   --ifm-navbar-item-padding-horizontal: 1rem;
   --ifm-navbar-height: 64px;
 
   /* Sidebar */
-  --ifm-menu-color: #6D6D7A;
-  --ifm-menu-color-background-active: rgba(113, 78, 255, 0.08);
-  --ifm-menu-color-active: #714EFF;
+  --ifm-menu-color: #5A7184;
+  --ifm-menu-color-background-active: rgba(76, 110, 245, 0.08);
+  --ifm-menu-color-active: #4C6EF5;
   --ifm-menu-link-padding-vertical: 0.375rem;
   --ifm-menu-link-padding-horizontal: 0.75rem;
 
@@ -66,10 +66,10 @@
   --doc-sidebar-hidden-width: 30px;
 
   /* Code */
-  --ifm-code-background: #F3F4F6;
-  --ifm-code-color: #1D1D1F;
-  --docusaurus-highlighted-code-line-bg: rgba(113, 78, 255, 0.08);
-  --docusaurus-highlighted-code-line-border-l-color: #714EFF;
+  --ifm-code-background: #E8EEF4;
+  --ifm-code-color: #112B3C;
+  --docusaurus-highlighted-code-line-bg: rgba(76, 110, 245, 0.08);
+  --docusaurus-highlighted-code-line-border-l-color: #4C6EF5;
 
   /* Cards */
   --ifm-card-background-color: #FFFFFF;
@@ -77,8 +77,8 @@
   /* Misc */
   --ifm-border-radius: 8px;
   --ifm-spacing-horizontal: 1rem;
-  --ifm-footer-background-color: #F3F4F6;
-  --ifm-footer-text-color: #6D6D7A;
+  --ifm-footer-background-color: #E8EEF4;
+  --ifm-footer-text-color: #5A7184;
 
   /* Sidebar icon — shared */
   --sidebar-icon-size: 1em;
@@ -86,64 +86,64 @@
   --sidebar-icon-gap: 0.5rem;
 
   /* Navbar backdrop-filter base color (RGB values for rgba()) */
-  --bg-base-rgb: 255, 255, 255;
+  --bg-base-rgb: 251, 252, 253;
 
   /* Scrollbar */
   --ifm-scrollbar-size: 5px;
-  --ifm-scrollbar-thumb-background-color: rgba(150, 150, 170, 0.35);
-  --ifm-scrollbar-thumb-hover-background-color: rgba(150, 150, 170, 0.65);
+  --ifm-scrollbar-thumb-background-color: rgba(90, 113, 132, 0.3);
+  --ifm-scrollbar-thumb-hover-background-color: rgba(90, 113, 132, 0.55);
 }
 
-/* ── Dark Theme ──────────────────────────────────────────────────────────── */
+/* ── Dark Theme (Winter is Coming Dark Blue) ─────────────────────────────── */
 [data-theme='dark'] {
-  --ifm-color-primary: #9D80FF;
-  --ifm-color-primary-dark: #8B6FFF;
-  --ifm-color-primary-darker: #7A5FFF;
-  --ifm-color-primary-darkest: #6850FF;
-  --ifm-color-primary-light: #AF95FF;
-  --ifm-color-primary-lighter: #C0AAFF;
-  --ifm-color-primary-lightest: #D1BFFF;
+  --ifm-color-primary: #82AAFF;
+  --ifm-color-primary-dark: #6B9AFF;
+  --ifm-color-primary-darker: #5A8BFF;
+  --ifm-color-primary-darkest: #3D72FF;
+  --ifm-color-primary-light: #99BAFF;
+  --ifm-color-primary-lighter: #AECAFF;
+  --ifm-color-primary-lightest: #CCDEFF;
 
-  --ifm-background-color: #111318;
-  --ifm-background-surface-primary: #1A1D23;
-  --ifm-background-surface-color: #21242C;
+  --ifm-background-color: #011627;
+  --ifm-background-surface-primary: #0B2942;
+  --ifm-background-surface-color: #122D42;
 
-  --ifm-color-emphasis-100: #E8EAED;
-  --ifm-color-emphasis-200: #D0D3D9;
-  --ifm-color-emphasis-300: #9AA0AC;
-  --ifm-color-emphasis-400: #6B7280;
+  --ifm-color-emphasis-100: #D6DEEB;
+  --ifm-color-emphasis-200: #B0BEC5;
+  --ifm-color-emphasis-300: #7E99A4;
+  --ifm-color-emphasis-400: #546E7A;
 
-  --ifm-link-color: #9D80FF;
-  --ifm-link-hover-color: #B8A0FF;
+  --ifm-link-color: #82AAFF;
+  --ifm-link-hover-color: #AECAFF;
 
-  --ifm-divider-color: rgba(255, 255, 255, 0.08);
-  --ifm-toc-border-color: rgba(255, 255, 255, 0.08);
-  --ifm-border-color: rgba(255, 255, 255, 0.08);
+  --ifm-divider-color: rgba(130, 170, 255, 0.1);
+  --ifm-toc-border-color: rgba(130, 170, 255, 0.1);
+  --ifm-border-color: rgba(130, 170, 255, 0.1);
 
-  --ifm-navbar-background-color: rgba(17, 19, 24, 0.92);
-  --ifm-navbar-text-color: #E8EAED;
+  --ifm-navbar-background-color: rgba(1, 22, 39, 0.92);
+  --ifm-navbar-text-color: #D6DEEB;
 
-  --ifm-menu-color: #9AA0AC;
-  --ifm-menu-color-background-active: rgba(157, 128, 255, 0.12);
-  --ifm-menu-color-active: #9D80FF;
+  --ifm-menu-color: #7E99A4;
+  --ifm-menu-color-background-active: rgba(130, 170, 255, 0.12);
+  --ifm-menu-color-active: #82AAFF;
 
-  --ifm-code-background: #1E2130;
-  --ifm-code-color: #E8EAED;
-  --docusaurus-highlighted-code-line-bg: rgba(157, 128, 255, 0.12);
-  --docusaurus-highlighted-code-line-border-l-color: #9D80FF;
+  --ifm-code-background: #0B2942;
+  --ifm-code-color: #D6DEEB;
+  --docusaurus-highlighted-code-line-bg: rgba(130, 170, 255, 0.12);
+  --docusaurus-highlighted-code-line-border-l-color: #82AAFF;
 
-  --ifm-card-background-color: #1A1D23;
-  --ifm-footer-background-color: #0F1318;
-  --ifm-footer-text-color: #9AA0AC;
+  --ifm-card-background-color: #0B2942;
+  --ifm-footer-background-color: #00111F;
+  --ifm-footer-text-color: #7E99A4;
 
   --sidebar-icon-opacity: 0.5;
 
   /* Navbar backdrop-filter base color (dark) */
-  --bg-base-rgb: 17, 19, 24;
+  --bg-base-rgb: 1, 22, 39;
 
   /* Scrollbar */
-  --ifm-scrollbar-thumb-background-color: rgba(80, 90, 110, 0.5);
-  --ifm-scrollbar-thumb-hover-background-color: rgba(80, 90, 110, 0.8);
+  --ifm-scrollbar-thumb-background-color: rgba(130, 170, 255, 0.25);
+  --ifm-scrollbar-thumb-hover-background-color: rgba(130, 170, 255, 0.45);
 }
 
 html[data-theme='dark'] {
@@ -253,13 +253,13 @@ p {
 }
 
 .navbar__link:hover {
-  background: rgba(113, 78, 255, 0.08);
+  background: rgba(76, 110, 245, 0.08);
   color: var(--ifm-color-primary);
   text-decoration: none;
 }
 
 [data-theme='dark'] .navbar__link:hover {
-  background: rgba(157, 128, 255, 0.1);
+  background: rgba(130, 170, 255, 0.1);
 }
 
 .navbar__link--active {
@@ -282,8 +282,12 @@ p {
   overflow-x: hidden !important;
   margin-left: 0 !important;
   padding-left: 0 !important;
-  /* scrollbar */
+  /* scrollbar — auto-hide */
   scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+}
+
+.theme-doc-sidebar-container:hover {
   scrollbar-color: var(--ifm-scrollbar-thumb-background-color) transparent;
 }
 
@@ -924,38 +928,19 @@ a:hover {
    LISTS
    ═══════════════════════════════════════════════════════════════════════════ */
 
-/* Remove browser-default disc bullets; use custom inline bullet */
+/* Lists */
 .markdown ul {
-  list-style: none;
-  padding-left: 1.25rem;
+  padding-left: 1.5rem;
   margin-bottom: 1rem;
 }
 
 .markdown ul>li {
-  position: relative;
-  padding-left: 0.5rem;
   margin-bottom: 0.3rem;
 }
 
-.markdown ul>li::before {
-  content: '•';
-  position: absolute;
-  left: -1rem;
-  top: 0;
-  color: var(--ifm-color-emphasis-400);
-  font-family: Arial, sans-serif;
-  font-size: 1.1em;
-  line-height: 1.6;
-}
-
-/* Nested list: open circle */
 .markdown ul ul {
   padding-left: 1.25rem;
   margin-top: 0.3rem;
-}
-
-.markdown ul ul>li::before {
-  content: '◦';
 }
 
 .markdown ol {
@@ -1036,7 +1021,7 @@ tr:nth-child(even) {
 .button--primary:hover {
   background-color: var(--ifm-color-primary-dark);
   border-color: var(--ifm-color-primary-dark);
-  box-shadow: 0 2px 8px rgba(113, 78, 255, 0.35);
+  box-shadow: 0 2px 8px rgba(76, 110, 245, 0.35);
   text-decoration: none;
 }
 
@@ -1054,7 +1039,7 @@ tr:nth-child(even) {
 
 .card:hover {
   border-color: var(--ifm-color-primary);
-  box-shadow: 0 2px 10px rgba(113, 78, 255, 0.1);
+  box-shadow: 0 2px 10px rgba(76, 110, 245, 0.1);
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -1113,7 +1098,7 @@ tr:nth-child(even) {
 
 .pagination-nav__link:hover {
   border-color: var(--ifm-color-primary);
-  box-shadow: 0 2px 8px rgba(113, 78, 255, 0.1);
+  box-shadow: 0 2px 8px rgba(76, 110, 245, 0.1);
   text-decoration: none;
 }
 
@@ -1144,7 +1129,7 @@ tr:nth-child(even) {
 }
 
 .badge--primary {
-  background-color: rgba(113, 78, 255, 0.12);
+  background-color: rgba(76, 110, 245, 0.12);
   color: var(--ifm-color-primary);
 }
 
@@ -1259,7 +1244,7 @@ tr:nth-child(even) {
 
 /* ── DocSearch modal overrides (if Algolia fallback is loaded) ─────────── */
 :root {
-  --docsearch-primary-color: #714EFF;
+  --docsearch-primary-color: #4C6EF5;
   --docsearch-text-color: var(--ifm-color-emphasis-100);
   --docsearch-searchbox-background: var(--ifm-background-surface-primary);
   --docsearch-modal-background: var(--ifm-background-color);
@@ -1315,13 +1300,18 @@ tr:nth-child(even) {
    SCROLLBARS — Thin, minimal style everywhere
    ═══════════════════════════════════════════════════════════════════════════ */
 
-/* Firefox */
+/* Firefox — auto-hide scrollbar */
 * {
   scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+  transition: scrollbar-color 0.3s;
+}
+
+*:hover {
   scrollbar-color: var(--ifm-scrollbar-thumb-background-color) transparent;
 }
 
-/* WebKit (Chrome, Safari, Edge) */
+/* WebKit (Chrome, Safari, Edge) — auto-hide scrollbar */
 *::-webkit-scrollbar {
   width: var(--ifm-scrollbar-size);
   height: var(--ifm-scrollbar-size);
@@ -1332,11 +1322,16 @@ tr:nth-child(even) {
 }
 
 *::-webkit-scrollbar-thumb {
-  background-color: var(--ifm-scrollbar-thumb-background-color);
+  background-color: transparent;
   border-radius: 3px;
+  transition: background-color 0.3s;
 }
 
-*::-webkit-scrollbar-thumb:hover {
+*:hover::-webkit-scrollbar-thumb {
+  background-color: var(--ifm-scrollbar-thumb-background-color);
+}
+
+*:hover::-webkit-scrollbar-thumb:hover {
   background-color: var(--ifm-scrollbar-thumb-hover-background-color);
 }
 

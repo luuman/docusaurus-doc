@@ -139,17 +139,12 @@
 
 /* ── Code blocks (plain, non-Prism) ──────────────────────────────────────── */
 .markdown pre:not(.prism-code) {
-  background-color: #1E2130;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background-color: var(--ifm-code-background);
+  border: 1px solid var(--ifm-border-color);
   border-radius: 10px;
   padding: 1.25rem;
   overflow-x: auto;
   margin-bottom: 1.5rem;
-}
-
-[data-theme='light'] .markdown pre:not(.prism-code) {
-  background-color: #1E2130;
-  border-color: rgba(0, 0, 0, 0.15);
 }
 
 .markdown pre code {
@@ -164,7 +159,7 @@
 
 /* Only set color for non-Prism blocks (Prism tokens use inline styles) */
 .markdown pre:not(.prism-code) code {
-  color: #E8EAED;
+  color: var(--ifm-code-color);
 }
 
 div[class*="codeBlockTitle"] {
@@ -174,7 +169,7 @@ div[class*="codeBlockTitle"] {
   padding: 0.5rem 1rem;
   background-color: rgba(0, 0, 0, 0.3);
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  color: #9AA0AC;
+  color: var(--ifm-color-emphasis-300);
 }
 
 /* ── Blockquotes ──────────────────────────────────────────────────────────── */
@@ -182,14 +177,14 @@ div[class*="codeBlockTitle"] {
   border-left: 3px solid var(--ifm-color-primary);
   margin: 1.25rem 0;
   padding: 0.75rem 1rem;
-  background-color: rgba(113, 78, 255, 0.05);
+  background-color: rgba(76, 110, 245, 0.05);
   border-radius: 0 8px 8px 0;
   color: var(--ifm-color-emphasis-200);
   font-style: normal;
 }
 
 [data-theme='dark'] .markdown blockquote {
-  background-color: rgba(157, 128, 255, 0.08);
+  background-color: rgba(130, 170, 255, 0.08);
 }
 
 .markdown blockquote p { margin-bottom: 0; }

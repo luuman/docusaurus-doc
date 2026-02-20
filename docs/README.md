@@ -75,6 +75,11 @@ $$
 ### 4. 高效绘制[流程图](https://github.com/knsv/mermaid#flowchart)
 
 ```mermaid
+---
+config:
+  look: handDrawn
+  theme: dark
+---
 graph TD
     A[用户请求] --> B[语义解析]
     B --> C[RAG检索]
@@ -113,6 +118,11 @@ graph TD
 ### 5. 高效绘制[序列图](https://github.com/knsv/mermaid#sequence-diagram)
 
 ```mermaid
+---
+config:
+  look: handDrawn
+  theme: dark
+---
 sequenceDiagram
   participant Alice
   participant Bob
@@ -133,6 +143,11 @@ sequenceDiagram
 > **甘特图**内在思想简单。基本是一条线条图，横轴表示时间，纵轴表示活动（项目），线条表示在整个期间上计划和实际的活动完成情况。它直观地表明任务计划在什么时候进行，及实际进展与计划要求的对比。
 
 ```mermaid
+---
+config:
+  look: handDrawn
+  theme: dark
+---
 gantt
   title 项目开发流程
   section 项目确定

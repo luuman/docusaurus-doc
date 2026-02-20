@@ -1,4 +1,5 @@
-import { themes as prismThemes } from "prism-react-renderer";
+import winterDark from "./src/prism-themes/winter-dark";
+import winterLight from "./src/prism-themes/winter-light";
 import type { Config } from "@docusaurus/types";
 import type * as Preset from "@docusaurus/preset-classic";
 
@@ -123,7 +124,7 @@ const config: Config = {
       //   src: "img/logo.svg",
       // },
       items: [
-        { to: "/docs", position: "right", label: "Docs" },
+        { type: "doc", docId: "README", position: "right", label: "Docs" },
         { to: "/blog", label: "Blog", position: "right" },
       ],
     },
@@ -173,8 +174,8 @@ const config: Config = {
       copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`,
     },
     prism: {
-      theme: prismThemes.github,
-      darkTheme: prismThemes.dracula,
+      theme: winterLight,
+      darkTheme: winterDark,
     },
   } satisfies Preset.ThemeConfig,
 };
