@@ -126,8 +126,8 @@ const config: Config = {
       //   src: "img/logo.svg",
       // },
       items: [
-        { type: "doc", to: "/blog", position: "right", label: "Docs" },
-        { to: "/blog", label: "Blog", position: "right" },
+        { to: "/docs/", position: "right", label: "Docs" },
+        { to: "/blog", position: "right", label: "Blog" },
       ],
     },
     footer: {
