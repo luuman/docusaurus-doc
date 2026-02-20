@@ -1,6 +1,7 @@
 import React, {useRef} from 'react';
 import Link from '@docusaurus/Link';
 import {useThemeConfig, useColorMode} from '@docusaurus/theme-common';
+import ErrorBoundary from '@docusaurus/ErrorBoundary';
 import NavbarMobileSidebarToggle from '@theme/Navbar/MobileSidebar/Toggle';
 import NavbarMobileSidebar from '@theme/Navbar/MobileSidebar';
 import SearchBar from '@theme/SearchBar';
@@ -93,7 +94,9 @@ export default function Navbar(): JSX.Element {
           <div className={styles.navbarRight}>
             <Link to="/docs/README" className={styles.navLink}>Docs</Link>
             <Link to="/blog" className={styles.navLink}>Blog</Link>
-            <ThemeToggle />
+            <ErrorBoundary fallback={() => null}>
+              <ThemeToggle />
+            </ErrorBoundary>
           </div>
         </div>
       </nav>
