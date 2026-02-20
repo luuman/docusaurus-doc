@@ -1,4 +1,5 @@
-import { themes as prismThemes } from "prism-react-renderer";
+import winterDark from "./src/prism-themes/winter-dark";
+import winterLight from "./src/prism-themes/winter-light";
 import type { Config } from "@docusaurus/types";
 import type * as Preset from "@docusaurus/preset-classic";
 
@@ -45,6 +46,17 @@ const config: Config = {
       },
     },
   },
+  plugins: [
+    [
+      require.resolve("@easyops-cn/docusaurus-search-local"),
+      {
+        hashed: true,
+        language: ["en", "zh"],
+        highlightSearchTermsOnTargetPage: true,
+        explicitSearchResultPath: true,
+      },
+    ],
+  ],
   presets: [
     [
       "classic",
@@ -53,6 +65,7 @@ const config: Config = {
           sidebarPath: "./sidebars.ts",
           sidebarCollapsible: true,
           sidebarCollapsed: false,
+          rehypePlugins: [require("./src/plugins/rehype-fix-style")],
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
           // editUrl:
@@ -74,16 +87,34 @@ const config: Config = {
           onUntruncatedBlogPosts: "warn",
         },
         theme: {
-          customCss: "./src/css/custom.css",
+          customCss: ["./src/css/custom.css", "./src/css/brainboard-prose.css"],
         },
       } satisfies Preset.Options,
     ],
   ],
   markdown: {
+    // .md files → CommonMark (not MDX), .mdx → MDX
+    // Required for GitBook-sourced docs that use {% hint %}, <br>, <figure> etc.
+    format: "detect",
     mermaid: true,
   },
   themes: ["@docusaurus/theme-mermaid"],
   themeConfig: {
+    mermaid: {
+      theme: {
+        dark: "dark",
+        light: "default",
+      },
+      options: {
+        look: "handDrawn",
+      },
+    },
+    // Set dark theme as default
+    colorMode: {
+      defaultMode: "dark",
+      disableSwitch: false,
+      respectPrefersColorScheme: false,
+    },
     // Replace with your project's social card
     image: "img/docusaurus-social-card.jpg",
     navbar: {
@@ -167,8 +198,8 @@ const config: Config = {
       copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`,
     },
     prism: {
-      theme: prismThemes.github,
-      darkTheme: prismThemes.dracula,
+      theme: winterLight,
+      darkTheme: winterDark,
     },
   } satisfies Preset.ThemeConfig,
 };

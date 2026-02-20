@@ -7,6 +7,7 @@
 使用 **pnpm**（不是 yarn 或 npm）作为包管理器。需要 Node.js ≥ 18.0。
 
 ### 开发
+
 ```bash
 pnpm start          # 启动开发服务器 http://localhost:3000/claude-doc/（中文）
 pnpm start:en       # 启动英文环境的开发服务器
@@ -14,6 +15,7 @@ pnpm typecheck      # TypeScript 类型检查
 ```
 
 ### 构建与部署
+
 ```bash
 pnpm build          # 构建静态网站到 build/ 目录
 pnpm serve          # 本地预览构建后的网站
@@ -21,6 +23,7 @@ pnpm clear          # 清除缓存（构建行为异常时使用）
 ```
 
 ### 翻译
+
 ```bash
 pnpm write-translations  # 提取新字符串用于翻译（添加新页面后执行）
 ```
