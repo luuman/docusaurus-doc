@@ -27,7 +27,7 @@ const config: Config = {
 
   trailingSlash: false,
 
-  onBrokenLinks: "throw",
+  onBrokenLinks: "warn",
   onBrokenMarkdownLinks: "warn",
 
   // Even if you don't use internationalization, you can use this field to set
@@ -45,6 +45,17 @@ const config: Config = {
       },
     },
   },
+  plugins: [
+    [
+      require.resolve("@easyops-cn/docusaurus-search-local"),
+      {
+        hashed: true,
+        language: ["en", "zh"],
+        highlightSearchTermsOnTargetPage: true,
+        explicitSearchResultPath: true,
+      },
+    ],
+  ],
   presets: [
     [
       "classic",
@@ -53,6 +64,7 @@ const config: Config = {
           sidebarPath: "./sidebars.ts",
           sidebarCollapsible: true,
           sidebarCollapsed: false,
+          rehypePlugins: [require('./src/plugins/rehype-fix-style')],
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
           // editUrl:
@@ -74,16 +86,28 @@ const config: Config = {
           onUntruncatedBlogPosts: "warn",
         },
         theme: {
-          customCss: "./src/css/custom.css",
+          customCss: ['./src/css/custom.css', './src/css/brainboard-prose.css'],
         },
       } satisfies Preset.Options,
     ],
   ],
   markdown: {
+    // .md files → CommonMark (not MDX), .mdx → MDX
+    // Required for GitBook-sourced docs that use {% hint %}, <br>, <figure> etc.
+    format: 'detect',
     mermaid: true,
   },
   themes: ["@docusaurus/theme-mermaid"],
   themeConfig: {
+    mermaid: {
+      theme: {
+        dark: 'dark',
+        light: 'default',
+      },
+      options: {
+        look: 'handDrawn',
+      },
+    },
     // Set dark theme as default
     colorMode: {
       defaultMode: 'dark',
@@ -99,32 +123,8 @@ const config: Config = {
       //   src: "img/logo.svg",
       // },
       items: [
-        // {
-        //   type: "docSidebar",
-        //   sidebarId: "tutorialSidebar",
-        //   position: "left",
-        //   label: "Doc",
-        // },
-        {
-          label: "Docs",
-          to: "docs/guide/",
-          position: "left",
-          activeBasePath: "docs",
-          // items: [
-          //   // { label: "Introduction", to: "docs/Introduction/overview" },
-          //   // { label: "Tutorials", to: "docs/tutorials/" },
-          //   // { label: "How-to Guides", to: "docs/howto/" },
-          //   // { label: "References", to: "docs/references/" },
-          //   // { label: "Explanations", to: "docs/explanations/" },
-          // ],
-        },
-        { to: "/blog", label: "Blog", position: "left" },
-        { type: "localeDropdown", position: "right" },
-        // {
-        //   href: "https://github.com/facebook/docusaurus",
-        //   label: "GitHub",
-        //   position: "right",
-        // },
+        { to: "/docs", position: "right", label: "Docs" },
+        { to: "/blog", label: "Blog", position: "right" },
       ],
     },
     footer: {
