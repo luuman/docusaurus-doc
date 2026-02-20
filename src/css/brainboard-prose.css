@@ -120,6 +120,16 @@
 .markdown ul > li > ul > li { list-style-type: circle; }
 .markdown ol > li { list-style-type: decimal; }
 
+.markdown li::marker {
+  unicode-bidi: normal;
+  font-variant-numeric: normal;
+  text-transform: none;
+  text-indent: 0;
+  text-align: start;
+  text-align-last: auto;
+  content: none;
+}
+
 /* ── Inline code ──────────────────────────────────────────────────────────── */
 .markdown code:not([class*="language-"]) {
   font-size: var(--ifm-code-font-size);
@@ -244,13 +254,9 @@ div[class*="codeBlockTitle"] {
 
 .markdown table {
   width: 100%;
-  table-layout: fixed;
+  table-layout: auto;
   border-collapse: collapse;
   font-size: 14px;
-  margin-bottom: 1.5rem;
-  border-radius: 8px;
-  overflow: hidden;
-  border: 1px solid var(--ifm-divider-color);
 }
 
 .markdown td,

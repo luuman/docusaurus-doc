@@ -1,0 +1,50 @@
+.tocWrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  position: sticky;
+  top: var(--ifm-navbar-height);
+  max-height: calc(100vh - var(--ifm-navbar-height));
+}
+
+.tocFooter {
+  margin-top: auto;
+  padding: 0.75rem 1rem;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.themeGroup {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  background: var(--ifm-background-surface-primary, var(--ifm-color-emphasis-100));
+  border-radius: 8px;
+  padding: 2px;
+}
+
+.themeBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--ifm-color-emphasis-600);
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.themeBtn:hover {
+  background: var(--ifm-color-emphasis-200);
+  color: var(--ifm-color-emphasis-900);
+}
+
+.themeBtnActive {
+  background: var(--ifm-background-color);
+  color: var(--ifm-color-primary);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+}
