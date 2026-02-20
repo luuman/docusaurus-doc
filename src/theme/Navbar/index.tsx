@@ -1,10 +1,7 @@
-import React from 'react';
+import React, {useRef} from 'react';
 import Link from '@docusaurus/Link';
 import {useThemeConfig, useColorMode} from '@docusaurus/theme-common';
-import {
-  useHideableNavbar,
-  useNavbarMobileSidebar,
-} from '@docusaurus/theme-common/internal';
+import ErrorBoundary from '@docusaurus/ErrorBoundary';
 import NavbarMobileSidebarToggle from '@theme/Navbar/MobileSidebar/Toggle';
 import NavbarMobileSidebar from '@theme/Navbar/MobileSidebar';
 import SearchBar from '@theme/SearchBar';
@@ -71,8 +68,7 @@ function NavbarLogo(): JSX.Element {
 }
 
 export default function Navbar(): JSX.Element {
-  const {navbar: {hideOnScroll}} = useThemeConfig();
-  const {navbarRef, isNavbarVisible} = useHideableNavbar(hideOnScroll);
+  const navbarRef = useRef<HTMLElement>(null);
 
   return (
     <>
@@ -98,7 +94,9 @@ export default function Navbar(): JSX.Element {
           <div className={styles.navbarRight}>
             <Link to="/docs/README" className={styles.navLink}>Docs</Link>
             <Link to="/blog" className={styles.navLink}>Blog</Link>
-            <ThemeToggle />
+            <ErrorBoundary fallback={() => null}>
+              <ThemeToggle />
+            </ErrorBoundary>
           </div>
         </div>
       </nav>
