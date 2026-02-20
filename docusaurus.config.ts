@@ -108,6 +108,7 @@ const config: Config = {
       },
       options: {
         look: "handDrawn",
+        maxWidth: "100%",
       },
     },
     // Set dark theme as default
@@ -125,16 +126,10 @@ const config: Config = {
       //   src: "img/logo.svg",
       // },
       items: [
-        // {
-        //   type: "docSidebar",
-        //   sidebarId: "tutorialSidebar",
-        //   position: "left",
-        //   label: "Doc",
-        // },
         {
           label: "Docs",
-          to: "docs/claude-code/",
-          position: "left",
+          to: "/docs/claude-code/",
+          position: "right",
           activeBasePath: "docs",
           // items: [
           //   // { label: "Introduction", to: "docs/Introduction/overview" },
@@ -144,8 +139,7 @@ const config: Config = {
           //   // { label: "Explanations", to: "docs/explanations/" },
           // ],
         },
-        { to: "/blog", label: "Blog", position: "left" },
-        { type: "localeDropdown", position: "right" },
+        { to: "/blog", label: "Blog", position: "right" },
         // {
         //   href: "https://github.com/facebook/docusaurus",
         //   label: "GitHub",

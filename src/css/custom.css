@@ -9,7 +9,7 @@
 /* ── Fonts ──────────────────────────────────────────────────────────────── */
 @import url('https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
 
-/* ── Light Theme (Winter is Coming Light) ────────────────────────────────── */
+/* ── Light Theme ─────────────────────────────────────────────────────────── */
 :root {
   /* Typography */
   --ifm-font-family-base: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -17,7 +17,7 @@
   --ifm-line-height-base: 1.75;
   --ifm-code-font-size: 14px;
 
-  /* Primary (Winter blue-purple) */
+  /* Primary (Blue) */
   --ifm-color-primary: #4C6EF5;
   --ifm-color-primary-dark: #3B5BDB;
   --ifm-color-primary-darker: #364FC7;
@@ -27,35 +27,35 @@
   --ifm-color-primary-lightest: #BAC8FF;
 
   /* Backgrounds */
-  --ifm-background-color: #FBFCFD;
-  --ifm-background-surface-primary: #F0F4F8;
-  --ifm-background-surface-color: #E8EEF4;
+  --ifm-background-color: #FFFFFF;
+  --ifm-background-surface-primary: #F9F9FB;
+  --ifm-background-surface-color: #F3F4F6;
 
   /* Text */
-  --ifm-color-emphasis-100: #112B3C;
-  --ifm-color-emphasis-200: #2C4356;
-  --ifm-color-emphasis-300: #5A7184;
-  --ifm-color-emphasis-400: #8899A6;
+  --ifm-color-emphasis-100: #1D1D1F;
+  --ifm-color-emphasis-200: #3D3D42;
+  --ifm-color-emphasis-300: #6D6D7A;
+  --ifm-color-emphasis-400: #9393A0;
 
   /* Links */
   --ifm-link-color: #4C6EF5;
   --ifm-link-hover-color: #3B5BDB;
 
   /* Borders */
-  --ifm-divider-color: rgba(17, 43, 60, 0.08);
-  --ifm-toc-border-color: rgba(17, 43, 60, 0.08);
-  --ifm-border-color: rgba(17, 43, 60, 0.08);
+  --ifm-divider-color: rgba(0, 0, 0, 0.07);
+  --ifm-toc-border-color: rgba(0, 0, 0, 0.07);
+  --ifm-border-color: rgba(0, 0, 0, 0.07);
 
   /* Navbar */
-  --ifm-navbar-background-color: rgba(251, 252, 253, 0.92);
+  --ifm-navbar-background-color: rgba(255, 255, 255, 0.92);
   --ifm-navbar-shadow: 0 1px 0 var(--ifm-divider-color);
-  --ifm-navbar-text-color: #112B3C;
+  --ifm-navbar-text-color: #1D1D1F;
   --ifm-navbar-item-padding-vertical: 0.5rem;
   --ifm-navbar-item-padding-horizontal: 1rem;
   --ifm-navbar-height: 64px;
 
   /* Sidebar */
-  --ifm-menu-color: #5A7184;
+  --ifm-menu-color: #6D6D7A;
   --ifm-menu-color-background-active: rgba(76, 110, 245, 0.08);
   --ifm-menu-color-active: #4C6EF5;
   --ifm-menu-link-padding-vertical: 0.375rem;
@@ -66,8 +66,8 @@
   --doc-sidebar-hidden-width: 30px;
 
   /* Code */
-  --ifm-code-background: #E8EEF4;
-  --ifm-code-color: #112B3C;
+  --ifm-code-background: #F3F4F6;
+  --ifm-code-color: #1D1D1F;
   --docusaurus-highlighted-code-line-bg: rgba(76, 110, 245, 0.08);
   --docusaurus-highlighted-code-line-border-l-color: #4C6EF5;
 
@@ -77,8 +77,8 @@
   /* Misc */
   --ifm-border-radius: 8px;
   --ifm-spacing-horizontal: 1rem;
-  --ifm-footer-background-color: #E8EEF4;
-  --ifm-footer-text-color: #5A7184;
+  --ifm-footer-background-color: #F3F4F6;
+  --ifm-footer-text-color: #6D6D7A;
 
   /* Sidebar icon — shared */
   --sidebar-icon-size: 1em;
@@ -86,15 +86,16 @@
   --sidebar-icon-gap: 0.5rem;
 
   /* Navbar backdrop-filter base color (RGB values for rgba()) */
-  --bg-base-rgb: 251, 252, 253;
+  --bg-base-rgb: 255, 255, 255;
 
   /* Scrollbar */
   --ifm-scrollbar-size: 5px;
-  --ifm-scrollbar-thumb-background-color: rgba(90, 113, 132, 0.3);
-  --ifm-scrollbar-thumb-hover-background-color: rgba(90, 113, 132, 0.55);
+  --ifm-scrollbar-thumb-background-color: rgba(150, 150, 170, 0.35);
+  --ifm-scrollbar-thumb-hover-background-color: rgba(150, 150, 170, 0.65);
 }
 
-/* ── Dark Theme (Winter is Coming Dark Blue) ─────────────────────────────── */
+/* ── Dark Theme ──────────────────────────────────────────────────────────── */
+html[data-theme='dark'],
 [data-theme='dark'] {
   --ifm-color-primary: #82AAFF;
   --ifm-color-primary-dark: #6B9AFF;
@@ -104,9 +105,9 @@
   --ifm-color-primary-lighter: #AECAFF;
   --ifm-color-primary-lightest: #CCDEFF;
 
-  --ifm-background-color: #011627;
-  --ifm-background-surface-primary: #0B2942;
-  --ifm-background-surface-color: #122D42;
+  --ifm-background-color: #011627 !important;
+  --ifm-background-surface-primary: #0B2942 !important;
+  --ifm-background-surface-color: #122D42 !important;
 
   --ifm-color-emphasis-100: #D6DEEB;
   --ifm-color-emphasis-200: #B0BEC5;
@@ -127,7 +128,7 @@
   --ifm-menu-color-background-active: rgba(130, 170, 255, 0.12);
   --ifm-menu-color-active: #82AAFF;
 
-  --ifm-code-background: #0B2942;
+  --ifm-code-background: #001122;
   --ifm-code-color: #D6DEEB;
   --docusaurus-highlighted-code-line-bg: rgba(130, 170, 255, 0.12);
   --docusaurus-highlighted-code-line-border-l-color: #82AAFF;
@@ -148,6 +149,12 @@
 
 html[data-theme='dark'] {
   color-scheme: dark;
+  background-color: #011627 !important;
+}
+
+[data-theme='dark'] body,
+[data-theme='dark'] .main-wrapper {
+  background-color: #011627 !important;
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -293,7 +300,7 @@ p {
 
 /* Dark mode sidebar — same bg as page */
 [data-theme='dark'] .theme-doc-sidebar-container {
-  background-color: var(--ifm-background-color) !important;
+  background-color: #011627 !important;
 }
 
 /* Sidebar scrollable area */
@@ -873,6 +880,8 @@ pre code {
   border-radius: 0;
   font-size: var(--ifm-code-font-size);
   box-shadow: none !important;
+  white-space: pre;
+  tab-size: 2;
 }
 
 /* Prism code block container — single border here */
@@ -888,6 +897,18 @@ div[class*="codeBlockContainer"] pre {
   border: none !important;
   border-radius: 0;
   margin: 0;
+  padding: var(--ifm-pre-padding);
+}
+
+/* Prism code lines — preserve indentation */
+div[class*="codeBlockContainer"] pre code,
+div[class*="codeBlockContainer"] pre code *,
+div[class*="codeBlockContainer"] .prism-code,
+div[class*="codeBlockContainer"] .prism-code *,
+pre code,
+pre code * {
+  white-space: pre !important;
+  tab-size: 2;
 }
 
 .docusaurus-highlight-code-line {
