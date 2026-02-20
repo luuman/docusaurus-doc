@@ -1,8 +1,7 @@
-import React from 'react';
+import React, {useRef} from 'react';
 import Link from '@docusaurus/Link';
 import {useThemeConfig, useColorMode} from '@docusaurus/theme-common';
 import {
-  useHideableNavbar,
   useNavbarMobileSidebar,
 } from '@docusaurus/theme-common/internal';
 import NavbarMobileSidebarToggle from '@theme/Navbar/MobileSidebar/Toggle';
@@ -71,8 +70,7 @@ function NavbarLogo(): JSX.Element {
 }
 
 export default function Navbar(): JSX.Element {
-  const {navbar: {hideOnScroll}} = useThemeConfig();
-  const {navbarRef, isNavbarVisible} = useHideableNavbar(hideOnScroll);
+  const navbarRef = useRef<HTMLElement>(null);
 
   return (
     <>
